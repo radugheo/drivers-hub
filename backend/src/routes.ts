@@ -1,6 +1,6 @@
-import { AuthController } from './controllers/AuthController';
-import { UserController } from './controllers/UserController';
-import { verifyToken } from './middlewares/jwt';
+import { AuthController } from './controllers/auth-controller';
+import { UserController } from './controllers/user-controller';
+import { isAdmin, isAuthenticated } from './middlewares/auth';
 
 const authRoutes = [
   {
@@ -25,21 +25,21 @@ const userRoutes = [
     route: '/users',
     controller: UserController,
     action: 'all',
-    middlewares: [verifyToken],
+    middlewares: [isAuthenticated],
   },
   {
     method: 'get',
     route: '/users/:id',
     controller: UserController,
     action: 'one',
-    middlewares: [verifyToken],
+    middlewares: [isAuthenticated],
   },
   {
     method: 'delete',
     route: '/users/:id',
     controller: UserController,
     action: 'remove',
-    middlewares: [verifyToken],
+    middlewares: [isAuthenticated, isAdmin],
   },
 ];
 

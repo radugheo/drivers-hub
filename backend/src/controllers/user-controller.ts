@@ -1,30 +1,32 @@
 import { AppDataSource } from '../data-source';
 import { NextFunction, Request, Response } from 'express';
-import { User } from '../entities/User';
+import { User } from '../entities/user';
+import { CustomError } from '../models/custom-error';
 
 export class UserController {
   private userRepository = AppDataSource.getRepository(User);
 
-  all = async (req: Request, res: Response, next: NextFunction) => {
-    return this.userRepository.find();
+  all = async (req: Request, res: Response) => {
+    const users = await this.userRepository.find();
+    return users;
   };
 
-  one = async (req: Request, res: Response, next: NextFunction) => {
+  one = async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
     const user = await this.userRepository.findOneBy({ id });
     if (!user) {
-      return res.status(404).send('User not found');
+      throw new CustomError(404, 'User not found');
     }
     return user;
   };
 
-  remove = async (req: Request, res: Response, next: NextFunction) => {
+  remove = async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
     const userToRemove = await this.userRepository.findOneBy({ id });
     if (!userToRemove) {
-      return res.status(404).send('User not found');
+      throw new CustomError(404, 'User not found');
     }
     await this.userRepository.remove(userToRemove);
-    return res.status(200).send('User removed');
+    return 'User removed';
   };
 }
