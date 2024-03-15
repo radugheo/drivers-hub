@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { AppDataSource } from '../data-source';
-import { User } from '../entities/user';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { CustomError } from '../models/custom-error';
+import { User } from '../entities/User';
 
 export class AuthController {
   private userRepository = AppDataSource.getRepository(User);
