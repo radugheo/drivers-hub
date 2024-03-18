@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.0",
+    "@react-navigation/bottom-tabs": "^6.5.20",
     "@react-navigation/native": "^6.1.16",
     "@react-navigation/native-stack": "^6.9.25",
     "@react-navigation/stack": "^6.3.28",
@@ -25,7 +26,8 @@
     "react-native-screens": "~3.29.0",
     "react-native-svg": "14.1.0",
     "styled-components": "^6.1.8",
-    "styled-system": "^5.1.5"
+    "styled-system": "^5.1.5",
+    "expo-font": "~11.10.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
