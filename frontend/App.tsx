@@ -8,8 +8,8 @@ export default function App() {
 
   async function loadFonts() {
     await Font.loadAsync({
-      'OktahRound-Bold': require('./assets/fonts/oktah_round_bold.otf'),
-      'OktahRound-Regular': require('./assets/fonts/oktah_round_regular.otf'),
+      'OktahRound-Bold': require('./assets/fonts/oktah_round_light.otf'),
+      'OktahRound-Regular': require('./assets/fonts/oktah_round_light.otf'),
     });
     setFontsLoaded(true);
   }
