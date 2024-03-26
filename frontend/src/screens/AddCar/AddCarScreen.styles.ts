@@ -12,17 +12,8 @@ export const styles = StyleSheet.create({
     marginBottom: 20,
     padding: 10,
   },
-  addButton: {
-    backgroundColor: "#6e3b6e",
-    borderRadius: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 10,
-  },
-  addButtonText: {
-    color: "white",
-    fontSize: 18,
+  editField: {
+    fontSize: 14,
+    fontWeight: "bold",
   },
 });

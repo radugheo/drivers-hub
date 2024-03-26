@@ -9,7 +9,6 @@ import {
 import { loginApiCall } from "../../api/auth-service";
 import { useNavigation } from "@react-navigation/native";
 import FormInputField from "../../components/FormInputField/FormInputField";
-import PrimaryButton from "../../components/PrimaryButton/PrimaryButton";
 import RedirectButton from "../../components/RedirectButton/RedirectButton";
 import PageTitle from "../../components/PageTitle/PageTitle";
 import Logo from "../../components/Logo/Logo";

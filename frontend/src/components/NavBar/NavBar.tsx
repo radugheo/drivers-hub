@@ -2,6 +2,7 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import GarageScreen from "../../screens/Garage/GarageScreen";
+import FindMyCarScreen from "../../screens/FindMyCar/FindMyCarScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -14,8 +15,9 @@ const NavBar = () => {
         tabBarInactiveTintColor: "gray",
         tabBarStyle: {
           backgroundColor: "#ffffff",
-          height: 60,
-          paddingBottom: 5,
+          height: 70,
+          paddingBottom: 15,
+          paddingHorizontal: 25, 
         },
         tabBarLabelStyle: {
           fontSize: 12,
@@ -25,15 +27,21 @@ const NavBar = () => {
           let iconName: any;
           if (route.name === "Garage") {
             iconName = focused ? "car-sport" : "car-sport-outline";
-          } else if (route.name === "Services") {
-            iconName = focused ? "construct" : "construct-outline";
+          } else if (route.name === "Reminders") {
+            iconName = focused ? "alarm" : "alarm-outline";
+          } else if (route.name === "Digital Wallet") {
+            iconName = focused ? "wallet" : "wallet-outline";
+          } else if (route.name === "Find my Car") {
+            iconName = focused ? "location" : "location-outline";
           }
           return <Ionicons name={iconName} size={size} color={color} />;
         },
       })}
     >
       <Tab.Screen name="Garage" component={GarageScreen} />
-      <Tab.Screen name="Services" component={GarageScreen} />
+      <Tab.Screen name="Reminders" component={GarageScreen} />
+      <Tab.Screen name="Digital Wallet" component={GarageScreen} />
+      <Tab.Screen name="Find my Car" component={FindMyCarScreen} />
     </Tab.Navigator>
   );
 };

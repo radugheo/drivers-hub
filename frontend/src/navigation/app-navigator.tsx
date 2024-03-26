@@ -7,8 +7,22 @@ import HomeScreen from "../screens/Home/HomeScreen";
 import ProfileScreen from "../screens/Profile/ProfileScreen";
 import GarageScreen from "../screens/Garage/GarageScreen";
 import AddCarScreen from "../screens/AddCar/AddCarScreen";
+import CarScreen from "../screens/CarScreen/CarScreen";
+import { Car } from "../models/Car.model";
+import FindMyCarScreen from "../screens/FindMyCar/FindMyCarScreen";
 
-const Stack = createNativeStackNavigator();
+export type RootStackParamList = {
+  Login: undefined;
+  Register: undefined;
+  Home: undefined;
+  Profile: undefined;
+  Garage: undefined;
+  AddCarScreen: undefined;
+  CarScreen: { item: Car };
+  FindMyCarScreen: undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const AppNavigator = () => {
   return (
@@ -31,8 +45,21 @@ const AppNavigator = () => {
         />
         <Stack.Screen name="Profile" component={ProfileScreen} />
         <Stack.Screen name="Garage" component={GarageScreen} />
-        <Stack.Screen name="AddCarScreen" component={AddCarScreen} />
-        {/* <Stack.Screen name="CarScreen" component={CarScreen} /> */}
+        <Stack.Screen
+          name="AddCarScreen"
+          component={AddCarScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="CarScreen"
+          component={CarScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="FindMyCarScreen"
+          component={FindMyCarScreen}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

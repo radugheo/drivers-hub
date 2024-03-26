@@ -13,9 +13,6 @@ const TopBar: React.FC<TopBarProps> = ({ title }) => {
   return (
     <View style={styles.topBar}>
       <Text style={styles.topBarTitle}>{title}</Text>
-      <TouchableOpacity onPress={() => navigation.navigate("Profile" as never)}>
-        <Ionicons name="person-circle-outline" size={30} color="black" />
-      </TouchableOpacity>
     </View>
   );
 };

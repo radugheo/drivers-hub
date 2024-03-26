@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Car } from "../models/Car.model";
 
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = "http://192.168.100.33:3000";
 
 export const registerApiCall = async (
   username: string,
@@ -66,5 +66,35 @@ export const addCarApiCall = async (car: Car, token: string) => {
     throw error.response
       ? error.response.data
       : new Error("An error occurred while adding a car");
+  }
+};
+
+export const updateCarApiCall = async (car: Car, token: string) => {
+  try {
+    const response = await axios.put(`${BASE_URL}/cars/${car.id}`, car, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    throw error.response
+      ? error.response.data
+      : new Error("An error occurred while updating the car");
+  }
+};
+
+export const deleteCarApiCall = async (carId: number, token: string) => {
+  try {
+    const response = await axios.delete(`${BASE_URL}/cars/${carId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    throw error.response
+      ? error.response.data
+      : new Error("An error occurred while deleting the car");
   }
 };

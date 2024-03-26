@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import { View, Text, Alert, TouchableOpacity } from "react-native";
+import { View, Text, Alert, TouchableOpacity, ScrollView } from "react-native";
 import { Car } from "../../models/Car.model";
 import { addCarApiCall } from "../../api/auth-service";
 import { useNavigation } from "@react-navigation/native";
 import { retrieveString } from "../../utils/storage-handler";
 import { styles } from "./AddCarScreen.styles";
 import FormInputField from "../../components/FormInputField/FormInputField";
-import PageTitle from "../../components/PageTitle/PageTitle";
-import PrimaryButton from "../../components/PrimaryButton/PrimaryButton";
 import OpacityButton from "../../components/OpacityButton/OpacityButton";
+import { SafeAreaView } from "react-native-safe-area-context";
+import TopBar from "../../components/TopBar/TopBar";
+import FormDropdownField from "../../components/FormDropdownField/FormDropdownField";
 
 export const AddCarScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -41,39 +42,53 @@ export const AddCarScreen: React.FC = () => {
     }
   };
 
+  const years = Array.from(
+    new Array(new Date().getFullYear() - 1970),
+    (val, index) => 1970 + index + 1
+  );
+
   return (
-    <View style={styles.container}>
-      <PageTitle title="Add Car" />
-      <FormInputField
-        iconName="car"
-        placeholder="Make"
-        value={newCar.make}
-        onChangeText={(make) => setNewCar((prev) => ({ ...prev, make }))}
-      />
-      <FormInputField
-        iconName="car"
-        placeholder="Model"
-        value={newCar.model}
-        onChangeText={(model) => setNewCar((prev) => ({ ...prev, model }))}
-      />
-      <FormInputField
-        iconName="calendar"
-        placeholder="Year"
-        value={newCar.year.toString()}
-        onChangeText={(year) =>
-          setNewCar((prev) => ({ ...prev, year: parseInt(year) }))
-        }
-      />
-      <FormInputField
-        iconName="id-card"
-        placeholder="License Plate"
-        value={newCar.licensePlate}
-        onChangeText={(licensePlate) =>
-          setNewCar((prev) => ({ ...prev, licensePlate }))
-        }
-      />
-      <OpacityButton title="Save" onPress={handleSaveCar} />
-    </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <TopBar title="Driver's Hub" />
+      <ScrollView style={styles.container}>
+        <Text style={styles.editField}>Make</Text>
+        <FormInputField
+          iconName="car"
+          placeholder="Make"
+          value={newCar.make}
+          onChangeText={(make) => setNewCar((prev) => ({ ...prev, make }))}
+        />
+        <Text style={styles.editField}>Model</Text>
+        <FormInputField
+          iconName="car"
+          placeholder="Model"
+          value={newCar.model}
+          onChangeText={(model) => setNewCar((prev) => ({ ...prev, model }))}
+        />
+        <Text style={styles.editField}>Year</Text>
+        <FormDropdownField
+          iconName="calendar"
+          selectedValue={newCar.year.toString()}
+          items={years.map((year) => ({
+            label: year.toString(),
+            value: year.toString(),
+          }))}
+          onValueChange={(year) =>
+            setNewCar((prev) => ({ ...prev, year: parseInt(year) }))
+          }
+        />
+        <Text style={styles.editField}>License Plate</Text>
+        <FormInputField
+          iconName="id-card"
+          placeholder="License Plate"
+          value={newCar.licensePlate}
+          onChangeText={(licensePlate) =>
+            setNewCar((prev) => ({ ...prev, licensePlate }))
+          }
+        />
+        <OpacityButton title="Save" onPress={handleSaveCar} />
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
