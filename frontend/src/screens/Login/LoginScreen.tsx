@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   View,
-  StyleSheet,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -12,7 +11,7 @@ import FormInputField from "../../components/FormInputField/FormInputField";
 import RedirectButton from "../../components/RedirectButton/RedirectButton";
 import PageTitle from "../../components/PageTitle/PageTitle";
 import Logo from "../../components/Logo/Logo";
-import { storeString } from "../../utils/storage-handler";
+import { saveAuthToken, storeString } from "../../utils/storage-handler";
 import { styles } from "./LoginScreen.styles";
 import OpacityButton from "../../components/OpacityButton/OpacityButton";
 

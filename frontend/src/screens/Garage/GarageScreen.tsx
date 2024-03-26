@@ -3,8 +3,6 @@ import {
   View,
   Text,
   FlatList,
-  TouchableOpacity,
-  Image,
   ListRenderItem,
   Alert,
 } from "react-native";

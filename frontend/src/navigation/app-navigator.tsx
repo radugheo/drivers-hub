@@ -7,7 +7,7 @@ import HomeScreen from "../screens/Home/HomeScreen";
 import ProfileScreen from "../screens/Profile/ProfileScreen";
 import GarageScreen from "../screens/Garage/GarageScreen";
 import AddCarScreen from "../screens/AddCar/AddCarScreen";
-import CarScreen from "../screens/CarScreen/CarScreen";
+import CarScreen from "../screens/Car/CarScreen";
 import { Car } from "../models/Car.model";
 import FindMyCarScreen from "../screens/FindMyCar/FindMyCarScreen";
 

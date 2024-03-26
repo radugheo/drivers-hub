@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import GarageScreen from "../../screens/Garage/GarageScreen";
 import FindMyCarScreen from "../../screens/FindMyCar/FindMyCarScreen";
+import DashboardScreen from "../../screens/Dashboard/DashboardScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -27,8 +28,8 @@ const NavBar = () => {
           let iconName: any;
           if (route.name === "Garage") {
             iconName = focused ? "car-sport" : "car-sport-outline";
-          } else if (route.name === "Reminders") {
-            iconName = focused ? "alarm" : "alarm-outline";
+          } else if (route.name === "Dashboard") {
+            iconName = focused ? "grid" : "grid-outline";
           } else if (route.name === "Digital Wallet") {
             iconName = focused ? "wallet" : "wallet-outline";
           } else if (route.name === "Find my Car") {
@@ -39,7 +40,7 @@ const NavBar = () => {
       })}
     >
       <Tab.Screen name="Garage" component={GarageScreen} />
-      <Tab.Screen name="Reminders" component={GarageScreen} />
+      <Tab.Screen name="Dashboard" component={DashboardScreen} />
       <Tab.Screen name="Digital Wallet" component={GarageScreen} />
       <Tab.Screen name="Find my Car" component={FindMyCarScreen} />
     </Tab.Navigator>
