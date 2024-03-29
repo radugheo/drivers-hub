@@ -70,6 +70,7 @@ export class CarController {
       nextService,
       vin,
     } = req.body;
+    console.log(JSON.stringify(req.body));
     if (!make || !model || !year || !ownerId) {
       throw new CustomError(400, 'Mandatory fields are required');
     }

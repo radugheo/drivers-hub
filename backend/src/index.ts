@@ -3,6 +3,8 @@ import * as bodyParser from 'body-parser';
 import { Request, Response } from 'express';
 import { AppDataSource } from './data-source';
 import { Routes } from './routes';
+import cors = require('cors');
+
 require('dotenv').config();
 AppDataSource.initialize()
   .then(async () => {
@@ -29,6 +31,8 @@ AppDataSource.initialize()
       const message = error.message || 'Something went wrong on the server';
       res.status(status).send({ error: message });
     });
+
+    app.use(cors());
 
     app.listen(3000);
     console.log('Express server has started on port 3000. Open http://localhost:3000/');

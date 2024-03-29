@@ -71,7 +71,7 @@ const carRoutes = [
     route: '/cars/:id',
     controller: CarController,
     action: 'remove',
-    middlewares: [isAuthenticated, isAdmin],
+    middlewares: [isAuthenticated],
   },
   {
     method: 'put',

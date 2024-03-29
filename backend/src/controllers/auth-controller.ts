@@ -13,7 +13,9 @@ export class AuthController {
     if (!username || !email || !password) {
       throw new CustomError(400, 'All fields are required');
     }
-    const userExists = await this.userRepository.findOneBy({ email });
+    const userExists = await this.userRepository.findOne({
+      where: [{ email }, { username }],
+    });
     if (userExists) {
       throw new CustomError(400, 'User already exists');
     }
@@ -44,6 +46,6 @@ export class AuthController {
     const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
-    return { auth: true, token: token };
+    return { auth: true, token: token, id: user.id };
   };
 }
