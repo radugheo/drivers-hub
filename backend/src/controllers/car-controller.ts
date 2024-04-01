@@ -41,7 +41,20 @@ export class CarController {
   private userRepository = AppDataSource.getRepository(User);
 
   all = async (req: Request, res: Response) => {
-    return this.carRepository.find();
+    return await this.carRepository.find();
+  };
+
+  allByOwner = async (req: Request, res: Response) => {
+    const ownerId = parseInt(req.params.id);
+    const owner = await this.userRepository.findOneBy({ id: ownerId });
+    if (!owner) {
+      throw new CustomError(404, 'Owner not found');
+    }
+    const cars = await this.carRepository.find({
+      where: { owner: { id: ownerId } },
+      relations: ['owner'], 
+    });
+    return cars;
   };
 
   one = async (req: Request, res: Response) => {

@@ -54,6 +54,13 @@ const carRoutes = [
   },
   {
     method: 'get',
+    route: '/cars/owner/:id',
+    controller: CarController,
+    action: 'allByOwner',
+    middlewares: [isAuthenticated],
+  },
+  {
+    method: 'get',
     route: '/cars/:id',
     controller: CarController,
     action: 'one',
