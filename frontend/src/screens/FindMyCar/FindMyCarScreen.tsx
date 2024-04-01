@@ -50,7 +50,7 @@ const FindMyCarScreen = () => {
           accuracy: Location.Accuracy.BestForNavigation,
           distanceInterval: 1,
         },
-        () => {}
+        () => {},
       );
     };
 
@@ -84,7 +84,7 @@ const FindMyCarScreen = () => {
       setParkingSpot(newParkingSpot);
       await AsyncStorage.setItem(
         PARKING_SPOT_KEY,
-        JSON.stringify(newParkingSpot)
+        JSON.stringify(newParkingSpot),
       );
     }
   };
@@ -112,7 +112,7 @@ const FindMyCarScreen = () => {
           latitudeDelta: 0.006,
           longitudeDelta: 0.006,
         },
-        500
+        500,
       );
     }
   };

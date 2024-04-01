@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Alert } from "react-native";
-import Carousel from "react-native-snap-carousel"; // Make sure to install this package
+import { View, Text, Alert, ScrollView } from "react-native";
+import Carousel from "react-native-snap-carousel";
 import { styles } from "./DashboardScreen.styles";
-import { getCarsApiCall } from "../../api/auth-service"; // Adjust the import path as necessary
-import { Car } from "../../models/Car.model"; // Adjust the import path as necessary
+import { getCarsApiCall } from "../../api/auth-service";
+import { Car } from "../../models/Car.model";
 import { retrieveString } from "../../utils/storage-handler";
 import OpacityButton from "../../components/OpacityButton/OpacityButton";
 
@@ -32,13 +32,15 @@ const DashboardScreen: React.FC = () => {
 
   const renderItem = ({ item }: { item: Car }) => {
     return (
-      <View style={styles.cardContainer}>
-        <Text style={styles.carTitle}>
-          {item.model} - {item.licensePlate}
-        </Text>
-        <View />
-        <OpacityButton title="Add new information" onPress={()=>{}} />
-      </View>
+      <ScrollView>
+        <View style={styles.cardContainer}>
+          <Text style={styles.carTitle}>
+            {item.make} {item.model} {item.year}
+          </Text>
+          <Text style={styles.carSubtitle}>{item.licensePlate}</Text>
+        </View>
+        <OpacityButton title="Add new information" onPress={() => {}} />
+      </ScrollView>
     );
   };
 

@@ -7,7 +7,9 @@ interface DeleteParkingButtonProps {
   onPress: () => void;
 }
 
-const DeleteParkingButton: React.FC<DeleteParkingButtonProps> = ({ onPress }) => {
+const DeleteParkingButton: React.FC<DeleteParkingButtonProps> = ({
+  onPress,
+}) => {
   return (
     <TouchableOpacity style={styles.recenterButton} onPress={onPress}>
       <Ionicons name="close-circle-outline" size={30} color="white" />

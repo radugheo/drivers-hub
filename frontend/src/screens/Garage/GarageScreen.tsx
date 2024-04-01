@@ -1,11 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  ListRenderItem,
-  Alert,
-} from "react-native";
+import { View, Text, FlatList, ListRenderItem, Alert } from "react-native";
 import { Car } from "../../models/Car.model";
 import { getCarsApiCall } from "../../api/auth-service";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";

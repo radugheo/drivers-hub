@@ -18,7 +18,7 @@ const NavBar = () => {
           backgroundColor: "#ffffff",
           height: 70,
           paddingBottom: 15,
-          paddingHorizontal: 25, 
+          paddingHorizontal: 25,
         },
         tabBarLabelStyle: {
           fontSize: 12,

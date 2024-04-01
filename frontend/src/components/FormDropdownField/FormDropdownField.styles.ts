@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
     flex: 2,
   },
   pickerContainer: {
-    flex: 1, 
+    flex: 1,
     marginLeft: 10,
     justifyContent: "center",
   },

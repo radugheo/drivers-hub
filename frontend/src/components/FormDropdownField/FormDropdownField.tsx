@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  Modal,
-  Platform,
-  Text,
-  TouchableOpacity,
-} from "react-native";
+import { View, Modal, Platform, Text, TouchableOpacity } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { styles } from "./FormDropdownField.styles";

@@ -1,7 +1,8 @@
 import axios from "axios";
 import { Car } from "../models/Car.model";
+import { retrieveString } from "../utils/storage-handler";
 
-const BASE_URL = "http://192.168.100.33:3000";
+const BASE_URL = process.env.BACKEND_URL;
 
 export const registerApiCall = async (
   username: string,
@@ -40,7 +41,8 @@ export const loginApiCall = async (email: string, password: string) => {
 
 export const getCarsApiCall = async (token: string) => {
   try {
-    const response = await axios.get(`${BASE_URL}/cars`, {
+    const ownerId = await retrieveString("userId");
+    const response = await axios.get(`${BASE_URL}/cars/owner/${ownerId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

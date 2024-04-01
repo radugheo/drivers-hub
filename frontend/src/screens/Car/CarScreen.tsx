@@ -63,7 +63,7 @@ const CarScreen: React.FC<CarScreenProps> = ({ route }) => {
   const services = ["mileage"];
   const years = Array.from(
     new Array(new Date().getFullYear() - 1970),
-    (val, index) => 1970 + index + 1
+    (val, index) => 1970 + index + 1,
   );
 
   return (
