@@ -30,8 +30,6 @@ const NavBar = () => {
             iconName = focused ? "car-sport" : "car-sport-outline";
           } else if (route.name === "Dashboard") {
             iconName = focused ? "grid" : "grid-outline";
-          } else if (route.name === "Digital Wallet") {
-            iconName = focused ? "wallet" : "wallet-outline";
           } else if (route.name === "Find my Car") {
             iconName = focused ? "location" : "location-outline";
           }
@@ -41,7 +39,6 @@ const NavBar = () => {
     >
       <Tab.Screen name="Garage" component={GarageScreen} />
       <Tab.Screen name="Dashboard" component={DashboardScreen} />
-      <Tab.Screen name="Digital Wallet" component={GarageScreen} />
       <Tab.Screen name="Find my Car" component={FindMyCarScreen} />
     </Tab.Navigator>
   );

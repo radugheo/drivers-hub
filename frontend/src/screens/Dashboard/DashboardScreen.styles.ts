@@ -12,43 +12,36 @@ export const styles = StyleSheet.create({
   itemWidth: {
     width: width,
   },
-  widgetOption: {
-    padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: "#e6e6e6",
-  },
-  modalOverlay: {
-    flex: 1,
-    justifyContent: "flex-end",
-  },
-  modalContainer: {
-    backgroundColor: "white",
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-    maxHeight: Dimensions.get("window").height / 3,
-  },
   cardContainer: {
     backgroundColor: "white",
     borderRadius: 8,
     padding: 10,
     marginHorizontal: 20,
   },
-  flatListContentContainer: {
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "flex-end",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  modalContainer: {
+    backgroundColor: "white",
     padding: 10,
+    maxHeight: Dimensions.get("window").height / 2,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  modalOption: {
+    padding: 12,
+    alignItems: "center",
+  },
+  modalOptionText: {
+    fontSize: 18,
+    color: "#007aff",
   },
   carTitle: {
     fontSize: 20,
   },
   carSubtitle: {
     fontSize: 14,
-  },
-  documentContainer: {
-    backgroundColor: "#f2f2f2",
-    borderRadius: 5,
-    padding: 10,
-    marginTop: 10,
-  },
-  documentText: {
-    fontSize: 18,
   },
 });

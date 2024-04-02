@@ -52,7 +52,7 @@ export class CarController {
     }
     const cars = await this.carRepository.find({
       where: { owner: { id: ownerId } },
-      relations: ['owner'], 
+      relations: ['owner'],
     });
     return cars;
   };

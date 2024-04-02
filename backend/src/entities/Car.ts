@@ -52,10 +52,31 @@ export class Car {
   insuranceCompany: string;
 
   @Column({ nullable: true })
+  insurancePicture: string;
+
+  @Column({ nullable: true })
+  cascoStartDate: Date;
+
+  @Column({ nullable: true })
+  cascoExpiryDate: Date;
+
+  @Column({ nullable: true })
+  cascoPolicyNumber: string;
+
+  @Column({ nullable: true })
+  cascoCompany: string;
+
+  @Column({ nullable: true })
+  cascoPicture: string;
+
+  @Column({ nullable: true })
   lastService: Date;
 
   @Column({ nullable: true })
   nextService: Date;
+
+  @Column({ nullable: true })
+  nextServiceMileage: number;
 
   @Column({ nullable: true })
   vin: string;

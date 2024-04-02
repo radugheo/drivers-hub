@@ -45,3 +45,22 @@ export const removeString = async (key: string): Promise<void> => {
     console.error(error);
   }
 };
+
+export const saveCarWidgets = async (carId: string, widgets: string[]) => {
+  try {
+    const carWidgetsStr = JSON.stringify(widgets);
+    await storeString(`carWidgets_${carId}`, carWidgetsStr);
+  } catch (error) {
+    console.error("Error saving car widgets:", error);
+  }
+};
+
+export const retrieveCarWidgets = async (carId: string): Promise<string[]> => {
+  try {
+    const widgetsStr = await retrieveString(`carWidgets_${carId}`);
+    return widgetsStr ? JSON.parse(widgetsStr) : [];
+  } catch (error) {
+    console.error("Error retrieving car widgets:", error);
+    return [];
+  }
+};

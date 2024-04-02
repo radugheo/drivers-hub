@@ -67,44 +67,102 @@ const CarScreen: React.FC<CarScreenProps> = ({ route }) => {
   );
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <TopBar title="Driver's Hub" />
-      <ScrollView style={styles.container}>
-        <Text style={styles.editField}>Make</Text>
-        <FormInputField
-          iconName="car"
-          placeholder={car.make}
-          value={car.make}
-          onChangeText={(text) => handleServiceInputChange("make", text)}
-        />
-        <Text style={styles.editField}>Model</Text>
-        <FormInputField
-          iconName="car"
-          placeholder="Model"
-          value={car.model}
-          onChangeText={(text) => handleServiceInputChange("model", text)}
-        />
-        <Text style={styles.editField}>Year</Text>
-        <FormDropdownField
-          iconName="calendar"
-          selectedValue={car.year.toString()}
-          items={years.map((year) => ({
-            label: year.toString(),
-            value: year.toString(),
-          }))}
-          onValueChange={(year) => handleServiceInputChange("year", year)}
-        />
-        <Text style={styles.editField}>License Plate</Text>
-        <FormInputField
-          iconName="window-maximize"
-          placeholder="License Plate"
-          value={car.licensePlate}
-          onChangeText={(text) =>
-            handleServiceInputChange("licensePlate", text)
-          }
-        />
+    <View style={styles.mainContainer}>
+      <TopBar title={`${car.make} ${car.model}`} />
+      <SafeAreaView style={styles.safeContainer}>
+        <ScrollView style={styles.scrollContainer}>
+          <Text style={styles.editField}>Make</Text>
+          <FormInputField
+            iconName="car"
+            placeholder={car.make}
+            value={car.make}
+            onChangeText={(text) => handleServiceInputChange("make", text)}
+          />
 
-        {/* {services.map((service, index) => (
+          <Text style={styles.editField}>Model</Text>
+          <FormInputField
+            iconName="car-side"
+            placeholder="Model"
+            value={car.model}
+            onChangeText={(text) => handleServiceInputChange("model", text)}
+          />
+
+          <Text style={styles.editField}>Year</Text>
+          <FormDropdownField
+            iconName="calendar"
+            selectedValue={car.year.toString()}
+            items={years.map((year) => ({
+              label: year.toString(),
+              value: year.toString(),
+            }))}
+            onValueChange={(year) => handleServiceInputChange("year", year)}
+          />
+
+          <Text style={styles.editField}>Mileage</Text>
+          <FormInputField
+            iconName="tachometer-alt"
+            placeholder="Mileage"
+            value={car.mileage?.toString() || ""}
+            onChangeText={(text) => handleServiceInputChange("mileage", text)}
+          />
+
+          <Text style={styles.editField}>Fuel</Text>
+          <FormInputField
+            iconName="gas-pump"
+            placeholder="Fuel"
+            value={car.fuel || ""}
+            onChangeText={(text) => handleServiceInputChange("fuel", text)}
+          />
+
+          <Text style={styles.editField}>Transmission</Text>
+          <FormInputField
+            iconName="wrench"
+            placeholder="Transmission"
+            value={car.transmission || ""}
+            onChangeText={(text) =>
+              handleServiceInputChange("transmission", text)
+            }
+          />
+
+          <Text style={styles.editField}>Displacement</Text>
+          <FormInputField
+            iconName="cog"
+            placeholder="Displacement"
+            value={car.displacement?.toString() || ""}
+            onChangeText={(text) =>
+              handleServiceInputChange("displacement", text)
+            }
+          />
+
+          <Text style={styles.editField}>Horsepower</Text>
+          <FormInputField
+            iconName="horse"
+            placeholder="Horsepower"
+            value={car.horsepower?.toString() || ""}
+            onChangeText={(text) =>
+              handleServiceInputChange("horsepower", text)
+            }
+          />
+
+          <Text style={styles.editField}>VIN</Text>
+          <FormInputField
+            iconName="ticket-alt"
+            placeholder="VIN"
+            value={car.vin}
+            onChangeText={(text) => handleServiceInputChange("vin", text)}
+          />
+
+          <Text style={styles.editField}>License Plate</Text>
+          <FormInputField
+            iconName="window-maximize"
+            placeholder="License Plate"
+            value={car.licensePlate}
+            onChangeText={(text) =>
+              handleServiceInputChange("licensePlate", text)
+            }
+          />
+
+          {/* {services.map((service, index) => (
           <View key={index} style={styles.serviceItem}>
             <Text style={styles.serviceText}>{service}</Text>
             {car.services[service] === undefined ? (
@@ -122,12 +180,13 @@ const CarScreen: React.FC<CarScreenProps> = ({ route }) => {
             )}
           </View>
         ))} */}
+        </ScrollView>
         <View style={styles.buttonsContainer}>
           <OpacityButton title="Save car" onPress={handleSave} />
           <OpacityButton title="Delete car" onPress={handleDelete} />
         </View>
-      </ScrollView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </View>
   );
 };
 

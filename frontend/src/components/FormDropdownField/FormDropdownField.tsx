@@ -26,7 +26,7 @@ const FormDropdownField: React.FC<FormDropdownProps> = ({
         style={styles.pickerButton}
         onPress={() => setModalVisible(true)}
       >
-        <Text>{selectedValue || "Select a year"}</Text>
+        <Text>{selectedValue || "Select"}</Text>
       </TouchableOpacity>
 
       {Platform.OS === "ios" && (
