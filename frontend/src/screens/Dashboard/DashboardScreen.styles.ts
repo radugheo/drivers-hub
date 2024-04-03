@@ -6,6 +6,11 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  carContainer: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingBottom: 10,
+  },
   sliderWidth: {
     width: width,
   },
@@ -14,9 +19,11 @@ export const styles = StyleSheet.create({
   },
   cardContainer: {
     backgroundColor: "white",
-    borderRadius: 8,
-    padding: 10,
-    marginHorizontal: 20,
+    borderRadius: 10,
+    marginVertical: 5,
+    marginHorizontal: 15,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
   },
   modalOverlay: {
     flex: 1,
@@ -33,6 +40,9 @@ export const styles = StyleSheet.create({
   modalOption: {
     padding: 12,
     alignItems: "center",
+  },
+  modalOptionDisabled: {
+    opacity: 0.5,
   },
   modalOptionText: {
     fontSize: 18,

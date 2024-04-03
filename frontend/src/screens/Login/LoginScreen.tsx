@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
-import { loginApiCall } from "../../api/auth-service";
+import { loginApiCall } from "../../api/api-service";
 import { useNavigation } from "@react-navigation/native";
 import FormInputField from "../../components/FormInputField/FormInputField";
 import RedirectButton from "../../components/RedirectButton/RedirectButton";

@@ -6,7 +6,7 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
-import { registerApiCall } from "../../api/auth-service";
+import { registerApiCall } from "../../api/api-service";
 import { useNavigation } from "@react-navigation/native";
 import PageTitle from "../../components/PageTitle/PageTitle";
 import RedirectButton from "../../components/RedirectButton/RedirectButton";

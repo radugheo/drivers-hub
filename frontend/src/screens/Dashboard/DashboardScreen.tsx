@@ -7,12 +7,10 @@ import {
   TouchableOpacity,
   Modal,
   FlatList,
-  Button,
-  TouchableWithoutFeedback,
 } from "react-native";
 import Carousel from "react-native-snap-carousel";
 import { styles } from "./DashboardScreen.styles";
-import { getCarsApiCall } from "../../api/auth-service";
+import { getCarsApiCall } from "../../api/api-service";
 import { Car } from "../../models/Car.model";
 import {
   retrieveCarWidgets,
@@ -62,6 +60,10 @@ const DashboardScreen: React.FC = () => {
 
   const addWidgetToCar = async (carId: string, widgetName: string) => {
     const currentWidgets = carWidgets[carId] || [];
+    if (currentWidgets.includes(widgetName)) {
+      Alert.alert("Duplicate Widget", "This widget has already been added.");
+      return;
+    }
     const updatedWidgets = [...currentWidgets, widgetName];
     setCarWidgets({ ...carWidgets, [carId]: updatedWidgets });
     await saveCarWidgets(carId, updatedWidgets);
@@ -84,7 +86,7 @@ const DashboardScreen: React.FC = () => {
   const renderItem = ({ item }: { item: Car }) => {
     const widgets = carWidgets[item.id!.toString()] || [];
     return (
-      <View>
+      <View style={styles.carContainer}>
         <ScrollView>
           <View style={styles.cardContainer}>
             <Text style={styles.carTitle}>
@@ -95,14 +97,14 @@ const DashboardScreen: React.FC = () => {
           {widgets.map((widgetName, index) => (
             <CustomWidget key={index} title={widgetName} progress={30} />
           ))}
-          <OpacityButton
-            title="Add new information"
-            onPress={() => {
-              setSelectedCarId(item.id!);
-              setModalVisible(true);
-            }}
-          />
         </ScrollView>
+        <OpacityButton
+          title="Add new information"
+          onPress={() => {
+            setSelectedCarId(item.id!);
+            setModalVisible(true);
+          }}
+        />
       </View>
     );
   };

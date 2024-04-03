@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { View, Text, FlatList, ListRenderItem, Alert } from "react-native";
 import { Car } from "../../models/Car.model";
-import { getCarsApiCall } from "../../api/auth-service";
+import { getCarsApiCall } from "../../api/api-service";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { retrieveString } from "../../utils/storage-handler";
 import { styles } from "./GarageScreen.styles";

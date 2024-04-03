@@ -9,7 +9,7 @@ import {
   Platform,
 } from "react-native";
 import { Car } from "../../models/Car.model";
-import { addCarApiCall } from "../../api/auth-service";
+import { addCarApiCall } from "../../api/api-service";
 import { useNavigation } from "@react-navigation/native";
 import { retrieveString } from "../../utils/storage-handler";
 import { styles } from "./AddCarScreen.styles";
