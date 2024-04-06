@@ -7,27 +7,38 @@ import {
   TouchableOpacity,
   Modal,
   FlatList,
+  TouchableWithoutFeedback,
 } from "react-native";
 import Carousel from "react-native-snap-carousel";
 import { styles } from "./DashboardScreen.styles";
-import { getCarsApiCall } from "../../api/api-service";
+import { getCarsApiCall, updateCarApiCall } from "../../api/api-service";
 import { Car } from "../../models/Car.model";
 import {
   retrieveCarWidgets,
   retrieveString,
   saveCarWidgets,
-  storeString,
 } from "../../utils/storage-handler";
 import OpacityButton from "../../components/OpacityButton/OpacityButton";
 import CustomWidget from "../../components/CustomWidget/CustomWidget";
+import FormInputField from "../../components/FormInputField/FormInputField";
+import DateInputField from "../../components/DateInputField/DateInputField";
+import PageTitle from "../../components/PageTitle/PageTitle";
 
 const DashboardScreen: React.FC = () => {
   const [cars, setCars] = useState<Car[]>([]);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [isServiceModalVisible, setServiceModalVisible] = useState(false);
   const [selectedCarId, setSelectedCarId] = useState<number | null>(null);
   const [carWidgets, setCarWidgets] = useState<{ [carId: string]: string[] }>(
     {},
   );
+  const [isInsuranceModalVisible, setIsInsuranceModalVisible] = useState(false);
+  const [insuranceFormData, setInsuranceFormData] = useState({
+    insuranceStartDate: new Date(),
+    insuranceExpiryDate: new Date(),
+    insurancePolicyNumber: "",
+    insuranceCompany: "",
+    insurancePicture: "",
+  });
 
   useEffect(() => {
     const fetchCars = async () => {
@@ -72,9 +83,13 @@ const DashboardScreen: React.FC = () => {
   const renderOption = ({ item }: any) => (
     <TouchableOpacity
       onPress={() => {
-        if (selectedCarId) {
+        if (selectedCarId && item === "Insurance") {
+          setIsInsuranceModalVisible(true);
+          setServiceModalVisible(false);
           addWidgetToCar(selectedCarId.toString(), item);
-          setModalVisible(false);
+        } else if (selectedCarId) {
+          addWidgetToCar(selectedCarId.toString(), item);
+          setServiceModalVisible(false);
         }
       }}
       style={styles.modalOption}
@@ -102,11 +117,40 @@ const DashboardScreen: React.FC = () => {
           title="Add new information"
           onPress={() => {
             setSelectedCarId(item.id!);
-            setModalVisible(true);
+            setServiceModalVisible(true);
           }}
         />
       </View>
     );
+  };
+
+  const handleInsuranceFormSubmit = async () => {
+    if (!selectedCarId) {
+      Alert.alert("Error", "No car selected.");
+      return;
+    }
+    const token = await retrieveString("userToken");
+    if (!token) {
+      Alert.alert("Error", "User token not found.");
+      return;
+    }
+    const carToUpdate = cars.find((car) => car.id === selectedCarId);
+    if (!carToUpdate) {
+      Alert.alert("Error", "Car not found.");
+      return;
+    }
+    const updatedCar = {
+      ...carToUpdate,
+      ...insuranceFormData,
+    };
+    try {
+      const result = await updateCarApiCall(updatedCar, token);
+      Alert.alert("Success", "Car insurance information updated successfully.");
+      setIsInsuranceModalVisible(false);
+    } catch (error) {
+      console.error("Error updating insurance information:", error);
+      Alert.alert("Error", "Failed to update insurance information.");
+    }
   };
 
   return (
@@ -121,13 +165,13 @@ const DashboardScreen: React.FC = () => {
       <Modal
         animationType="none"
         transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
+        visible={isServiceModalVisible}
+        onRequestClose={() => setServiceModalVisible(false)}
       >
         <TouchableOpacity
           style={styles.modalOverlay}
           activeOpacity={1}
-          onPressOut={() => setModalVisible(false)}
+          onPressOut={() => setServiceModalVisible(false)}
         >
           <View style={styles.modalContainer}>
             <FlatList
@@ -135,6 +179,82 @@ const DashboardScreen: React.FC = () => {
               renderItem={renderOption}
               keyExtractor={(item) => item}
             />
+          </View>
+        </TouchableOpacity>
+      </Modal>
+
+      <Modal
+        visible={isInsuranceModalVisible}
+        animationType="none"
+        transparent={true}
+        onRequestClose={() => setIsInsuranceModalVisible(false)}
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPressOut={() => setIsInsuranceModalVisible(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalFormContainer}>
+              <PageTitle title="Insurance Information" />
+              <ScrollView>
+                <Text style={styles.editField}>Insurance Start Date</Text>
+                <DateInputField
+                  iconName="calendar-alt"
+                  placeholder="Insurance Start Date"
+                  value={insuranceFormData.insuranceStartDate}
+                  onChange={(selectedDate) => {
+                    setInsuranceFormData((prevData) => ({
+                      ...prevData,
+                      insuranceStartDate: selectedDate || new Date(),
+                    }));
+                  }}
+                />
+
+                <Text style={styles.editField}>Insurance End Date</Text>
+                <DateInputField
+                  iconName="calendar-alt"
+                  placeholder="Insurance Expiry Date"
+                  value={insuranceFormData.insuranceExpiryDate}
+                  onChange={(selectedDate) => {
+                    setInsuranceFormData((prevData) => ({
+                      ...prevData,
+                      insuranceExpiryDate: selectedDate || new Date(),
+                    }));
+                  }}
+                />
+
+                <Text style={styles.editField}>Insurance Policy Number</Text>
+                <FormInputField
+                  iconName="file-contract"
+                  placeholder="Insurance Policy Number"
+                  value={insuranceFormData.insurancePolicyNumber}
+                  onChangeText={(text) => {
+                    setInsuranceFormData((prevData) => ({
+                      ...prevData,
+                      insurancePolicyNumber: text,
+                    }));
+                  }}
+                />
+
+                <Text style={styles.editField}>Insurance Company</Text>
+                <FormInputField
+                  iconName="building"
+                  placeholder="Insurance Company"
+                  value={insuranceFormData.insuranceCompany}
+                  onChangeText={(text) => {
+                    setInsuranceFormData((prevData) => ({
+                      ...prevData,
+                      insuranceCompany: text,
+                    }));
+                  }}
+                />
+              </ScrollView>
+              <OpacityButton
+                title="Submit"
+                onPress={handleInsuranceFormSubmit}
+              />
+            </View>
           </View>
         </TouchableOpacity>
       </Modal>

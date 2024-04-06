@@ -37,6 +37,24 @@ export const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
+  modalFormContainer: {
+    backgroundColor: "white",
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+    paddingTop: 10,
+    maxHeight: Dimensions.get("window").height / 2,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  safeContainer: {
+    flex: 1,
+    paddingBottom: 20,
+    paddingHorizontal: 20,
+  },
+  editField: {
+    fontSize: 14,
+    fontWeight: "bold",
+  },
   modalOption: {
     padding: 12,
     alignItems: "center",

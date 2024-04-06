@@ -19,6 +19,7 @@ export const registerApiCall = async (
     });
     return response.data;
   } catch (error: any) {
+    console.log(JSON.stringify(error));
     throw error.response
       ? error.response.data
       : new Error("An error occurred during registration");
@@ -33,6 +34,7 @@ export const loginApiCall = async (email: string, password: string) => {
     });
     return response.data;
   } catch (error: any) {
+    console.log(JSON.stringify(error));
     throw error.response
       ? error.response.data
       : new Error("An error occurred during login");

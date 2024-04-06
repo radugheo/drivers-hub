@@ -10,7 +10,12 @@ export class Car {
   transmission?: string;
   displacement?: number;
   horsepower?: number;
-  vin: string;
+  insuranceStartDate?: Date;
+  insuranceExpiryDate?: Date;
+  insurancePolicyNumber?: string;
+  insuranceCompany?: string;
+  insurancePicture?: string;
+  vin?: string;
   ownerId: string;
   constructor(
     make: string,
@@ -22,6 +27,11 @@ export class Car {
     transmission: string,
     displacement: number,
     horsepower: number,
+    insuranceStartDate: Date,
+    insuranceExpiryDate: Date,
+    insurancePolicyNumber: string,
+    insuranceCompany: string,
+    insurancePicture: string,
     vin: string,
     ownerId: string,
   ) {
@@ -34,6 +44,11 @@ export class Car {
     this.transmission = transmission;
     this.displacement = displacement;
     this.horsepower = horsepower;
+    this.insuranceStartDate = insuranceStartDate;
+    this.insuranceExpiryDate = insuranceExpiryDate;
+    this.insurancePolicyNumber = insurancePolicyNumber;
+    this.insuranceCompany = insuranceCompany;
+    this.insurancePicture = insurancePicture;
     this.vin = vin;
     this.ownerId = ownerId;
   }

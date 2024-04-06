@@ -3,7 +3,6 @@ import {
   View,
   Text,
   Alert,
-  TouchableOpacity,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
@@ -164,7 +163,7 @@ export const AddCarScreen: React.FC = () => {
             <FormInputField
               iconName="ticket-alt"
               placeholder="VIN"
-              value={newCar.vin}
+              value={newCar.vin?.toString()!}
               onChangeText={(vin) => setNewCar((prev) => ({ ...prev, vin }))}
             />
 

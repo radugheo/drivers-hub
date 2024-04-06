@@ -107,19 +107,27 @@ const CarScreen: React.FC<CarScreenProps> = ({ route }) => {
           />
 
           <Text style={styles.editField}>Fuel</Text>
-          <FormInputField
+          <FormDropdownField
             iconName="gas-pump"
-            placeholder="Fuel"
-            value={car.fuel || ""}
-            onChangeText={(text) => handleServiceInputChange("fuel", text)}
+            selectedValue={car.fuel || ""}
+            items={[
+              { label: "Gasoline", value: "Gasoline" },
+              { label: "Diesel", value: "Diesel" },
+              { label: "Electric", value: "Electric" },
+              { label: "Hybrid", value: "Hybrid" },
+            ]}
+            onValueChange={(text) => handleServiceInputChange("fuel", text)}
           />
 
           <Text style={styles.editField}>Transmission</Text>
-          <FormInputField
+          <FormDropdownField
             iconName="wrench"
-            placeholder="Transmission"
-            value={car.transmission || ""}
-            onChangeText={(text) =>
+            selectedValue={car.transmission || ""}
+            items={[
+              { label: "Manual", value: "Manual" },
+              { label: "Automatic", value: "Automatic" },
+            ]}
+            onValueChange={(text) =>
               handleServiceInputChange("transmission", text)
             }
           />
@@ -148,7 +156,7 @@ const CarScreen: React.FC<CarScreenProps> = ({ route }) => {
           <FormInputField
             iconName="ticket-alt"
             placeholder="VIN"
-            value={car.vin}
+            value={car.vin?.toString() || ""}
             onChangeText={(text) => handleServiceInputChange("vin", text)}
           />
 
