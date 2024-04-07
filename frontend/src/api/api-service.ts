@@ -73,7 +73,7 @@ export const addCarApiCall = async (car: Car, token: string) => {
   }
 };
 
-export const updateCarApiCall = async (car: Car, token: string) => {
+export const updateCarApiCall = async (car: any, token: string) => {
   try {
     const response = await axios.put(`${BASE_URL}/cars/${car.id}`, car, {
       headers: {

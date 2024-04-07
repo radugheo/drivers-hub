@@ -56,7 +56,6 @@ const CarScreen: React.FC<CarScreenProps> = ({ route }) => {
   };
 
   const handleServiceInputChange = (name: keyof Car, value: string) => {
-    console.log("Name", name, "Value", value);
     setCar((prevCar) => ({ ...prevCar, [name]: value }));
   };
 

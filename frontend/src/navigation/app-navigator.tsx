@@ -10,6 +10,7 @@ import AddCarScreen from "../screens/AddCar/AddCarScreen";
 import CarScreen from "../screens/Car/CarScreen";
 import { Car } from "../models/Car.model";
 import FindMyCarScreen from "../screens/FindMyCar/FindMyCarScreen";
+import InsuranceScreen from "../screens/InsuranceScreen/InsuranceScreen";
 
 export type RootStackParamList = {
   Login: undefined;
@@ -20,6 +21,7 @@ export type RootStackParamList = {
   AddCarScreen: undefined;
   CarScreen: { item: Car };
   FindMyCarScreen: undefined;
+  InsuranceScreen: { item: Car };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -58,6 +60,11 @@ const AppNavigator = () => {
         <Stack.Screen
           name="FindMyCarScreen"
           component={FindMyCarScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="InsuranceScreen"
+          component={InsuranceScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

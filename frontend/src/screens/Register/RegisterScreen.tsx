@@ -6,15 +6,15 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
-import { registerApiCall } from "../../api/api-service";
+import { loginApiCall, registerApiCall } from "../../api/api-service";
 import { useNavigation } from "@react-navigation/native";
 import PageTitle from "../../components/PageTitle/PageTitle";
 import RedirectButton from "../../components/RedirectButton/RedirectButton";
 import FormInputField from "../../components/FormInputField/FormInputField";
-import PrimaryButton from "../../components/PrimaryButton/PrimaryButton";
 import Logo from "../../components/Logo/Logo";
 import { styles } from "./RegisterScreen.styles";
 import OpacityButton from "../../components/OpacityButton/OpacityButton";
+import { storeString } from "../../utils/storage-handler";
 
 const RegisterScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -32,7 +32,10 @@ const RegisterScreen: React.FC = () => {
       return;
     }
     try {
-      const data = await registerApiCall(username, email, password, "user");
+      await registerApiCall(username, email, password, "user");
+      const data = await loginApiCall(email, password);
+      await storeString("userToken", data.token);
+      await storeString("userId", data.id.toString());
       console.log("Registration successful", data);
       navigation.reset({
         index: 0,
@@ -46,8 +49,8 @@ const RegisterScreen: React.FC = () => {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : "height"} // Adjust behavior based on platform
-      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20} // Adjust the offset on Android
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20} 
     >
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View style={styles.container}>

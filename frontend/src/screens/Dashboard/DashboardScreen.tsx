@@ -1,14 +1,5 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  Alert,
-  ScrollView,
-  TouchableOpacity,
-  Modal,
-  FlatList,
-  TouchableWithoutFeedback,
-} from "react-native";
+import React, { useState, useCallback } from "react";
+import { View, Text, Alert, ScrollView, TouchableOpacity } from "react-native";
 import Carousel from "react-native-snap-carousel";
 import { styles } from "./DashboardScreen.styles";
 import { getCarsApiCall, updateCarApiCall } from "../../api/api-service";
@@ -20,16 +11,17 @@ import {
 } from "../../utils/storage-handler";
 import OpacityButton from "../../components/OpacityButton/OpacityButton";
 import CustomWidget from "../../components/CustomWidget/CustomWidget";
-import FormInputField from "../../components/FormInputField/FormInputField";
-import DateInputField from "../../components/DateInputField/DateInputField";
-import PageTitle from "../../components/PageTitle/PageTitle";
+import OptionsModal from "../../components/OptionsModal/OptionsModal";
+import InsuranceFormModal from "../../components/InsuranceFormModal/InsuranceFormModal";
+import { useFocusEffect } from "@react-navigation/native";
+import InsuranceWidget from "../../components/InsuranceWidget/InsuranceWidget";
 
 const DashboardScreen: React.FC = () => {
   const [cars, setCars] = useState<Car[]>([]);
   const [isServiceModalVisible, setServiceModalVisible] = useState(false);
   const [selectedCarId, setSelectedCarId] = useState<number | null>(null);
   const [carWidgets, setCarWidgets] = useState<{ [carId: string]: string[] }>(
-    {},
+    {}
   );
   const [isInsuranceModalVisible, setIsInsuranceModalVisible] = useState(false);
   const [insuranceFormData, setInsuranceFormData] = useState({
@@ -40,41 +32,63 @@ const DashboardScreen: React.FC = () => {
     insurancePicture: "",
   });
 
-  useEffect(() => {
-    const fetchCars = async () => {
-      try {
-        const token = await retrieveString("userToken");
-        if (token) {
-          const fetchedCars: Car[] = await getCarsApiCall(token);
-          setCars(fetchedCars);
-          fetchedCars.forEach(async (car) => {
-            const widgets = await retrieveCarWidgets(car.id!.toString());
-            setCarWidgets((prevWidgets) => ({
-              ...prevWidgets,
-              [car.id!.toString()]: widgets,
-            }));
-          });
-        } else {
-          console.log("Unable to retrieve user token");
-          Alert.alert("Error", "Unable to retrieve user token");
-        }
-      } catch (error) {
-        console.error(error);
-        Alert.alert("Error", "Unable to retrieve cars");
-      }
-    };
+  const fetchCarsAndWidgets = useCallback(async () => {
+    try {
+      const token = await retrieveString("userToken");
+      if (token) {
+        let fetchedCars: Car[] = await getCarsApiCall(token);
 
-    fetchCars();
+        fetchedCars = fetchedCars.sort((a, b) => {
+          if (a.make < b.make) return -1;
+          if (a.make > b.make) return 1;
+          if (a.model < b.model) return -1;
+          if (a.model > b.model) return 1;
+          return 0;
+        });
+
+        setCars(fetchedCars);
+        const widgetsFetchPromises = fetchedCars.map((car) =>
+          retrieveCarWidgets(car.id!.toString())
+        );
+        const allWidgets = await Promise.all(widgetsFetchPromises);
+        const widgetsMap = fetchedCars.reduce(
+          (acc, car, index) => ({
+            ...acc,
+            [car.id!.toString()]: allWidgets[index] || [],
+          }),
+          {}
+        );
+        setCarWidgets(widgetsMap);
+      } else {
+        Alert.alert("Error", "Unable to retrieve user token");
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Error", "Unable to retrieve cars and widgets");
+    }
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchCarsAndWidgets();
+    }, [fetchCarsAndWidgets])
+  );
 
   const options = ["Insurance", "Service", "Accident", "Mileage"];
 
+  const widgetExists = (widgetName: string) => {
+    if (selectedCarId) {
+      const currentWidgets = carWidgets[selectedCarId.toString()] || [];
+      if (currentWidgets.includes(widgetName)) {
+        Alert.alert("Duplicate Widget", "This widget has already been added.");
+        return true;
+      }
+    }
+    return false;
+  };
+
   const addWidgetToCar = async (carId: string, widgetName: string) => {
     const currentWidgets = carWidgets[carId] || [];
-    if (currentWidgets.includes(widgetName)) {
-      Alert.alert("Duplicate Widget", "This widget has already been added.");
-      return;
-    }
     const updatedWidgets = [...currentWidgets, widgetName];
     setCarWidgets({ ...carWidgets, [carId]: updatedWidgets });
     await saveCarWidgets(carId, updatedWidgets);
@@ -83,13 +97,14 @@ const DashboardScreen: React.FC = () => {
   const renderOption = ({ item }: any) => (
     <TouchableOpacity
       onPress={() => {
-        if (selectedCarId && item === "Insurance") {
-          setIsInsuranceModalVisible(true);
-          setServiceModalVisible(false);
-          addWidgetToCar(selectedCarId.toString(), item);
-        } else if (selectedCarId) {
-          addWidgetToCar(selectedCarId.toString(), item);
-          setServiceModalVisible(false);
+        if (!widgetExists(item)) {
+          if (selectedCarId && item === "Insurance") {
+            setIsInsuranceModalVisible(true);
+            setServiceModalVisible(false);
+          } else if (selectedCarId) {
+            addWidgetToCar(selectedCarId.toString(), item);
+            setServiceModalVisible(false);
+          }
         }
       }}
       style={styles.modalOption}
@@ -109,9 +124,15 @@ const DashboardScreen: React.FC = () => {
             </Text>
             <Text style={styles.carSubtitle}>{item.licensePlate}</Text>
           </View>
-          {widgets.map((widgetName, index) => (
-            <CustomWidget key={index} title={widgetName} progress={30} />
-          ))}
+          {widgets.map((widgetName, index) => {
+            if (widgetName === "Insurance" && item.insuranceCompany) {
+              return <InsuranceWidget key={index} item={item} />;
+            } else {
+              return (
+                <CustomWidget key={index} title={widgetName} progress={30} />
+              );
+            }
+          })}
         </ScrollView>
         <OpacityButton
           title="Add new information"
@@ -144,9 +165,21 @@ const DashboardScreen: React.FC = () => {
       ...insuranceFormData,
     };
     try {
-      const result = await updateCarApiCall(updatedCar, token);
+      await updateCarApiCall(updatedCar, token);
       Alert.alert("Success", "Car insurance information updated successfully.");
       setIsInsuranceModalVisible(false);
+      setCars(cars.map((car) => (car.id === selectedCarId ? updatedCar : car)));
+      if (!carWidgets[selectedCarId.toString()].includes("Insurance")) {
+        const updatedWidgets = [
+          ...carWidgets[selectedCarId.toString()],
+          "Insurance",
+        ];
+        setCarWidgets({
+          ...carWidgets,
+          [selectedCarId.toString()]: updatedWidgets,
+        });
+        saveCarWidgets(selectedCarId.toString(), updatedWidgets);
+      }
     } catch (error) {
       console.error("Error updating insurance information:", error);
       Alert.alert("Error", "Failed to update insurance information.");
@@ -162,102 +195,25 @@ const DashboardScreen: React.FC = () => {
         itemWidth={styles.itemWidth.width}
         layout={"default"}
       />
-      <Modal
+
+      <OptionsModal
         animationType="none"
         transparent={true}
         visible={isServiceModalVisible}
+        options={options}
         onRequestClose={() => setServiceModalVisible(false)}
-      >
-        <TouchableOpacity
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPressOut={() => setServiceModalVisible(false)}
-        >
-          <View style={styles.modalContainer}>
-            <FlatList
-              data={options}
-              renderItem={renderOption}
-              keyExtractor={(item) => item}
-            />
-          </View>
-        </TouchableOpacity>
-      </Modal>
+        renderOption={renderOption}
+      />
 
-      <Modal
-        visible={isInsuranceModalVisible}
+      <InsuranceFormModal
         animationType="none"
         transparent={true}
+        visible={isInsuranceModalVisible}
         onRequestClose={() => setIsInsuranceModalVisible(false)}
-      >
-        <TouchableOpacity
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPressOut={() => setIsInsuranceModalVisible(false)}
-        >
-          <View style={styles.modalOverlay}>
-            <View style={styles.modalFormContainer}>
-              <PageTitle title="Insurance Information" />
-              <ScrollView>
-                <Text style={styles.editField}>Insurance Start Date</Text>
-                <DateInputField
-                  iconName="calendar-alt"
-                  placeholder="Insurance Start Date"
-                  value={insuranceFormData.insuranceStartDate}
-                  onChange={(selectedDate) => {
-                    setInsuranceFormData((prevData) => ({
-                      ...prevData,
-                      insuranceStartDate: selectedDate || new Date(),
-                    }));
-                  }}
-                />
-
-                <Text style={styles.editField}>Insurance End Date</Text>
-                <DateInputField
-                  iconName="calendar-alt"
-                  placeholder="Insurance Expiry Date"
-                  value={insuranceFormData.insuranceExpiryDate}
-                  onChange={(selectedDate) => {
-                    setInsuranceFormData((prevData) => ({
-                      ...prevData,
-                      insuranceExpiryDate: selectedDate || new Date(),
-                    }));
-                  }}
-                />
-
-                <Text style={styles.editField}>Insurance Policy Number</Text>
-                <FormInputField
-                  iconName="file-contract"
-                  placeholder="Insurance Policy Number"
-                  value={insuranceFormData.insurancePolicyNumber}
-                  onChangeText={(text) => {
-                    setInsuranceFormData((prevData) => ({
-                      ...prevData,
-                      insurancePolicyNumber: text,
-                    }));
-                  }}
-                />
-
-                <Text style={styles.editField}>Insurance Company</Text>
-                <FormInputField
-                  iconName="building"
-                  placeholder="Insurance Company"
-                  value={insuranceFormData.insuranceCompany}
-                  onChangeText={(text) => {
-                    setInsuranceFormData((prevData) => ({
-                      ...prevData,
-                      insuranceCompany: text,
-                    }));
-                  }}
-                />
-              </ScrollView>
-              <OpacityButton
-                title="Submit"
-                onPress={handleInsuranceFormSubmit}
-              />
-            </View>
-          </View>
-        </TouchableOpacity>
-      </Modal>
+        insuranceFormData={insuranceFormData}
+        setInsuranceFormData={setInsuranceFormData}
+        onSave={handleInsuranceFormSubmit}
+      />
     </View>
   );
 };

@@ -9,7 +9,8 @@ require('dotenv').config();
 AppDataSource.initialize()
   .then(async () => {
     const app = express();
-    app.use(bodyParser.json());
+    app.use(bodyParser.json({ limit: '50mb' }));
+    app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
 
     Routes.forEach((route) => {
       const middlewares = route.middlewares || [];

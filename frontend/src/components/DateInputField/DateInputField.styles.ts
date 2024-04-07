@@ -11,9 +11,7 @@ export const styles = StyleSheet.create({
     padding: 10,
   },
   input: {
-    height: 20,
     flex: 1,
-    marginLeft: 10,
     fontFamily: "OktahRound-Regular",
   },
 });

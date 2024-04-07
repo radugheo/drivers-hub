@@ -13,6 +13,17 @@ export const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  insuranceImage: {
+    width: "100%",
+    height: 300,
+    resizeMode: "contain",
+    marginTop: 20,
+  },
   editField: {
     fontSize: 14,
     fontWeight: "bold",

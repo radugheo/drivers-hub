@@ -20,7 +20,16 @@ const GarageScreen: React.FC = () => {
     try {
       const token = await retrieveString("userToken");
       if (token) {
-        const fetchedCars: Car[] = await getCarsApiCall(token);
+        let fetchedCars: Car[] = await getCarsApiCall(token);
+
+        fetchedCars = fetchedCars.sort((a, b) => {
+          if (a.make < b.make) return -1;
+          if (a.make > b.make) return 1;
+          if (a.model < b.model) return -1;
+          if (a.model > b.model) return 1;
+          return 0;
+        });
+
         setCars(fetchedCars);
       } else {
         console.log("Unable to retrieve user token");
