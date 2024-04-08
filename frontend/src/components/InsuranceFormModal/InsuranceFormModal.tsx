@@ -4,7 +4,6 @@ import {
   Text,
   ScrollView,
   TouchableWithoutFeedback,
-  Image,
 } from "react-native";
 import DateInputField from "../DateInputField/DateInputField";
 import FormInputField from "../FormInputField/FormInputField";

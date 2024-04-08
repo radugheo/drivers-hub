@@ -18,12 +18,6 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 20,
   },
-  insuranceImage: {
-    width: "100%",
-    height: 300,
-    resizeMode: "contain",
-    marginTop: 20,
-  },
   editField: {
     fontSize: 14,
     fontWeight: "bold",
@@ -31,5 +25,23 @@ export const styles = StyleSheet.create({
   buttonsContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
+  },
+  viewImageButton: {
+    backgroundColor: "#00817E",
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+    alignSelf: "center",
+    flexDirection: "row",
+  },
+  viewImageButtonText: {
+    flex: 1,
+    fontFamily: "OktahRound-Regular",
+    color: "white",
+    marginLeft: 10,
+  },
+  imageContainer: {
+    flexDirection: "row",
+    alignItems: "center",
   },
 });

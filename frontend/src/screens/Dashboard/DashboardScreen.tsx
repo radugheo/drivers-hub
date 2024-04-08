@@ -128,10 +128,12 @@ const DashboardScreen: React.FC = () => {
           {widgets.map((widgetName, index) => {
             if (widgetName === "Insurance") {
               if (carHasInsurance(item)) {
-                return <InsuranceWidget item={item} />;
+                return <InsuranceWidget key={index} item={item} />;
               }
             } else {
-              return <CustomWidget title={widgetName} progress={30} />;
+              return (
+                <CustomWidget key={index} title={widgetName} progress={30} />
+              );
             }
           })}
         </ScrollView>

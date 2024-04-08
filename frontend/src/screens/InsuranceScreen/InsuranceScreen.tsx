@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   Text,
-  Image,
   ScrollView,
   View,
   KeyboardAvoidingView,
@@ -9,6 +8,7 @@ import {
   SafeAreaView,
   Alert,
   LogBox,
+  TouchableOpacity,
 } from "react-native";
 import { styles } from "./InsuranceScreen.styles";
 import { useNavigation, RouteProp } from "@react-navigation/native";
@@ -21,6 +21,9 @@ import { removeCarWidgets, retrieveString } from "../../utils/storage-handler";
 import { updateCarApiCall } from "../../api/api-service";
 import DateInputField from "../../components/DateInputField/DateInputField";
 import { Car } from "../../models/Car.model";
+import PictureModal from "../../components/PictureModal/PictureModal";
+import PictureInputField from "../../components/PictureInputField/PictureInputField";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 LogBox.ignoreLogs([
   "Non-serializable values were found in the navigation state",
@@ -44,6 +47,7 @@ const InsuranceScreen: React.FC<InsuranceScreenProps> = ({ route }) => {
   const navigation = useNavigation();
   const { item } = route.params;
   const [car, setCar] = useState<Car>(item);
+  const [isModalVisible, setModalVisible] = useState(false);
 
   const handleSaveInsurance = async () => {
     try {
@@ -82,8 +86,17 @@ const InsuranceScreen: React.FC<InsuranceScreenProps> = ({ route }) => {
     }
   };
 
-  const handleServiceInputChange = (name: keyof Car, value: string) => {
+  const handleServiceInputChange = (name: keyof Car, value: string | null) => {
     setCar((prevCar) => ({ ...prevCar, [name]: value }));
+  };
+
+  const handleImageSelect = (base64Image: string | null) => {
+    if (base64Image === null) {
+      Alert.alert("Image Removed", "Insurance picture has been removed.");
+      handleServiceInputChange("insurancePicture", null);
+      return;
+    }
+    handleServiceInputChange("insurancePicture", base64Image);
   };
 
   return (
@@ -150,19 +163,34 @@ const InsuranceScreen: React.FC<InsuranceScreenProps> = ({ route }) => {
 
             <Text style={styles.editField}>Insurance Picture</Text>
             {car.insurancePicture ? (
-              <Image
-                source={{
-                  uri: `data:image/png;base64,${car.insurancePicture}`,
-                }}
-                style={styles.insuranceImage}
-              />
+              <View style={styles.imageContainer}>
+                <TouchableOpacity
+                  onPress={() => setModalVisible(true)}
+                  style={styles.viewImageButton}
+                >
+                  <FontAwesome5 name="camera" size={24} color="white" />
+                  <Text style={styles.viewImageButtonText}>View Image</Text>
+                  <TouchableOpacity onPress={() => handleImageSelect(null)}>
+                    <FontAwesome5 name="trash" size={24} color="red" />
+                  </TouchableOpacity>
+                </TouchableOpacity>
+              </View>
             ) : (
-              <Text>No image available</Text>
+              <PictureInputField
+                iconName="camera"
+                title="Select or Take a Picture"
+                onImageSelect={handleImageSelect}
+              />
             )}
           </ScrollView>
+          <PictureModal
+            isVisible={isModalVisible}
+            onClose={() => setModalVisible(false)}
+            imageData={car.insurancePicture || ""}
+          />
           <View style={styles.buttonsContainer}>
-            <OpacityButton title="Save car" onPress={handleSaveInsurance} />
-            <OpacityButton title="Delete car" onPress={handleDeleteInsurance} />
+            <OpacityButton title="Save" onPress={handleSaveInsurance} />
+            <OpacityButton title="Delete" onPress={handleDeleteInsurance} />
           </View>
         </KeyboardAvoidingView>
       </SafeAreaView>
