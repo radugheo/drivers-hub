@@ -15,6 +15,8 @@ import OptionsModal from "../../components/OptionsModal/OptionsModal";
 import InsuranceFormModal from "../../components/InsuranceFormModal/InsuranceFormModal";
 import { useFocusEffect } from "@react-navigation/native";
 import InsuranceWidget from "../../components/InsuranceWidget/InsuranceWidget";
+import ITPFormModal from "../../components/ITPFormModal/ITPFormModal";
+import ITPWidget from "../../components/ITPWidget/ITPWidget";
 
 const DashboardScreen: React.FC = () => {
   const [cars, setCars] = useState<Car[]>([]);
@@ -30,6 +32,12 @@ const DashboardScreen: React.FC = () => {
     insurancePolicyNumber: "",
     insuranceCompany: "",
     insurancePicture: "",
+  });
+
+  const [isITPModalVisible, setIsITPModalVisible] = useState(false);
+  const [ITPFormData, setITPFormData] = useState({
+    lastService: new Date(),
+    nextService: new Date(),
   });
 
   const fetchCarsAndWidgets = useCallback(async () => {
@@ -65,7 +73,13 @@ const DashboardScreen: React.FC = () => {
     }, [fetchCarsAndWidgets]),
   );
 
-  const options = ["Insurance", "Service", "Accident", "Mileage"];
+  const options = [
+    "Insurance",
+    "Service",
+    "Accident",
+    "Mileage",
+    "ITP (Technical Inspection)",
+  ];
 
   const widgetExists = (widgetName: string) => {
     if (selectedCarId) {
@@ -92,8 +106,11 @@ const DashboardScreen: React.FC = () => {
           if (selectedCarId && item === "Insurance") {
             setIsInsuranceModalVisible(true);
             setServiceModalVisible(false);
-          } else if (selectedCarId) {
-            addWidgetToCar(selectedCarId.toString(), item);
+          } else if (selectedCarId && item === "ITP (Technical Inspection)") {
+            setIsITPModalVisible(true);
+            setServiceModalVisible(false);
+          } else {
+            addWidgetToCar(selectedCarId!.toString(), item);
             setServiceModalVisible(false);
           }
         }
@@ -114,6 +131,10 @@ const DashboardScreen: React.FC = () => {
     );
   };
 
+  const carHasITP = (car: Car) => {
+    return car.lastService || car.nextService;
+  };
+
   const renderItem = ({ item }: { item: Car }) => {
     const widgets = carWidgets[item.id!.toString()] || [];
     return (
@@ -129,6 +150,10 @@ const DashboardScreen: React.FC = () => {
             if (widgetName === "Insurance") {
               if (carHasInsurance(item)) {
                 return <InsuranceWidget key={index} item={item} />;
+              }
+            } else if (widgetName === "ITP (Technical Inspection)") {
+              if (carHasITP(item)) {
+                return <ITPWidget key={index} item={item} />;
               }
             } else {
               return (
@@ -189,6 +214,51 @@ const DashboardScreen: React.FC = () => {
     }
   };
 
+  const handleITPFormSubmit = async () => {
+    if (!selectedCarId) {
+      Alert.alert("Error", "No car selected.");
+      return;
+    }
+    const token = await retrieveString("userToken");
+    if (!token) {
+      Alert.alert("Error", "User token not found.");
+      return;
+    }
+    const carToUpdate = cars.find((car) => car.id === selectedCarId);
+    if (!carToUpdate) {
+      Alert.alert("Error", "Car not found.");
+      return;
+    }
+    const updatedCar = {
+      ...carToUpdate,
+      ...ITPFormData,
+    };
+    try {
+      await updateCarApiCall(updatedCar, token);
+      Alert.alert("Success", "Car ITP information updated successfully.");
+      setIsITPModalVisible(false);
+      setCars(cars.map((car) => (car.id === selectedCarId ? updatedCar : car)));
+      if (
+        !carWidgets[selectedCarId.toString()].includes(
+          "ITP (Technical Inspection)",
+        )
+      ) {
+        const updatedWidgets = [
+          ...carWidgets[selectedCarId.toString()],
+          "ITP (Technical Inspection)",
+        ];
+        setCarWidgets({
+          ...carWidgets,
+          [selectedCarId.toString()]: updatedWidgets,
+        });
+        saveCarWidgets(selectedCarId.toString(), updatedWidgets);
+      }
+    } catch (error) {
+      console.error("Error updating ITP information:", error);
+      Alert.alert("Error", "Failed to update ITP information.");
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Carousel
@@ -216,6 +286,16 @@ const DashboardScreen: React.FC = () => {
         insuranceFormData={insuranceFormData}
         setInsuranceFormData={setInsuranceFormData}
         onSave={handleInsuranceFormSubmit}
+      />
+
+      <ITPFormModal
+        animationType="none"
+        transparent={true}
+        visible={isITPModalVisible}
+        onRequestClose={() => setIsITPModalVisible(false)}
+        ITPFormData={ITPFormData}
+        setITPFormData={setITPFormData}
+        onSave={handleITPFormSubmit}
       />
     </View>
   );

@@ -83,7 +83,7 @@ const InsuranceFormModal: React.FC<InsuranceFormModalProps> = ({
                   }
                 />
 
-                <Text style={styles.editField}>Insurance Start Date</Text>
+                <Text style={styles.editField}>Valid from</Text>
                 <DateInputField
                   iconName="calendar-alt"
                   placeholder="Insurance Start Date"
@@ -96,7 +96,7 @@ const InsuranceFormModal: React.FC<InsuranceFormModalProps> = ({
                   }
                 />
 
-                <Text style={styles.editField}>Insurance End Date</Text>
+                <Text style={styles.editField}>Valid to</Text>
                 <DateInputField
                   iconName="calendar-alt"
                   placeholder="Insurance Expiry Date"

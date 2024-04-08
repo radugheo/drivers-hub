@@ -43,6 +43,7 @@ export const styles = StyleSheet.create({
   },
   carTitle: {
     fontSize: 20,
+    fontWeight: "bold",
   },
   carSubtitle: {
     fontSize: 14,

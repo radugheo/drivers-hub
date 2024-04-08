@@ -131,7 +131,7 @@ const InsuranceScreen: React.FC<InsuranceScreenProps> = ({ route }) => {
               }
             />
 
-            <Text style={styles.editField}>Start Date</Text>
+            <Text style={styles.editField}>Valid from</Text>
             <DateInputField
               iconName="calendar"
               placeholder="Start Date"
@@ -146,7 +146,7 @@ const InsuranceScreen: React.FC<InsuranceScreenProps> = ({ route }) => {
               }
             />
 
-            <Text style={styles.editField}>End Date</Text>
+            <Text style={styles.editField}>Valid to</Text>
             <DateInputField
               iconName="calendar"
               placeholder="End Date"

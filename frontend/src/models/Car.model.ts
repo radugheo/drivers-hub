@@ -15,6 +15,8 @@ export class Car {
   insurancePolicyNumber?: string;
   insuranceCompany?: string;
   insurancePicture?: string;
+  lastService?: Date;
+  nextService?: Date;
   vin?: string;
   ownerId: string;
   constructor(
@@ -32,6 +34,8 @@ export class Car {
     insurancePolicyNumber: string,
     insuranceCompany: string,
     insurancePicture: string,
+    lastService: Date,
+    nextService: Date,
     vin: string,
     ownerId: string,
   ) {
@@ -49,6 +53,8 @@ export class Car {
     this.insurancePolicyNumber = insurancePolicyNumber;
     this.insuranceCompany = insuranceCompany;
     this.insurancePicture = insurancePicture;
+    this.lastService = lastService;
+    this.nextService = nextService;
     this.vin = vin;
     this.ownerId = ownerId;
   }
