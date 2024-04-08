@@ -11,6 +11,7 @@ import CarScreen from "../screens/Car/CarScreen";
 import { Car } from "../models/Car.model";
 import FindMyCarScreen from "../screens/FindMyCar/FindMyCarScreen";
 import InsuranceScreen from "../screens/InsuranceScreen/InsuranceScreen";
+import DashboardScreen from "../screens/Dashboard/DashboardScreen";
 
 export type RootStackParamList = {
   Login: undefined;
@@ -20,6 +21,7 @@ export type RootStackParamList = {
   Garage: undefined;
   AddCarScreen: undefined;
   CarScreen: { item: Car };
+  DashboardScreen: undefined;
   FindMyCarScreen: undefined;
   InsuranceScreen: { item: Car };
 };
@@ -55,6 +57,11 @@ const AppNavigator = () => {
         <Stack.Screen
           name="CarScreen"
           component={CarScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="DashboardScreen"
+          component={DashboardScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen

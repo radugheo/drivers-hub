@@ -32,6 +32,14 @@ const InsuranceWidget: React.FC<InsuranceWidgetProps> = ({ item }) => {
     return progress > 100 ? 100 : progress;
   };
 
+  const calculateDaysLeft = () => {
+    const end = new Date(item.insuranceExpiryDate!).getTime();
+    const now = new Date().getTime();
+    const totalDuration = end - now;
+    const daysLeft = Math.floor(totalDuration / (1000 * 60 * 60 * 24));
+    return daysLeft;
+  };
+
   const getProgressBarColor = (progress: number) => {
     if (progress > 90) {
       return "red";
@@ -60,7 +68,8 @@ const InsuranceWidget: React.FC<InsuranceWidgetProps> = ({ item }) => {
       <Text style={styles.title}>RCA - {item.insuranceCompany}</Text>
       <View style={styles.datesContainer}>
         <Text>
-          {formatDate(new Date(item.insuranceStartDate!).toDateString()!)}
+          {calculateDaysLeft()}
+          {" days left"}
         </Text>
         <Text>
           {formatDate(new Date(item.insuranceExpiryDate!).toDateString()!)}

@@ -21,7 +21,7 @@ const DashboardScreen: React.FC = () => {
   const [isServiceModalVisible, setServiceModalVisible] = useState(false);
   const [selectedCarId, setSelectedCarId] = useState<number | null>(null);
   const [carWidgets, setCarWidgets] = useState<{ [carId: string]: string[] }>(
-    {}
+    {},
   );
   const [isInsuranceModalVisible, setIsInsuranceModalVisible] = useState(false);
   const [insuranceFormData, setInsuranceFormData] = useState({
@@ -37,18 +37,9 @@ const DashboardScreen: React.FC = () => {
       const token = await retrieveString("userToken");
       if (token) {
         let fetchedCars: Car[] = await getCarsApiCall(token);
-
-        fetchedCars = fetchedCars.sort((a, b) => {
-          if (a.make < b.make) return -1;
-          if (a.make > b.make) return 1;
-          if (a.model < b.model) return -1;
-          if (a.model > b.model) return 1;
-          return 0;
-        });
-
         setCars(fetchedCars);
         const widgetsFetchPromises = fetchedCars.map((car) =>
-          retrieveCarWidgets(car.id!.toString())
+          retrieveCarWidgets(car.id!.toString()),
         );
         const allWidgets = await Promise.all(widgetsFetchPromises);
         const widgetsMap = fetchedCars.reduce(
@@ -56,7 +47,7 @@ const DashboardScreen: React.FC = () => {
             ...acc,
             [car.id!.toString()]: allWidgets[index] || [],
           }),
-          {}
+          {},
         );
         setCarWidgets(widgetsMap);
       } else {
@@ -71,7 +62,7 @@ const DashboardScreen: React.FC = () => {
   useFocusEffect(
     useCallback(() => {
       fetchCarsAndWidgets();
-    }, [fetchCarsAndWidgets])
+    }, [fetchCarsAndWidgets]),
   );
 
   const options = ["Insurance", "Service", "Accident", "Mileage"];
@@ -113,6 +104,16 @@ const DashboardScreen: React.FC = () => {
     </TouchableOpacity>
   );
 
+  const carHasInsurance = (car: Car) => {
+    return (
+      car.insuranceCompany ||
+      car.insurancePolicyNumber ||
+      car.insuranceStartDate ||
+      car.insuranceExpiryDate ||
+      car.insurancePicture
+    );
+  };
+
   const renderItem = ({ item }: { item: Car }) => {
     const widgets = carWidgets[item.id!.toString()] || [];
     return (
@@ -125,12 +126,12 @@ const DashboardScreen: React.FC = () => {
             <Text style={styles.carSubtitle}>{item.licensePlate}</Text>
           </View>
           {widgets.map((widgetName, index) => {
-            if (widgetName === "Insurance" && item.insuranceCompany) {
-              return <InsuranceWidget key={index} item={item} />;
+            if (widgetName === "Insurance") {
+              if (carHasInsurance(item)) {
+                return <InsuranceWidget item={item} />;
+              }
             } else {
-              return (
-                <CustomWidget key={index} title={widgetName} progress={30} />
-              );
+              return <CustomWidget title={widgetName} progress={30} />;
             }
           })}
         </ScrollView>

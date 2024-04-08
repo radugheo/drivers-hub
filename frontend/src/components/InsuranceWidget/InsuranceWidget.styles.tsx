@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
 // Add to your CustomWidget.styles or create a new stylesheet
 export const styles = StyleSheet.create({
@@ -29,28 +29,28 @@ export const styles = StyleSheet.create({
     marginTop: 10,
   },
   datesContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   button: {
     marginTop: 10,
-    backgroundColor: '#007bff',
+    backgroundColor: "#00817E",
     padding: 10,
     borderRadius: 5,
   },
   buttonText: {
-    color: 'white',
-    textAlign: 'center',
+    color: "white",
+    textAlign: "center",
   },
   modalOverlay: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   insuranceImage: {
     width: 300,
     height: 400,
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
 });

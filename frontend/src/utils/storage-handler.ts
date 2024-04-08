@@ -64,3 +64,11 @@ export const retrieveCarWidgets = async (carId: string): Promise<string[]> => {
     return [];
   }
 };
+
+export const removeCarWidgets = async (carId: string) => {
+  try {
+    await removeString(`carWidgets_${carId}`);
+  } catch (error) {
+    console.error("Error removing car widgets:", error);
+  }
+};

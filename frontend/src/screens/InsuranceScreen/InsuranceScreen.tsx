@@ -8,6 +8,7 @@ import {
   Platform,
   SafeAreaView,
   Alert,
+  LogBox,
 } from "react-native";
 import { styles } from "./InsuranceScreen.styles";
 import { useNavigation, RouteProp } from "@react-navigation/native";
@@ -16,10 +17,14 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import TopBar from "../../components/TopBar/TopBar";
 import FormInputField from "../../components/FormInputField/FormInputField";
 import OpacityButton from "../../components/OpacityButton/OpacityButton";
-import { retrieveString } from "../../utils/storage-handler";
+import { removeCarWidgets, retrieveString } from "../../utils/storage-handler";
 import { updateCarApiCall } from "../../api/api-service";
 import DateInputField from "../../components/DateInputField/DateInputField";
 import { Car } from "../../models/Car.model";
+
+LogBox.ignoreLogs([
+  "Non-serializable values were found in the navigation state",
+]);
 
 type InsuranceScreenRouteProp = RouteProp<
   RootStackParamList,
@@ -50,6 +55,30 @@ const InsuranceScreen: React.FC<InsuranceScreenProps> = ({ route }) => {
       }
     } catch (error) {
       console.error("Error updating the car:", error);
+    }
+  };
+
+  const handleDeleteInsurance = async () => {
+    try {
+      const token = await retrieveString("userToken");
+      const result = await updateCarApiCall(
+        {
+          id: car.id,
+          insuranceCompany: null,
+          insurancePolicyNumber: null,
+          insuranceStartDate: null,
+          insuranceExpiryDate: null,
+          insurancePicture: null,
+        },
+        token,
+      );
+      if (result) {
+        Alert.alert("Success", "Insurance details have been deleted.");
+        await removeCarWidgets(car.id!.toString());
+        navigation.goBack();
+      }
+    } catch (error) {
+      console.error("Error deleting the insurance details:", error);
     }
   };
 
@@ -84,7 +113,7 @@ const InsuranceScreen: React.FC<InsuranceScreenProps> = ({ route }) => {
               onChangeText={(insurancePolicyNumber) =>
                 handleServiceInputChange(
                   "insurancePolicyNumber",
-                  insurancePolicyNumber
+                  insurancePolicyNumber,
                 )
               }
             />
@@ -99,7 +128,7 @@ const InsuranceScreen: React.FC<InsuranceScreenProps> = ({ route }) => {
               onChange={(date) =>
                 handleServiceInputChange(
                   "insuranceStartDate",
-                  date.toISOString()
+                  date.toISOString(),
                 )
               }
             />
@@ -114,7 +143,7 @@ const InsuranceScreen: React.FC<InsuranceScreenProps> = ({ route }) => {
               onChange={(date) =>
                 handleServiceInputChange(
                   "insuranceExpiryDate",
-                  date.toISOString()
+                  date.toISOString(),
                 )
               }
             />
@@ -131,7 +160,10 @@ const InsuranceScreen: React.FC<InsuranceScreenProps> = ({ route }) => {
               <Text>No image available</Text>
             )}
           </ScrollView>
-          <OpacityButton title="Save" onPress={handleSaveInsurance} />
+          <View style={styles.buttonsContainer}>
+            <OpacityButton title="Save car" onPress={handleSaveInsurance} />
+            <OpacityButton title="Delete car" onPress={handleDeleteInsurance} />
+          </View>
         </KeyboardAvoidingView>
       </SafeAreaView>
     </View>

@@ -49,6 +49,13 @@ export const getCarsApiCall = async (token: string) => {
         Authorization: `Bearer ${token}`,
       },
     });
+    response.data.sort((a: Car, b: Car) => {
+      if (a.make < b.make) return -1;
+      if (a.make > b.make) return 1;
+      if (a.model < b.model) return -1;
+      if (a.model > b.model) return 1;
+      return 0;
+    });
     return response.data;
   } catch (error: any) {
     console.log(JSON.stringify(error));

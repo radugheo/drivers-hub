@@ -29,7 +29,7 @@ const PictureInputField: React.FC<PictureInputProps> = ({
       Alert.alert(
         "Insufficient Permissions!",
         "You need to grant camera and photo library permissions to use this feature.",
-        [{ text: "Okay" }]
+        [{ text: "Okay" }],
       );
       return false;
     }

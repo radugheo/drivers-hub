@@ -28,4 +28,8 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
   },
+  buttonsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+  },
 });

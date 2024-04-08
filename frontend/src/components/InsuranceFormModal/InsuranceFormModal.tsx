@@ -116,7 +116,6 @@ const InsuranceFormModal: React.FC<InsuranceFormModalProps> = ({
                   title="Select or Take a Picture"
                   onImageSelect={handleImageSelect}
                 />
-                
               </ScrollView>
               <OpacityButton title="Save" onPress={onSave} />
             </View>

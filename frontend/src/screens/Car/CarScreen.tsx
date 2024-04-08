@@ -29,7 +29,7 @@ const CarScreen: React.FC<CarScreenProps> = ({ route }) => {
   const { item } = route.params;
   const [car, setCar] = useState<Car>(item);
 
-  const handleSave = async () => {
+  const handleSaveCar = async () => {
     try {
       const token = await retrieveString("userToken");
       const result = await updateCarApiCall(car, token);
@@ -42,7 +42,7 @@ const CarScreen: React.FC<CarScreenProps> = ({ route }) => {
     }
   };
 
-  const handleDelete = async () => {
+  const handleDeleteCar = async () => {
     try {
       const token = await retrieveString("userToken");
       const result = await deleteCarApiCall(car.id!, token);
@@ -189,8 +189,8 @@ const CarScreen: React.FC<CarScreenProps> = ({ route }) => {
         ))} */}
         </ScrollView>
         <View style={styles.buttonsContainer}>
-          <OpacityButton title="Save car" onPress={handleSave} />
-          <OpacityButton title="Delete car" onPress={handleDelete} />
+          <OpacityButton title="Save car" onPress={handleSaveCar} />
+          <OpacityButton title="Delete car" onPress={handleDeleteCar} />
         </View>
       </SafeAreaView>
     </View>
