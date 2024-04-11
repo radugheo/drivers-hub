@@ -15,8 +15,14 @@ export class Car {
   insurancePolicyNumber?: string;
   insuranceCompany?: string;
   insurancePicture?: string;
+  lastInspection?: Date;
+  nextInspection?: Date;
   lastService?: Date;
   nextService?: Date;
+  lastServiceMileage?: number;
+  nextServiceMileageInterval?: number;
+  serviceCompany?: string;
+  serviceDetails?: string;
   vin?: string;
   ownerId: string;
   constructor(
@@ -34,8 +40,14 @@ export class Car {
     insurancePolicyNumber: string,
     insuranceCompany: string,
     insurancePicture: string,
+    lastInspection: Date,
+    nextInspection: Date,
     lastService: Date,
     nextService: Date,
+    lastServiceMileage: number,
+    nextServiceMileageInterval: number,
+    serviceCompany: string,
+    serviceDetails: string,
     vin: string,
     ownerId: string,
   ) {
@@ -53,8 +65,14 @@ export class Car {
     this.insurancePolicyNumber = insurancePolicyNumber;
     this.insuranceCompany = insuranceCompany;
     this.insurancePicture = insurancePicture;
+    this.lastInspection = lastInspection;
+    this.nextInspection = nextInspection;
     this.lastService = lastService;
     this.nextService = nextService;
+    this.lastServiceMileage = lastServiceMileage;
+    this.nextServiceMileageInterval = nextServiceMileageInterval;
+    this.serviceCompany = serviceCompany;
+    this.serviceDetails = serviceDetails;
     this.vin = vin;
     this.ownerId = ownerId;
   }

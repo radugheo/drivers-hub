@@ -17,6 +17,7 @@ import OpacityButton from "../../components/OpacityButton/OpacityButton";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TopBar from "../../components/TopBar/TopBar";
 import FormDropdownField from "../../components/FormDropdownField/FormDropdownField";
+import NumberInputField from "../../components/NumberInputField/NumberInputField";
 
 export const AddCarScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -98,7 +99,7 @@ export const AddCarScreen: React.FC = () => {
             />
 
             <Text style={styles.editField}>Mileage (km)</Text>
-            <FormInputField
+            <NumberInputField
               iconName="tachometer-alt"
               placeholder="Mileage"
               value={newCar.mileage?.toString() || ""}
@@ -134,7 +135,7 @@ export const AddCarScreen: React.FC = () => {
             />
 
             <Text style={styles.editField}>Displacement (cc)</Text>
-            <FormInputField
+            <NumberInputField
               iconName="cog"
               placeholder="Displacement"
               value={newCar.displacement?.toString()!}
@@ -147,7 +148,7 @@ export const AddCarScreen: React.FC = () => {
             />
 
             <Text style={styles.editField}>Horsepower (hp)</Text>
-            <FormInputField
+            <NumberInputField
               iconName="horse"
               placeholder="Horsepower"
               value={newCar.horsepower?.toString()!}

@@ -51,6 +51,11 @@ const InsuranceScreen: React.FC<InsuranceScreenProps> = ({ route }) => {
 
   const handleSaveInsurance = async () => {
     try {
+      for (const key in car) {
+        if (car[key as keyof Car] === "") {
+          (car[key as keyof Car] as Car[keyof Car] | null) = null; 
+        }
+      }
       const token = await retrieveString("userToken");
       const result = await updateCarApiCall(car, token);
       if (result) {

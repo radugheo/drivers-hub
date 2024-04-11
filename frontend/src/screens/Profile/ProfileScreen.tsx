@@ -1,18 +1,37 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
 import { Ionicons, MaterialIcons, AntDesign } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { styles } from "./ProfileScreen.styles";
-import { removeString } from "../../utils/storage-handler";
+import { removeString, retrieveString } from "../../utils/storage-handler";
+import { getCarsApiCall, getUserDataApiCall } from "../../api/api-service";
 
 const ProfileScreen: React.FC = () => {
-  const userData = {
-    username: "John Doe",
-    email: "johndoe@gmail.com",
-    cars: [],
-  };
+  const [userData, setUserData] = useState({
+    username: "Loading...",
+    email: "Loading...",
+    carsNumber: 0,
+  });
 
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const getUserData = async () => {
+      const token = await retrieveString("userToken");
+      if (token) {
+        try {
+          let data = await getUserDataApiCall(token);
+          data = { ...data, carsNumber: await retrieveString("carsNumber") };
+          setUserData(data);
+        } catch (error) {
+          console.log("Failed to fetch user data", error);
+          Alert.alert("Error", "Unable to load profile data.");
+        }
+      }
+    };
+
+    getUserData();
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -37,7 +56,7 @@ const ProfileScreen: React.FC = () => {
           </View>
         </View>
         <View style={styles.headerRight}>
-          <Text style={styles.fieldAmount}>{userData.cars.length}</Text>
+          <Text style={styles.fieldAmount}>{userData.carsNumber}</Text>
           <Text style={styles.fieldLabel}>Cars</Text>
         </View>
       </View>

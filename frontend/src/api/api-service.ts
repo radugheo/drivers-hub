@@ -8,7 +8,7 @@ export const registerApiCall = async (
   username: string,
   email: string,
   password: string,
-  role: string = "user",
+  role: string = "user"
 ) => {
   try {
     const response = await axios.post(`${BASE_URL}/register`, {
@@ -38,6 +38,23 @@ export const loginApiCall = async (email: string, password: string) => {
     throw error.response
       ? error.response.data
       : new Error("An error occurred during login");
+  }
+};
+
+export const getUserDataApiCall = async (token: string) => {
+  try {
+    const userId = await retrieveString("userId");
+    const response = await axios.get(`${BASE_URL}/users/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    console.log(JSON.stringify(error));
+    throw error.response
+      ? error.response.data
+      : new Error("An error occurred while fetching user data");
   }
 };
 

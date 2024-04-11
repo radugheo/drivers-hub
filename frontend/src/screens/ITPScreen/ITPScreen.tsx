@@ -39,10 +39,14 @@ const ITPScreen: React.FC<ITPScreenProps> = ({ route }) => {
   const navigation = useNavigation();
   const { item } = route.params;
   const [car, setCar] = useState<Car>(item);
-  const [isModalVisible, setModalVisible] = useState(false);
 
   const handleSaveITP = async () => {
     try {
+      for (const key in car) {
+        if (car[key as keyof Car] === "") {
+          (car[key as keyof Car] as Car[keyof Car] | null) = null; 
+        }
+      }
       const token = await retrieveString("userToken");
       const result = await updateCarApiCall(car, token);
       if (result) {
@@ -60,8 +64,8 @@ const ITPScreen: React.FC<ITPScreenProps> = ({ route }) => {
       const result = await updateCarApiCall(
         {
           id: car.id,
-          lastService: null,
-          nextService: null,
+          lastInspection: null,
+          nextInspection: null,
         },
         token,
       );
@@ -92,9 +96,9 @@ const ITPScreen: React.FC<ITPScreenProps> = ({ route }) => {
             <DateInputField
               iconName="calendar"
               placeholder="Start Date"
-              value={new Date(car.lastService || new Date().toISOString())}
+              value={new Date(car.lastInspection || new Date().toISOString())}
               onChange={(date) =>
-                handleServiceInputChange("lastService", date.toISOString())
+                handleServiceInputChange("lastInspection", date.toISOString())
               }
             />
 
@@ -102,9 +106,9 @@ const ITPScreen: React.FC<ITPScreenProps> = ({ route }) => {
             <DateInputField
               iconName="calendar"
               placeholder="End Date"
-              value={new Date(car.nextService || new Date().toISOString())}
+              value={new Date(car.nextInspection || new Date().toISOString())}
               onChange={(date) =>
-                handleServiceInputChange("nextService", date.toISOString())
+                handleServiceInputChange("nextInspection", date.toISOString())
               }
             />
           </ScrollView>

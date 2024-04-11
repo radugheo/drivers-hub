@@ -1,29 +1,29 @@
 import React from "react";
 import { View, Text, TouchableOpacity, Modal, Image } from "react-native";
-import { styles } from "./ITPWidget.styles";
+import { styles } from "./ServiceWidget.styles";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Car } from "../../models/Car.model";
 
-type ITPWidgetNavigationProp = StackNavigationProp<
+type ServiceWidgetNavigationProp = StackNavigationProp<
   RootStackParamList,
-  "ITPScreen"
+  "ServiceScreen"
 >;
 
 export type RootStackParamList = {
-  ITPScreen: { item: Car };
+  ServiceScreen: { item: Car };
 };
 
-interface ITPWidgetProps {
+interface ServiceWidgetProps {
   item: Car;
 }
 
-const ITPWidget: React.FC<ITPWidgetProps> = ({ item }) => {
-  const navigation = useNavigation<ITPWidgetNavigationProp>();
+const ServiceWidget: React.FC<ServiceWidgetProps> = ({ item }) => {
+  const navigation = useNavigation<ServiceWidgetNavigationProp>();
 
   const calculateProgress = () => {
-    const start = new Date(item.lastInspection!).getTime();
-    const end = new Date(item.nextInspection!).getTime();
+    const start = new Date(item.lastService!).getTime();
+    const end = new Date(item.nextService!).getTime();
     const now = new Date().getTime();
     const totalDuration = end - start;
     const timeElapsedSinceStart = now - start;
@@ -32,7 +32,7 @@ const ITPWidget: React.FC<ITPWidgetProps> = ({ item }) => {
   };
 
   const calculateDaysLeft = () => {
-    const end = new Date(item.nextInspection!).getTime();
+    const end = new Date(item.nextService!).getTime();
     const now = new Date().getTime();
     const totalDuration = end - now;
     const daysLeft = Math.floor(totalDuration / (1000 * 60 * 60 * 24));
@@ -52,22 +52,34 @@ const ITPWidget: React.FC<ITPWidgetProps> = ({ item }) => {
     return `${date.split(" ")[2]} ${date.split(" ")[1]} ${date.split(" ")[3]}`;
   };
 
-  const navigateToITPScreen = () => {
-    navigation.navigate("ITPScreen", { item });
+  const navigateToServiceScreen = () => {
+    navigation.navigate("ServiceScreen", { item });
   };
 
   const progress = calculateProgress();
   const progressBarColor = getProgressBarColor(progress);
 
   return (
-    <TouchableOpacity style={styles.container} onPress={navigateToITPScreen}>
-      <Text style={styles.title}>ITP (Technical Inspection)</Text>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={navigateToServiceScreen}
+    >
+      <Text style={styles.title}>Maintainance (Technical Service)</Text>
+
       <View style={styles.datesContainer}>
-        <Text>
-          {calculateDaysLeft()}
-          {" days left"}
-        </Text>
-        <Text>{formatDate(new Date(item.nextInspection!).toDateString()!)}</Text>
+        {item.nextServiceMileageInterval ? (
+          <Text>
+            {item.nextServiceMileageInterval} km or {calculateDaysLeft()}
+            {" days left"}
+          </Text>
+        ) : (
+          <Text>
+            {calculateDaysLeft()}
+            {" days left"}
+          </Text>
+        )}
+
+        <Text>{formatDate(new Date(item.nextService!).toDateString()!)}</Text>
       </View>
       <View style={styles.progressBarBackground}>
         <View
@@ -81,4 +93,4 @@ const ITPWidget: React.FC<ITPWidgetProps> = ({ item }) => {
   );
 };
 
-export default ITPWidget;
+export default ServiceWidget;

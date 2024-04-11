@@ -16,14 +16,14 @@ interface ITPFormModal {
   visible: boolean;
   onRequestClose: () => void;
   ITPFormData: {
-    lastService: Date;
-    nextService: Date;
+    lastInspection: Date;
+    nextInspection: Date;
   };
   setITPFormData: (data: any) => void;
   onSave: () => void;
 }
 
-const InsuranceFormModal: React.FC<ITPFormModal> = ({
+const ITPFormModal: React.FC<ITPFormModal> = ({
   animationType,
   transparent,
   visible,
@@ -48,12 +48,12 @@ const InsuranceFormModal: React.FC<ITPFormModal> = ({
                 <Text style={styles.editField}>Valid from</Text>
                 <DateInputField
                   iconName="calendar-alt"
-                  placeholder="Insurance Start Date"
-                  value={ITPFormData.lastService}
+                  placeholder="ITP Start Date"
+                  value={ITPFormData.lastInspection}
                   onChange={(date) =>
                     setITPFormData({
                       ...ITPFormData,
-                      lastService: date || new Date(),
+                      lastInspection: date || new Date(),
                     })
                   }
                 />
@@ -61,12 +61,12 @@ const InsuranceFormModal: React.FC<ITPFormModal> = ({
                 <Text style={styles.editField}>Valid to</Text>
                 <DateInputField
                   iconName="calendar-alt"
-                  placeholder="Insurance Expiry Date"
-                  value={ITPFormData.nextService}
+                  placeholder="ITP Expiry Date"
+                  value={ITPFormData.nextInspection}
                   onChange={(date) =>
                     setITPFormData({
                       ...ITPFormData,
-                      nextService: date || new Date(),
+                      nextInspection: date || new Date(),
                     })
                   }
                 />
@@ -80,4 +80,4 @@ const InsuranceFormModal: React.FC<ITPFormModal> = ({
   );
 };
 
-export default InsuranceFormModal;
+export default ITPFormModal;

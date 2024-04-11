@@ -70,13 +70,34 @@ export class Car {
   cascoPicture: string;
 
   @Column({ nullable: true })
+  vignetteStartDate: Date;
+
+  @Column({ nullable: true })
+  vignetteExpiryDate: Date;
+
+  @Column({ nullable: true })
+  lastInspection: Date;
+
+  @Column({ nullable: true })
+  nextInspection: Date;
+
+  @Column({ nullable: true })
   lastService: Date;
 
   @Column({ nullable: true })
   nextService: Date;
+  
+  @Column({ nullable: true })
+  lastServiceMileage: number;
 
   @Column({ nullable: true })
-  nextServiceMileage: number;
+  nextServiceMileageInterval: number;
+
+  @Column({ nullable: true })
+  serviceCompany: string;
+
+  @Column({ nullable: true })
+  serviceDetails: string;
 
   @Column({ nullable: true })
   vin: string;

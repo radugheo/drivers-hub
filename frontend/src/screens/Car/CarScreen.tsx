@@ -12,6 +12,7 @@ import { RootStackParamList } from "../../navigation/app-navigator";
 import TopBar from "../../components/TopBar/TopBar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FormDropdownField from "../../components/FormDropdownField/FormDropdownField";
+import NumberInputField from "../../components/NumberInputField/NumberInputField";
 
 type CarScreenRouteProp = RouteProp<RootStackParamList, "CarScreen">;
 type CarScreenNavigationProp = StackNavigationProp<
@@ -98,7 +99,7 @@ const CarScreen: React.FC<CarScreenProps> = ({ route }) => {
           />
 
           <Text style={styles.editField}>Mileage</Text>
-          <FormInputField
+          <NumberInputField
             iconName="tachometer-alt"
             placeholder="Mileage"
             value={car.mileage?.toString() || ""}
@@ -132,7 +133,7 @@ const CarScreen: React.FC<CarScreenProps> = ({ route }) => {
           />
 
           <Text style={styles.editField}>Displacement</Text>
-          <FormInputField
+          <NumberInputField
             iconName="cog"
             placeholder="Displacement"
             value={car.displacement?.toString() || ""}
@@ -142,7 +143,7 @@ const CarScreen: React.FC<CarScreenProps> = ({ route }) => {
           />
 
           <Text style={styles.editField}>Horsepower</Text>
-          <FormInputField
+          <NumberInputField
             iconName="horse"
             placeholder="Horsepower"
             value={car.horsepower?.toString() || ""}

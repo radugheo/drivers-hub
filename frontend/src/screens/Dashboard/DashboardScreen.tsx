@@ -17,13 +17,25 @@ import { useFocusEffect } from "@react-navigation/native";
 import InsuranceWidget from "../../components/InsuranceWidget/InsuranceWidget";
 import ITPFormModal from "../../components/ITPFormModal/ITPFormModal";
 import ITPWidget from "../../components/ITPWidget/ITPWidget";
+import ServiceWidget from "../../components/ServiceWidget/ServiceWidget";
+import ServiceFormModal from "../../components/ServiceFormModal/ServiceFormModal";
+
+type FormData = { [key: string]: any };
+type SetIsModalVisibleFunction = (isVisible: boolean) => void;
+type WidgetName = string;
+
+type HandleSubmitFormParams = {
+  formData: FormData;
+  setIsModalVisible: SetIsModalVisibleFunction;
+  widgetName: WidgetName;
+};
 
 const DashboardScreen: React.FC = () => {
   const [cars, setCars] = useState<Car[]>([]);
-  const [isServiceModalVisible, setServiceModalVisible] = useState(false);
+  const [isOptionsModalVisible, setOptionsModalVisible] = useState(false);
   const [selectedCarId, setSelectedCarId] = useState<number | null>(null);
   const [carWidgets, setCarWidgets] = useState<{ [carId: string]: string[] }>(
-    {},
+    {}
   );
   const [isInsuranceModalVisible, setIsInsuranceModalVisible] = useState(false);
   const [insuranceFormData, setInsuranceFormData] = useState({
@@ -36,8 +48,18 @@ const DashboardScreen: React.FC = () => {
 
   const [isITPModalVisible, setIsITPModalVisible] = useState(false);
   const [ITPFormData, setITPFormData] = useState({
+    lastInspection: new Date(),
+    nextInspection: new Date(),
+  });
+
+  const [isServiceModalVisible, setServiceModalVisible] = useState(false);
+  const [serviceFormData, setServiceFormData] = useState({
     lastService: new Date(),
     nextService: new Date(),
+    lastServiceMileage: 0,
+    nextServiceMileageInterval: 0,
+    serviceCompany: "",
+    serviceDetails: "",
   });
 
   const fetchCarsAndWidgets = useCallback(async () => {
@@ -47,7 +69,7 @@ const DashboardScreen: React.FC = () => {
         let fetchedCars: Car[] = await getCarsApiCall(token);
         setCars(fetchedCars);
         const widgetsFetchPromises = fetchedCars.map((car) =>
-          retrieveCarWidgets(car.id!.toString()),
+          retrieveCarWidgets(car.id!.toString())
         );
         const allWidgets = await Promise.all(widgetsFetchPromises);
         const widgetsMap = fetchedCars.reduce(
@@ -55,8 +77,9 @@ const DashboardScreen: React.FC = () => {
             ...acc,
             [car.id!.toString()]: allWidgets[index] || [],
           }),
-          {},
+          {}
         );
+        console.log("Widgets map", widgetsMap);
         setCarWidgets(widgetsMap);
       } else {
         Alert.alert("Error", "Unable to retrieve user token");
@@ -70,15 +93,13 @@ const DashboardScreen: React.FC = () => {
   useFocusEffect(
     useCallback(() => {
       fetchCarsAndWidgets();
-    }, [fetchCarsAndWidgets]),
+    }, [fetchCarsAndWidgets])
   );
 
   const options = [
     "Insurance",
-    "Service",
-    "Accident",
-    "Mileage",
     "ITP (Technical Inspection)",
+    "Service & Maintenance",
   ];
 
   const widgetExists = (widgetName: string) => {
@@ -105,13 +126,16 @@ const DashboardScreen: React.FC = () => {
         if (!widgetExists(item)) {
           if (selectedCarId && item === "Insurance") {
             setIsInsuranceModalVisible(true);
-            setServiceModalVisible(false);
+            setOptionsModalVisible(false);
           } else if (selectedCarId && item === "ITP (Technical Inspection)") {
             setIsITPModalVisible(true);
-            setServiceModalVisible(false);
+            setOptionsModalVisible(false);
+          } else if (selectedCarId && item === "Service & Maintenance") {
+            setServiceModalVisible(true);
+            setOptionsModalVisible(false);
           } else {
             addWidgetToCar(selectedCarId!.toString(), item);
-            setServiceModalVisible(false);
+            setOptionsModalVisible(false);
           }
         }
       }}
@@ -132,7 +156,18 @@ const DashboardScreen: React.FC = () => {
   };
 
   const carHasITP = (car: Car) => {
-    return car.lastService || car.nextService;
+    return car.lastInspection || car.nextInspection;
+  };
+
+  const carHasService = (car: Car) => {
+    return (
+      car.lastService ||
+      car.nextService ||
+      car.lastServiceMileage ||
+      car.nextServiceMileageInterval ||
+      car.serviceCompany || 
+      car.serviceDetails
+    );
   };
 
   const renderItem = ({ item }: { item: Car }) => {
@@ -155,6 +190,10 @@ const DashboardScreen: React.FC = () => {
               if (carHasITP(item)) {
                 return <ITPWidget key={index} item={item} />;
               }
+            } else if (widgetName === "Service & Maintenance") {
+              if (carHasService(item)) {
+                return <ServiceWidget key={index} item={item} />;
+              }
             } else {
               return (
                 <CustomWidget key={index} title={widgetName} progress={30} />
@@ -166,14 +205,18 @@ const DashboardScreen: React.FC = () => {
           title="Add new information"
           onPress={() => {
             setSelectedCarId(item.id!);
-            setServiceModalVisible(true);
+            setOptionsModalVisible(true);
           }}
         />
       </View>
     );
   };
 
-  const handleInsuranceFormSubmit = async () => {
+  const handleSubmitForm = async ({
+    formData,
+    setIsModalVisible,
+    widgetName,
+  }: HandleSubmitFormParams) => {
     if (!selectedCarId) {
       Alert.alert("Error", "No car selected.");
       return;
@@ -190,17 +233,20 @@ const DashboardScreen: React.FC = () => {
     }
     const updatedCar = {
       ...carToUpdate,
-      ...insuranceFormData,
+      ...formData,
     };
     try {
       await updateCarApiCall(updatedCar, token);
-      Alert.alert("Success", "Car insurance information updated successfully.");
-      setIsInsuranceModalVisible(false);
+      Alert.alert(
+        "Success",
+        `Car ${widgetName} information updated successfully.`
+      );
+      setIsModalVisible(false);
       setCars(cars.map((car) => (car.id === selectedCarId ? updatedCar : car)));
-      if (!carWidgets[selectedCarId.toString()].includes("Insurance")) {
+      if (!carWidgets[selectedCarId.toString()].includes(widgetName)) {
         const updatedWidgets = [
           ...carWidgets[selectedCarId.toString()],
-          "Insurance",
+          widgetName,
         ];
         setCarWidgets({
           ...carWidgets,
@@ -209,54 +255,33 @@ const DashboardScreen: React.FC = () => {
         saveCarWidgets(selectedCarId.toString(), updatedWidgets);
       }
     } catch (error) {
-      console.error("Error updating insurance information:", error);
-      Alert.alert("Error", "Failed to update insurance information.");
+      console.error(`Error updating ${widgetName} information:`, error);
+      Alert.alert("Error", `Failed to update ${widgetName} information.`);
     }
   };
 
+  const handleInsuranceFormSubmit = async () => {
+    await handleSubmitForm({
+      formData: insuranceFormData,
+      setIsModalVisible: setIsInsuranceModalVisible,
+      widgetName: "Insurance",
+    });
+  };
+
   const handleITPFormSubmit = async () => {
-    if (!selectedCarId) {
-      Alert.alert("Error", "No car selected.");
-      return;
-    }
-    const token = await retrieveString("userToken");
-    if (!token) {
-      Alert.alert("Error", "User token not found.");
-      return;
-    }
-    const carToUpdate = cars.find((car) => car.id === selectedCarId);
-    if (!carToUpdate) {
-      Alert.alert("Error", "Car not found.");
-      return;
-    }
-    const updatedCar = {
-      ...carToUpdate,
-      ...ITPFormData,
-    };
-    try {
-      await updateCarApiCall(updatedCar, token);
-      Alert.alert("Success", "Car ITP information updated successfully.");
-      setIsITPModalVisible(false);
-      setCars(cars.map((car) => (car.id === selectedCarId ? updatedCar : car)));
-      if (
-        !carWidgets[selectedCarId.toString()].includes(
-          "ITP (Technical Inspection)",
-        )
-      ) {
-        const updatedWidgets = [
-          ...carWidgets[selectedCarId.toString()],
-          "ITP (Technical Inspection)",
-        ];
-        setCarWidgets({
-          ...carWidgets,
-          [selectedCarId.toString()]: updatedWidgets,
-        });
-        saveCarWidgets(selectedCarId.toString(), updatedWidgets);
-      }
-    } catch (error) {
-      console.error("Error updating ITP information:", error);
-      Alert.alert("Error", "Failed to update ITP information.");
-    }
+    await handleSubmitForm({
+      formData: ITPFormData,
+      setIsModalVisible: setIsITPModalVisible,
+      widgetName: "ITP (Technical Inspection)",
+    });
+  };
+
+  const handleServiceFormSubmit = async () => {
+    await handleSubmitForm({
+      formData: serviceFormData,
+      setIsModalVisible: setServiceModalVisible,
+      widgetName: "Service & Maintenance",
+    });
   };
 
   return (
@@ -272,9 +297,9 @@ const DashboardScreen: React.FC = () => {
       <OptionsModal
         animationType="none"
         transparent={true}
-        visible={isServiceModalVisible}
+        visible={isOptionsModalVisible}
         options={options}
-        onRequestClose={() => setServiceModalVisible(false)}
+        onRequestClose={() => setOptionsModalVisible(false)}
         renderOption={renderOption}
       />
 
@@ -296,6 +321,16 @@ const DashboardScreen: React.FC = () => {
         ITPFormData={ITPFormData}
         setITPFormData={setITPFormData}
         onSave={handleITPFormSubmit}
+      />
+
+      <ServiceFormModal
+        animationType="none"
+        transparent={true}
+        visible={isServiceModalVisible}
+        onRequestClose={() => setServiceModalVisible(false)}
+        serviceFormData={serviceFormData}
+        setServiceFormData={setServiceFormData}
+        onSave={handleServiceFormSubmit}
       />
     </View>
   );
