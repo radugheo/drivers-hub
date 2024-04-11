@@ -86,7 +86,7 @@ export class Car {
 
   @Column({ nullable: true })
   nextService: Date;
-  
+
   @Column({ nullable: true })
   lastServiceMileage: number;
 
