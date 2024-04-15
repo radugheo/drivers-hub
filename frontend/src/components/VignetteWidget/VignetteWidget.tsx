@@ -1,29 +1,29 @@
 import React from "react";
 import { View, Text, TouchableOpacity, Modal, Image } from "react-native";
-import { styles } from "./ITPWidget.styles";
+import { styles } from "./VignetteWidget.styles";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Car } from "../../models/Car.model";
 
-type ITPWidgetNavigationProp = StackNavigationProp<
+type VignetteWidgetNavigationProp = StackNavigationProp<
   RootStackParamList,
-  "ITPScreen"
+  "VignetteScreen"
 >;
 
 export type RootStackParamList = {
-  ITPScreen: { item: Car };
+  VignetteScreen: { item: Car };
 };
 
-interface ITPWidgetProps {
+interface VignetteWidgetProps {
   item: Car;
 }
 
-const ITPWidget: React.FC<ITPWidgetProps> = ({ item }) => {
-  const navigation = useNavigation<ITPWidgetNavigationProp>();
+const VignetteWidget: React.FC<VignetteWidgetProps> = ({ item }) => {
+  const navigation = useNavigation<VignetteWidgetNavigationProp>();
 
   const calculateProgress = () => {
-    const start = new Date(item.lastInspection!).getTime();
-    const end = new Date(item.nextInspection!).getTime();
+    const start = new Date(item.vignetteStartDate!).getTime();
+    const end = new Date(item.vignetteExpiryDate!).getTime();
     const now = new Date().getTime();
     const totalDuration = end - start;
     const timeElapsedSinceStart = now - start;
@@ -32,7 +32,7 @@ const ITPWidget: React.FC<ITPWidgetProps> = ({ item }) => {
   };
 
   const calculateDaysLeft = () => {
-    const end = new Date(item.nextInspection!).getTime();
+    const end = new Date(item.vignetteExpiryDate!).getTime();
     const now = new Date().getTime();
     const totalDuration = end - now;
     const daysLeft = Math.floor(totalDuration / (1000 * 60 * 60 * 24));
@@ -52,23 +52,26 @@ const ITPWidget: React.FC<ITPWidgetProps> = ({ item }) => {
     return `${date.split(" ")[2]} ${date.split(" ")[1]} ${date.split(" ")[3]}`;
   };
 
-  const navigateToITPScreen = () => {
-    navigation.navigate("ITPScreen", { item });
+  const navigateToVignetteScreen = () => {
+    navigation.navigate("VignetteScreen", { item });
   };
 
   const progress = calculateProgress();
   const progressBarColor = getProgressBarColor(progress);
 
   return (
-    <TouchableOpacity style={styles.container} onPress={navigateToITPScreen}>
-      <Text style={styles.title}>ITP (Technical Inspection)</Text>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={navigateToVignetteScreen}
+    >
+      <Text style={styles.title}>Vignette</Text>
       <View style={styles.datesContainer}>
         <Text>
           {calculateDaysLeft()}
           {" days left"}
         </Text>
         <Text>
-          {formatDate(new Date(item.nextInspection!).toDateString()!)}
+          {formatDate(new Date(item.vignetteExpiryDate!).toDateString()!)}
         </Text>
       </View>
       <View style={styles.progressBarBackground}>
@@ -83,4 +86,4 @@ const ITPWidget: React.FC<ITPWidgetProps> = ({ item }) => {
   );
 };
 
-export default ITPWidget;
+export default VignetteWidget;

@@ -14,6 +14,7 @@ import InsuranceScreen from "../screens/InsuranceScreen/InsuranceScreen";
 import DashboardScreen from "../screens/Dashboard/DashboardScreen";
 import ITPScreen from "../screens/ITPScreen/ITPScreen";
 import ServiceScreen from "../screens/ServiceScreen/ServiceScreen";
+import VignetteScreen from "../screens/VignetteScreen/VignetteScreen";
 
 export type RootStackParamList = {
   Login: undefined;
@@ -28,6 +29,7 @@ export type RootStackParamList = {
   InsuranceScreen: { item: Car };
   ITPScreen: { item: Car };
   ServiceScreen: { item: Car };
+  VignetteScreen: { item: Car };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -86,6 +88,11 @@ const AppNavigator = () => {
         <Stack.Screen
           name="ServiceScreen"
           component={ServiceScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="VignetteScreen"
+          component={VignetteScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

@@ -9,7 +9,7 @@ import {
   Alert,
   LogBox,
 } from "react-native";
-import { styles } from "./ITPScreen.styles";
+import { styles } from "./VignetteScreen.styles";
 import { useNavigation, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../../navigation/app-navigator";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -24,23 +24,23 @@ LogBox.ignoreLogs([
   "Non-serializable values were found in the navigation state",
 ]);
 
-type ITPScreenRouteProp = RouteProp<RootStackParamList, "ITPScreen">;
-type ITPScreenNavigationProp = StackNavigationProp<
+type VignetteScreenRouteProp = RouteProp<RootStackParamList, "VignetteScreen">;
+type VignetteScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
-  "ITPScreen"
+  "VignetteScreen"
 >;
 
-interface ITPScreenProps {
-  route: ITPScreenRouteProp;
-  navigation: ITPScreenNavigationProp;
+interface VignetteScreenProps {
+  route: VignetteScreenRouteProp;
+  navigation: VignetteScreenNavigationProp;
 }
 
-const ITPScreen: React.FC<ITPScreenProps> = ({ route }) => {
+const VignetteScreen: React.FC<VignetteScreenProps> = ({ route }) => {
   const navigation = useNavigation();
   const { item } = route.params;
   const [car, setCar] = useState<Car>(item);
 
-  const handleSaveITP = async () => {
+  const handleSaveVignette = async () => {
     try {
       for (const key in car) {
         if (car[key as keyof Car] === "") {
@@ -58,24 +58,24 @@ const ITPScreen: React.FC<ITPScreenProps> = ({ route }) => {
     }
   };
 
-  const handleDeleteITP = async () => {
+  const handleDeleteVignette = async () => {
     try {
       const token = await retrieveString("userToken");
       const result = await updateCarApiCall(
         {
           id: car.id,
-          lastInspection: null,
-          nextInspection: null,
+          vignetteStartDate: null,
+          vignetteExpiryDate: null,
         },
         token,
       );
       if (result) {
-        Alert.alert("Success", "ITP details have been deleted.");
+        Alert.alert("Success", "Vignette details have been deleted.");
         await removeCarWidgets(car.id!.toString());
         navigation.goBack();
       }
     } catch (error) {
-      console.error("Error deleting the ITP details:", error);
+      console.error("Error deleting the Vignette details:", error);
     }
   };
 
@@ -85,7 +85,7 @@ const ITPScreen: React.FC<ITPScreenProps> = ({ route }) => {
 
   return (
     <View style={styles.mainContainer}>
-      <TopBar title="ITP Details" />
+      <TopBar title="Vignette Details" />
       <SafeAreaView style={styles.safeContainer}>
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -96,9 +96,14 @@ const ITPScreen: React.FC<ITPScreenProps> = ({ route }) => {
             <DateInputField
               iconName="calendar"
               placeholder="Start Date"
-              value={new Date(car.lastInspection || new Date().toISOString())}
+              value={
+                new Date(car.vignetteStartDate || new Date().toISOString())
+              }
               onChange={(date) =>
-                handleServiceInputChange("lastInspection", date.toISOString())
+                handleServiceInputChange(
+                  "vignetteStartDate",
+                  date.toISOString(),
+                )
               }
             />
 
@@ -106,15 +111,20 @@ const ITPScreen: React.FC<ITPScreenProps> = ({ route }) => {
             <DateInputField
               iconName="calendar"
               placeholder="End Date"
-              value={new Date(car.nextInspection || new Date().toISOString())}
+              value={
+                new Date(car.vignetteExpiryDate || new Date().toISOString())
+              }
               onChange={(date) =>
-                handleServiceInputChange("nextInspection", date.toISOString())
+                handleServiceInputChange(
+                  "vignetteExpiryDate",
+                  date.toISOString(),
+                )
               }
             />
           </ScrollView>
           <View style={styles.buttonsContainer}>
-            <OpacityButton title="Save" onPress={handleSaveITP} />
-            <OpacityButton title="Delete" onPress={handleDeleteITP} />
+            <OpacityButton title="Save" onPress={handleSaveVignette} />
+            <OpacityButton title="Delete" onPress={handleDeleteVignette} />
           </View>
         </KeyboardAvoidingView>
       </SafeAreaView>
@@ -122,4 +132,4 @@ const ITPScreen: React.FC<ITPScreenProps> = ({ route }) => {
   );
 };
 
-export default ITPScreen;
+export default VignetteScreen;

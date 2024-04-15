@@ -73,7 +73,7 @@ const ServiceScreen: React.FC<ServiceScreenProps> = ({ route }) => {
           nextServiceMileageInterval: null,
           serviceCompany: null,
         },
-        token
+        token,
       );
       if (result) {
         Alert.alert("Success", "Service details have been deleted.");
@@ -136,7 +136,7 @@ const ServiceScreen: React.FC<ServiceScreenProps> = ({ route }) => {
               onChangeText={(lastServiceMileage) =>
                 handleServiceInputChange(
                   "lastServiceMileage",
-                  lastServiceMileage
+                  lastServiceMileage,
                 )
               }
             />
@@ -151,7 +151,7 @@ const ServiceScreen: React.FC<ServiceScreenProps> = ({ route }) => {
               onChangeText={(nextServiceMileageInterval) =>
                 handleServiceInputChange(
                   "nextServiceMileageInterval",
-                  nextServiceMileageInterval
+                  nextServiceMileageInterval,
                 )
               }
             />

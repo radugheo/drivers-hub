@@ -1,14 +1,14 @@
 import React from "react";
 import { View, TextInput } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { styles } from "./NumberInputField.styles"; 
+import { styles } from "./NumberInputField.styles";
 
 interface NumberInputProps {
   iconName: string;
   placeholder: string;
-  value: string | null; 
-  onChangeText: (text: string) => void; 
-  secureTextEntry?: boolean; 
+  value: string | null;
+  onChangeText: (text: string) => void;
+  secureTextEntry?: boolean;
 }
 
 const NumberInputField: React.FC<NumberInputProps> = ({
@@ -25,7 +25,7 @@ const NumberInputField: React.FC<NumberInputProps> = ({
         style={styles.input}
         placeholder={placeholder}
         placeholderTextColor={"#666"}
-        value={value? value : undefined}
+        value={value ? value : undefined}
         onChangeText={onChangeText}
         keyboardType="numeric"
         secureTextEntry={secureTextEntry}

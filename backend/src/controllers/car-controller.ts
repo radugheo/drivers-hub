@@ -33,6 +33,8 @@ const updateCarFields = async (car, data, userRepository) => {
     'cascoPolicyNumber',
     'cascoCompany',
     'cascoPicture',
+    'vignetteStartDate',
+    'vignetteExpiryDate',
     'fuel',
     'vin',
   ];

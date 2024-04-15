@@ -8,7 +8,7 @@ export const registerApiCall = async (
   username: string,
   email: string,
   password: string,
-  role: string = "user"
+  role: string = "user",
 ) => {
   try {
     const response = await axios.post(`${BASE_URL}/register`, {

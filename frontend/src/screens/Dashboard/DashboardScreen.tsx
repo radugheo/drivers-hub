@@ -19,6 +19,8 @@ import ITPFormModal from "../../components/ITPFormModal/ITPFormModal";
 import ITPWidget from "../../components/ITPWidget/ITPWidget";
 import ServiceWidget from "../../components/ServiceWidget/ServiceWidget";
 import ServiceFormModal from "../../components/ServiceFormModal/ServiceFormModal";
+import VignetteWidget from "../../components/VignetteWidget/VignetteWidget";
+import VignetteFormModal from "../../components/VignetteFormModal/VignetteFormModal";
 
 type FormData = { [key: string]: any };
 type SetIsModalVisibleFunction = (isVisible: boolean) => void;
@@ -35,7 +37,7 @@ const DashboardScreen: React.FC = () => {
   const [isOptionsModalVisible, setOptionsModalVisible] = useState(false);
   const [selectedCarId, setSelectedCarId] = useState<number | null>(null);
   const [carWidgets, setCarWidgets] = useState<{ [carId: string]: string[] }>(
-    {}
+    {},
   );
   const [isInsuranceModalVisible, setIsInsuranceModalVisible] = useState(false);
   const [insuranceFormData, setInsuranceFormData] = useState({
@@ -62,6 +64,12 @@ const DashboardScreen: React.FC = () => {
     serviceDetails: "",
   });
 
+  const [isVignetteModalVisible, setIsVignetteModalVisible] = useState(false);
+  const [vignetteFormData, setVignetteFormData] = useState({
+    vignetteStartDate: new Date(),
+    vignetteExpiryDate: new Date(),
+  });
+
   const fetchCarsAndWidgets = useCallback(async () => {
     try {
       const token = await retrieveString("userToken");
@@ -69,7 +77,7 @@ const DashboardScreen: React.FC = () => {
         let fetchedCars: Car[] = await getCarsApiCall(token);
         setCars(fetchedCars);
         const widgetsFetchPromises = fetchedCars.map((car) =>
-          retrieveCarWidgets(car.id!.toString())
+          retrieveCarWidgets(car.id!.toString()),
         );
         const allWidgets = await Promise.all(widgetsFetchPromises);
         const widgetsMap = fetchedCars.reduce(
@@ -77,7 +85,7 @@ const DashboardScreen: React.FC = () => {
             ...acc,
             [car.id!.toString()]: allWidgets[index] || [],
           }),
-          {}
+          {},
         );
         console.log("Widgets map", widgetsMap);
         setCarWidgets(widgetsMap);
@@ -93,13 +101,14 @@ const DashboardScreen: React.FC = () => {
   useFocusEffect(
     useCallback(() => {
       fetchCarsAndWidgets();
-    }, [fetchCarsAndWidgets])
+    }, [fetchCarsAndWidgets]),
   );
 
   const options = [
     "Insurance",
     "ITP (Technical Inspection)",
     "Service & Maintenance",
+    "Vignette",
   ];
 
   const widgetExists = (widgetName: string) => {
@@ -133,6 +142,9 @@ const DashboardScreen: React.FC = () => {
           } else if (selectedCarId && item === "Service & Maintenance") {
             setServiceModalVisible(true);
             setOptionsModalVisible(false);
+          } else if (selectedCarId && item === "Vignette") {
+            setIsVignetteModalVisible(true);
+            setOptionsModalVisible(false);
           } else {
             addWidgetToCar(selectedCarId!.toString(), item);
             setOptionsModalVisible(false);
@@ -165,22 +177,26 @@ const DashboardScreen: React.FC = () => {
       car.nextService ||
       car.lastServiceMileage ||
       car.nextServiceMileageInterval ||
-      car.serviceCompany || 
+      car.serviceCompany ||
       car.serviceDetails
     );
+  };
+
+  const carHasVignette = (car: Car) => {
+    return car.vignetteStartDate || car.vignetteExpiryDate;
   };
 
   const renderItem = ({ item }: { item: Car }) => {
     const widgets = carWidgets[item.id!.toString()] || [];
     return (
       <View style={styles.carContainer}>
+        <View style={styles.cardContainer}>
+          <Text style={styles.carTitle}>
+            {item.make} {item.model} {item.year}
+          </Text>
+          <Text style={styles.carSubtitle}>{item.licensePlate}</Text>
+        </View>
         <ScrollView>
-          <View style={styles.cardContainer}>
-            <Text style={styles.carTitle}>
-              {item.make} {item.model} {item.year}
-            </Text>
-            <Text style={styles.carSubtitle}>{item.licensePlate}</Text>
-          </View>
           {widgets.map((widgetName, index) => {
             if (widgetName === "Insurance") {
               if (carHasInsurance(item)) {
@@ -193,6 +209,10 @@ const DashboardScreen: React.FC = () => {
             } else if (widgetName === "Service & Maintenance") {
               if (carHasService(item)) {
                 return <ServiceWidget key={index} item={item} />;
+              }
+            } else if (widgetName === "Vignette") {
+              if (carHasVignette(item)) {
+                return <VignetteWidget key={index} item={item} />;
               }
             } else {
               return (
@@ -239,7 +259,7 @@ const DashboardScreen: React.FC = () => {
       await updateCarApiCall(updatedCar, token);
       Alert.alert(
         "Success",
-        `Car ${widgetName} information updated successfully.`
+        `Car ${widgetName} information updated successfully.`,
       );
       setIsModalVisible(false);
       setCars(cars.map((car) => (car.id === selectedCarId ? updatedCar : car)));
@@ -281,6 +301,14 @@ const DashboardScreen: React.FC = () => {
       formData: serviceFormData,
       setIsModalVisible: setServiceModalVisible,
       widgetName: "Service & Maintenance",
+    });
+  };
+
+  const handleVignetteFormSubmit = async () => {
+    await handleSubmitForm({
+      formData: vignetteFormData,
+      setIsModalVisible: setIsVignetteModalVisible,
+      widgetName: "Vignette",
     });
   };
 
@@ -331,6 +359,16 @@ const DashboardScreen: React.FC = () => {
         serviceFormData={serviceFormData}
         setServiceFormData={setServiceFormData}
         onSave={handleServiceFormSubmit}
+      />
+
+      <VignetteFormModal
+        animationType="none"
+        transparent={true}
+        visible={isVignetteModalVisible}
+        onRequestClose={() => setIsVignetteModalVisible(false)}
+        vignetteFormData={vignetteFormData}
+        setVignetteFormData={setVignetteFormData}
+        onSave={handleVignetteFormSubmit}
       />
     </View>
   );

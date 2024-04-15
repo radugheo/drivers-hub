@@ -53,7 +53,7 @@ const InsuranceScreen: React.FC<InsuranceScreenProps> = ({ route }) => {
     try {
       for (const key in car) {
         if (car[key as keyof Car] === "") {
-          (car[key as keyof Car] as Car[keyof Car] | null) = null; 
+          (car[key as keyof Car] as Car[keyof Car] | null) = null;
         }
       }
       const token = await retrieveString("userToken");
