@@ -15,6 +15,7 @@ import DashboardScreen from "../screens/Dashboard/DashboardScreen";
 import ITPScreen from "../screens/ITPScreen/ITPScreen";
 import ServiceScreen from "../screens/ServiceScreen/ServiceScreen";
 import VignetteScreen from "../screens/VignetteScreen/VignetteScreen";
+import { ActiveInsurance } from "../models/Active-Insurance.model";
 
 export type RootStackParamList = {
   Login: undefined;
@@ -26,7 +27,7 @@ export type RootStackParamList = {
   CarScreen: { item: Car };
   DashboardScreen: undefined;
   FindMyCarScreen: undefined;
-  InsuranceScreen: { item: Car };
+  InsuranceScreen: { carItem: Car; insuranceItem: ActiveInsurance };
   ITPScreen: { item: Car };
   ServiceScreen: { item: Car };
   VignetteScreen: { item: Car };

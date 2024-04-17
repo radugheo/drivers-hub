@@ -1,5 +1,6 @@
 import { AuthController } from './controllers/auth-controller';
 import { CarController } from './controllers/car-controller';
+import { InsuranceController } from './controllers/insurance-controller';
 import { UserController } from './controllers/user-controller';
 import { isAdmin, isAuthenticated } from './middlewares/auth';
 
@@ -87,20 +88,58 @@ const carRoutes = [
     action: 'update',
     middlewares: [isAuthenticated],
   },
+];
+
+const insuranceRoutes = [
+  {
+    method: 'get',
+    route: '/insurance/active/:id',
+    controller: InsuranceController,
+    action: 'activeByCar',
+    middlewares: [isAuthenticated],
+  },
   {
     method: 'post',
-    route: '/cars/:id/insurance',
-    controller: CarController,
-    action: 'addInsurance',
+    route: '/insurance/active',
+    controller: InsuranceController,
+    action: 'saveActive',
+    middlewares: [isAuthenticated],
+  },
+  {
+    method: 'put',
+    route: '/insurance/active/:id',
+    controller: InsuranceController,
+    action: 'updateActive',
     middlewares: [isAuthenticated],
   },
   {
     method: 'delete',
-    route: '/cars/:id/insurance',
-    controller: CarController,
-    action: 'removeInsurance',
+    route: '/insurance/active/:id',
+    controller: InsuranceController,
+    action: 'removeActive',
+    middlewares: [isAuthenticated],
+  },
+  {
+    method: 'get',
+    route: '/insurance/history/:id',
+    controller: InsuranceController,
+    action: 'historyByCar',
+    middlewares: [isAuthenticated],
+  },
+  {
+    method: 'post',
+    route: '/insurance/history',
+    controller: InsuranceController,
+    action: 'expire',
+    middlewares: [isAuthenticated],
+  },
+  {
+    method: 'delete',
+    route: '/insurance/history/:id',
+    controller: InsuranceController,
+    action: 'removeExpired',
     middlewares: [isAuthenticated],
   },
 ];
 
-export const Routes = [...authRoutes, ...userRoutes, ...carRoutes];
+export const Routes = [...authRoutes, ...userRoutes, ...carRoutes, ...insuranceRoutes];

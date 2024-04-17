@@ -18,12 +18,17 @@ import TopBar from "../../components/TopBar/TopBar";
 import FormInputField from "../../components/FormInputField/FormInputField";
 import OpacityButton from "../../components/OpacityButton/OpacityButton";
 import { removeCarWidgets, retrieveString } from "../../utils/storage-handler";
-import { updateCarApiCall } from "../../api/api-service";
+import {
+  deleteInsuranceApiCall,
+  updateCarApiCall,
+  updateInsuranceApiCall,
+} from "../../api/api-service";
 import DateInputField from "../../components/DateInputField/DateInputField";
 import { Car } from "../../models/Car.model";
 import PictureModal from "../../components/PictureModal/PictureModal";
 import PictureInputField from "../../components/PictureInputField/PictureInputField";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { ActiveInsurance } from "../../models/Active-Insurance.model";
 
 LogBox.ignoreLogs([
   "Non-serializable values were found in the navigation state",
@@ -45,43 +50,48 @@ interface InsuranceScreenProps {
 
 const InsuranceScreen: React.FC<InsuranceScreenProps> = ({ route }) => {
   const navigation = useNavigation();
-  const { item } = route.params;
-  const [car, setCar] = useState<Car>(item);
+  const { carItem, insuranceItem } = route.params;
+  const [car, setCar] = useState<Car>(carItem);
+  const [insurance, setInsurance] = useState<ActiveInsurance>(insuranceItem);
   const [isModalVisible, setModalVisible] = useState(false);
 
   const handleSaveInsurance = async () => {
     try {
-      for (const key in car) {
-        if (car[key as keyof Car] === "") {
-          (car[key as keyof Car] as Car[keyof Car] | null) = null;
+      for (const key in insurance) {
+        if (insurance[key as keyof ActiveInsurance] === "") {
+          (insurance[key as keyof ActiveInsurance] as
+            | ActiveInsurance[keyof ActiveInsurance]
+            | null) = null;
         }
       }
+      console.log("Updating insurance with ID:", insurance.id);
+      console.log("Updating car with ID:", car.id);
+      const updatedCar = { ...car, activeInsurance: insurance };
       const token = await retrieveString("userToken");
-      const result = await updateCarApiCall(car, token);
-      if (result) {
-        Alert.alert("Success", "Car updated successfully.");
+      const resultInsuranceCall = await updateInsuranceApiCall(
+        insurance,
+        token,
+      );
+      const resultCarCall = await updateCarApiCall(updatedCar, token);
+      if (resultInsuranceCall && resultCarCall) {
+        Alert.alert("Success", "Car insurance updated successfully.");
         navigation.goBack();
       }
     } catch (error) {
-      console.error("Error updating the car:", error);
+      console.error("Error updating the car insurance:", error);
     }
   };
 
   const handleDeleteInsurance = async () => {
     try {
+      const updatedCar = { ...car, activeInsurance: null };
       const token = await retrieveString("userToken");
-      const result = await updateCarApiCall(
-        {
-          id: car.id,
-          insuranceCompany: null,
-          insurancePolicyNumber: null,
-          insuranceStartDate: null,
-          insuranceExpiryDate: null,
-          insurancePicture: null,
-        },
+      const resultInsuranceCall = await deleteInsuranceApiCall(
+        insurance.id!,
         token,
       );
-      if (result) {
+      const resultCarCall = await updateCarApiCall(updatedCar, token);
+      if (resultInsuranceCall && resultCarCall) {
         Alert.alert("Success", "Insurance details have been deleted.");
         await removeCarWidgets(car.id!.toString());
         navigation.goBack();
@@ -91,17 +101,20 @@ const InsuranceScreen: React.FC<InsuranceScreenProps> = ({ route }) => {
     }
   };
 
-  const handleServiceInputChange = (name: keyof Car, value: string | null) => {
-    setCar((prevCar) => ({ ...prevCar, [name]: value }));
+  const handleServiceInputChange = (
+    name: keyof ActiveInsurance,
+    value: string | null,
+  ) => {
+    setInsurance((prevInsurance) => ({ ...prevInsurance, [name]: value }));
   };
 
   const handleImageSelect = (base64Image: string | null) => {
     if (base64Image === null) {
       Alert.alert("Image Removed", "Insurance picture has been removed.");
-      handleServiceInputChange("insurancePicture", null);
+      handleServiceInputChange("picture", null);
       return;
     }
-    handleServiceInputChange("insurancePicture", base64Image);
+    handleServiceInputChange("picture", base64Image);
   };
 
   return (
@@ -116,23 +129,20 @@ const InsuranceScreen: React.FC<InsuranceScreenProps> = ({ route }) => {
             <Text style={styles.editField}>Company</Text>
             <FormInputField
               iconName="building"
-              placeholder={car.insuranceCompany || ""}
-              value={car.insuranceCompany || ""}
-              onChangeText={(insuranceCompany) =>
-                handleServiceInputChange("insuranceCompany", insuranceCompany)
+              placeholder={insurance.company || ""}
+              value={insurance.company || ""}
+              onChangeText={(company) =>
+                handleServiceInputChange("company", company)
               }
             />
 
             <Text style={styles.editField}>Policy Number</Text>
             <FormInputField
               iconName="file"
-              placeholder={car.insurancePolicyNumber || ""}
-              value={car.insurancePolicyNumber || ""}
-              onChangeText={(insurancePolicyNumber) =>
-                handleServiceInputChange(
-                  "insurancePolicyNumber",
-                  insurancePolicyNumber,
-                )
+              placeholder={insurance.policyNumber || ""}
+              value={insurance.policyNumber || ""}
+              onChangeText={(policyNumber) =>
+                handleServiceInputChange("policyNumber", policyNumber)
               }
             />
 
@@ -140,14 +150,9 @@ const InsuranceScreen: React.FC<InsuranceScreenProps> = ({ route }) => {
             <DateInputField
               iconName="calendar"
               placeholder="Start Date"
-              value={
-                new Date(car.insuranceStartDate || new Date().toISOString())
-              }
+              value={new Date(insurance.startDate || new Date().toISOString())}
               onChange={(date) =>
-                handleServiceInputChange(
-                  "insuranceStartDate",
-                  date.toISOString(),
-                )
+                handleServiceInputChange("startDate", date.toISOString())
               }
             />
 
@@ -155,19 +160,14 @@ const InsuranceScreen: React.FC<InsuranceScreenProps> = ({ route }) => {
             <DateInputField
               iconName="calendar"
               placeholder="End Date"
-              value={
-                new Date(car.insuranceExpiryDate || new Date().toISOString())
-              }
+              value={new Date(insurance.expiryDate || new Date().toISOString())}
               onChange={(date) =>
-                handleServiceInputChange(
-                  "insuranceExpiryDate",
-                  date.toISOString(),
-                )
+                handleServiceInputChange("expiryDate", date.toISOString())
               }
             />
 
             <Text style={styles.editField}>Insurance Picture</Text>
-            {car.insurancePicture ? (
+            {insurance.picture ? (
               <View style={styles.imageContainer}>
                 <TouchableOpacity
                   onPress={() => setModalVisible(true)}
@@ -191,7 +191,7 @@ const InsuranceScreen: React.FC<InsuranceScreenProps> = ({ route }) => {
           <PictureModal
             isVisible={isModalVisible}
             onClose={() => setModalVisible(false)}
-            imageData={car.insurancePicture || ""}
+            imageData={insurance.picture || ""}
           />
           <View style={styles.buttonsContainer}>
             <OpacityButton title="Save" onPress={handleSaveInsurance} />

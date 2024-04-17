@@ -1,5 +1,7 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from './User';
+import { InsuranceHistory } from './InsuranceHistory';
+import { ActiveInsurance } from './ActiveInsurance';
 
 @Entity()
 export class Car {
@@ -38,21 +40,6 @@ export class Car {
 
   @Column({ nullable: true })
   fuel: string;
-
-  @Column({ nullable: true })
-  insuranceStartDate: Date;
-
-  @Column({ nullable: true })
-  insuranceExpiryDate: Date;
-
-  @Column({ nullable: true })
-  insurancePolicyNumber: string;
-
-  @Column({ nullable: true })
-  insuranceCompany: string;
-
-  @Column({ nullable: true })
-  insurancePicture: string;
 
   @Column({ nullable: true })
   cascoStartDate: Date;
@@ -104,4 +91,13 @@ export class Car {
 
   @ManyToOne(() => User, (owner) => owner.cars)
   owner: User;
+
+  @OneToOne(() => ActiveInsurance, (insurance) => insurance.car, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  activeInsurance: ActiveInsurance;
+
+  @OneToMany(() => InsuranceHistory, (insurance) => insurance.car)
+  insuranceHistory: InsuranceHistory[];
 }

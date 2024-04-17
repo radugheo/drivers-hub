@@ -11,20 +11,15 @@ import OpacityButton from "../OpacityButton/OpacityButton";
 import PageTitle from "../PageTitle/PageTitle";
 import { styles } from "./InsuranceFormModal.styles";
 import PictureInputField from "../PictureInputField/PictureInputField";
+import { ActiveInsurance } from "../../models/Active-Insurance.model";
 
 interface InsuranceFormModalProps {
   animationType: "none" | "slide" | "fade";
   transparent: boolean;
   visible: boolean;
   onRequestClose: () => void;
-  insuranceFormData: {
-    insurancePolicyNumber: string;
-    insuranceCompany: string;
-    insuranceStartDate: Date;
-    insuranceExpiryDate: Date;
-    insurancePicture: string;
-  };
-  setInsuranceFormData: (data: any) => void;
+  insurance: ActiveInsurance;
+  setInsurance: (data: any) => void;
   onSave: () => void;
 }
 
@@ -33,14 +28,14 @@ const InsuranceFormModal: React.FC<InsuranceFormModalProps> = ({
   transparent,
   visible,
   onRequestClose,
-  insuranceFormData,
-  setInsuranceFormData,
+  insurance,
+  setInsurance,
   onSave,
 }) => {
   const handleImageSelect = (imageBase64: string | null) => {
-    setInsuranceFormData({
-      ...insuranceFormData,
-      insurancePicture: imageBase64,
+    setInsurance({
+      ...insurance,
+      picture: imageBase64,
     });
   };
 
@@ -61,11 +56,11 @@ const InsuranceFormModal: React.FC<InsuranceFormModalProps> = ({
                 <FormInputField
                   iconName="file-contract"
                   placeholder="Insurance Policy Number"
-                  value={insuranceFormData.insurancePolicyNumber}
+                  value={insurance.policyNumber ? insurance.policyNumber : ""}
                   onChangeText={(text) =>
-                    setInsuranceFormData({
-                      ...insuranceFormData,
-                      insurancePolicyNumber: text,
+                    setInsurance({
+                      ...insurance,
+                      policyNumber: text,
                     })
                   }
                 />
@@ -74,11 +69,11 @@ const InsuranceFormModal: React.FC<InsuranceFormModalProps> = ({
                 <FormInputField
                   iconName="building"
                   placeholder="Insurance Company"
-                  value={insuranceFormData.insuranceCompany}
+                  value={insurance.company ? insurance.company : ""}
                   onChangeText={(text) =>
-                    setInsuranceFormData({
-                      ...insuranceFormData,
-                      insuranceCompany: text,
+                    setInsurance({
+                      ...insurance,
+                      company: text,
                     })
                   }
                 />
@@ -87,11 +82,11 @@ const InsuranceFormModal: React.FC<InsuranceFormModalProps> = ({
                 <DateInputField
                   iconName="calendar-alt"
                   placeholder="Insurance Start Date"
-                  value={insuranceFormData.insuranceStartDate}
+                  value={insurance.startDate!}
                   onChange={(date) =>
-                    setInsuranceFormData({
-                      ...insuranceFormData,
-                      insuranceStartDate: date || new Date(),
+                    setInsurance({
+                      ...insurance,
+                      startDate: date || new Date(),
                     })
                   }
                 />
@@ -100,11 +95,11 @@ const InsuranceFormModal: React.FC<InsuranceFormModalProps> = ({
                 <DateInputField
                   iconName="calendar-alt"
                   placeholder="Insurance Expiry Date"
-                  value={insuranceFormData.insuranceExpiryDate}
+                  value={insurance.expiryDate!}
                   onChange={(date) =>
-                    setInsuranceFormData({
-                      ...insuranceFormData,
-                      insuranceExpiryDate: date || new Date(),
+                    setInsurance({
+                      ...insurance,
+                      expiryDate: date || new Date(),
                     })
                   }
                 />

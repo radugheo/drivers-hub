@@ -58,6 +58,7 @@ export const saveCarWidgets = async (carId: string, widgets: string[]) => {
 export const retrieveCarWidgets = async (carId: string): Promise<string[]> => {
   try {
     const widgetsStr = await retrieveString(`carWidgets_${carId}`);
+    console.log("Widgets string:", widgetsStr);
     return widgetsStr ? JSON.parse(widgetsStr) : [];
   } catch (error) {
     console.error("Error retrieving car widgets:", error);
