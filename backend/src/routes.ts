@@ -1,5 +1,6 @@
 import { AuthController } from './controllers/auth-controller';
 import { CarController } from './controllers/car-controller';
+import { InspectionController } from './controllers/inspection-controller';
 import { InsuranceController } from './controllers/insurance-controller';
 import { UserController } from './controllers/user-controller';
 import { isAdmin, isAuthenticated } from './middlewares/auth';
@@ -142,4 +143,56 @@ const insuranceRoutes = [
   },
 ];
 
-export const Routes = [...authRoutes, ...userRoutes, ...carRoutes, ...insuranceRoutes];
+const inspectionRoutes = [
+  {
+    method: 'get',
+    route: '/inspection/active/:id',
+    controller: InspectionController,
+    action: 'activeByCar',
+    middlewares: [isAuthenticated],
+  },
+  {
+    method: 'post',
+    route: '/inspection/active',
+    controller: InspectionController,
+    action: 'saveActive',
+    middlewares: [isAuthenticated],
+  },
+  {
+    method: 'put',
+    route: '/inspection/active/:id',
+    controller: InspectionController,
+    action: 'updateActive',
+    middlewares: [isAuthenticated],
+  },
+  {
+    method: 'delete',
+    route: '/inspection/active/:id',
+    controller: InspectionController,
+    action: 'removeActive',
+    middlewares: [isAuthenticated],
+  },
+  {
+    method: 'get',
+    route: '/inspection/history/:id',
+    controller: InspectionController,
+    action: 'historyByCar',
+    middlewares: [isAuthenticated],
+  },
+  {
+    method: 'post',
+    route: '/inspection/history',
+    controller: InspectionController,
+    action: 'expire',
+    middlewares: [isAuthenticated],
+  },
+  {
+    method: 'delete',
+    route: '/inspection/history/:id',
+    controller: InspectionController,
+    action: 'removeExpired',
+    middlewares: [isAuthenticated],
+  },
+];
+
+export const Routes = [...authRoutes, ...userRoutes, ...carRoutes, ...insuranceRoutes, ...inspectionRoutes];

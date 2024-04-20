@@ -6,11 +6,7 @@ import FormInputField from "../../components/FormInputField/FormInputField";
 import { Car } from "../../models/Car.model";
 import { retrieveString } from "../../utils/storage-handler";
 import OpacityButton from "../../components/OpacityButton/OpacityButton";
-import {
-  deleteCarApiCall,
-  deleteInsuranceApiCall,
-  updateCarApiCall,
-} from "../../api/api-service";
+import { deleteCarApiCall, updateCarApiCall } from "../../api/api-service";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../navigation/app-navigator";
 import TopBar from "../../components/TopBar/TopBar";

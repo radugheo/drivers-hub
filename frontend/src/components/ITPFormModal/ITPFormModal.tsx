@@ -9,17 +9,15 @@ import DateInputField from "../DateInputField/DateInputField";
 import OpacityButton from "../OpacityButton/OpacityButton";
 import PageTitle from "../PageTitle/PageTitle";
 import { styles } from "./ITPFormModal.styles";
+import { ActiveInspection } from "../../models/Active-Inspection.model";
 
 interface ITPFormModal {
   animationType: "none" | "slide" | "fade";
   transparent: boolean;
   visible: boolean;
   onRequestClose: () => void;
-  ITPFormData: {
-    lastInspection: Date;
-    nextInspection: Date;
-  };
-  setITPFormData: (data: any) => void;
+  inspection: ActiveInspection;
+  setInspection: (data: any) => void;
   onSave: () => void;
 }
 
@@ -28,8 +26,8 @@ const ITPFormModal: React.FC<ITPFormModal> = ({
   transparent,
   visible,
   onRequestClose,
-  ITPFormData,
-  setITPFormData,
+  inspection,
+  setInspection,
   onSave,
 }) => {
   return (
@@ -49,11 +47,11 @@ const ITPFormModal: React.FC<ITPFormModal> = ({
                 <DateInputField
                   iconName="calendar-alt"
                   placeholder="ITP Start Date"
-                  value={ITPFormData.lastInspection}
+                  value={inspection.validFrom || new Date()}
                   onChange={(date) =>
-                    setITPFormData({
-                      ...ITPFormData,
-                      lastInspection: date || new Date(),
+                    setInspection({
+                      ...inspection,
+                      validFrom: date || new Date(),
                     })
                   }
                 />
@@ -62,11 +60,11 @@ const ITPFormModal: React.FC<ITPFormModal> = ({
                 <DateInputField
                   iconName="calendar-alt"
                   placeholder="ITP Expiry Date"
-                  value={ITPFormData.nextInspection}
+                  value={inspection.validUntil || new Date()}
                   onChange={(date) =>
-                    setITPFormData({
-                      ...ITPFormData,
-                      nextInspection: date || new Date(),
+                    setInspection({
+                      ...inspection,
+                      validUntil: date || new Date(),
                     })
                   }
                 />
