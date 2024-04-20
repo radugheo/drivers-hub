@@ -6,7 +6,11 @@ import FormInputField from "../../components/FormInputField/FormInputField";
 import { Car } from "../../models/Car.model";
 import { retrieveString } from "../../utils/storage-handler";
 import OpacityButton from "../../components/OpacityButton/OpacityButton";
-import { deleteCarApiCall, updateCarApiCall } from "../../api/api-service";
+import {
+  deleteCarApiCall,
+  deleteInsuranceApiCall,
+  updateCarApiCall,
+} from "../../api/api-service";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../navigation/app-navigator";
 import TopBar from "../../components/TopBar/TopBar";
@@ -60,7 +64,6 @@ const CarScreen: React.FC<CarScreenProps> = ({ route }) => {
     setCar((prevCar) => ({ ...prevCar, [name]: value }));
   };
 
-  const services = ["mileage"];
   const years = Array.from(
     new Array(new Date().getFullYear() - 1970),
     (val, index) => 1970 + index + 1,

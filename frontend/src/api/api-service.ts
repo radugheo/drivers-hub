@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Car } from "../models/Car.model";
 import { retrieveString } from "../utils/storage-handler";
+import { ActiveInsurance } from "../models/Active-Insurance.model";
 
 const BASE_URL = process.env.BACKEND_URL;
 
@@ -124,5 +125,70 @@ export const deleteCarApiCall = async (carId: number, token: string) => {
     throw error.response
       ? error.response.data
       : new Error("An error occurred while deleting the car");
+  }
+};
+
+export const addInsuranceApiCall = async (
+  insurance: ActiveInsurance,
+  token: string,
+) => {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/insurance/active`,
+      insurance,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (error: any) {
+    throw error.response
+      ? error.response.data
+      : new Error("An error occurred while adding insurance");
+  }
+};
+
+export const updateInsuranceApiCall = async (
+  insurance: ActiveInsurance,
+  token: string,
+) => {
+  try {
+    const response = await axios.put(
+      `${BASE_URL}/insurance/active/${insurance.id}`,
+      insurance,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (error: any) {
+    throw error.response
+      ? error.response.data
+      : new Error("An error occurred while updating insurance");
+  }
+};
+
+export const deleteInsuranceApiCall = async (
+  insuranceId: number,
+  token: string,
+) => {
+  try {
+    const response = await axios.delete(
+      `${BASE_URL}/insurance/active/${insuranceId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (error: any) {
+    throw error.response
+      ? error.response.data
+      : new Error("An error occurred while deleting insurance");
   }
 };

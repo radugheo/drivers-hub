@@ -37,6 +37,7 @@ const updateCarFields = async (car, data, userRepository) => {
     'vignetteExpiryDate',
     'fuel',
     'vin',
+    'activeInsurance',
   ];
 
   fields.forEach(async (field) => {
@@ -70,7 +71,7 @@ export class CarController {
     }
     const cars = await this.carRepository.find({
       where: { owner: { id: ownerId } },
-      relations: ['owner'],
+      relations: ['owner', 'activeInsurance'],
     });
     return cars;
   };

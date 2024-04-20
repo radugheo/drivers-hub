@@ -45,12 +45,15 @@ const DateInputField: React.FC<DateInputProps> = ({
           {value ? value.toLocaleDateString() : placeholder}
         </Text>
       </TouchableOpacity>
-      <DateTimePickerModal
-        isVisible={isDatePickerVisible}
-        mode="date"
-        onConfirm={handleConfirm}
-        onCancel={hideDatePicker}
-      />
+      <View style={styles.datePickerContainer}>
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode="date"
+          onConfirm={handleConfirm}
+          onCancel={hideDatePicker}
+          textColor="black"
+        />
+      </View>
     </View>
   );
 };

@@ -1,29 +1,28 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Modal, Image } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { styles } from "./InsuranceWidget.styles"; // Assuming you'll extend or reuse styles from CustomWidget
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Car } from "../../models/Car.model";
+import { ActiveInsurance } from "../../models/Active-Insurance.model";
+import { RootStackParamList } from "../../navigation/app-navigator";
 
 type InsuranceWidgetNavigationProp = StackNavigationProp<
   RootStackParamList,
   "InsuranceScreen"
 >;
 
-export type RootStackParamList = {
-  InsuranceScreen: { item: Car };
-};
-
 interface InsuranceWidgetProps {
   item: Car;
 }
 
 const InsuranceWidget: React.FC<InsuranceWidgetProps> = ({ item }) => {
+  const carInsurance: ActiveInsurance = item.activeInsurance!;
   const navigation = useNavigation<InsuranceWidgetNavigationProp>();
 
   const calculateProgress = () => {
-    const start = new Date(item.insuranceStartDate!).getTime();
-    const end = new Date(item.insuranceExpiryDate!).getTime();
+    const start = new Date(carInsurance.startDate!).getTime();
+    const end = new Date(carInsurance.expiryDate!).getTime();
     const now = new Date().getTime();
     const totalDuration = end - start;
     const timeElapsedSinceStart = now - start;
@@ -32,7 +31,7 @@ const InsuranceWidget: React.FC<InsuranceWidgetProps> = ({ item }) => {
   };
 
   const calculateDaysLeft = () => {
-    const end = new Date(item.insuranceExpiryDate!).getTime();
+    const end = new Date(carInsurance.expiryDate!).getTime();
     const now = new Date().getTime();
     const totalDuration = end - now;
     const daysLeft = Math.floor(totalDuration / (1000 * 60 * 60 * 24));
@@ -53,7 +52,10 @@ const InsuranceWidget: React.FC<InsuranceWidgetProps> = ({ item }) => {
   };
 
   const navigateToInsuranceScreen = () => {
-    navigation.navigate("InsuranceScreen", { item });
+    navigation.navigate("InsuranceScreen", {
+      carItem: item,
+      insuranceItem: item.activeInsurance!,
+    });
   };
 
   const progress = calculateProgress();
@@ -64,14 +66,14 @@ const InsuranceWidget: React.FC<InsuranceWidgetProps> = ({ item }) => {
       style={styles.container}
       onPress={navigateToInsuranceScreen}
     >
-      <Text style={styles.title}>RCA - {item.insuranceCompany}</Text>
+      <Text style={styles.title}>RCA - {carInsurance.company}</Text>
       <View style={styles.datesContainer}>
         <Text>
           {calculateDaysLeft()}
           {" days left"}
         </Text>
         <Text>
-          {formatDate(new Date(item.insuranceExpiryDate!).toDateString()!)}
+          {formatDate(new Date(carInsurance.expiryDate!).toDateString()!)}
         </Text>
       </View>
       <View style={styles.progressBarBackground}>
@@ -83,7 +85,7 @@ const InsuranceWidget: React.FC<InsuranceWidgetProps> = ({ item }) => {
         />
       </View>
       <Text style={styles.text}>
-        Policy Number: {item.insurancePolicyNumber}
+        Policy Number: {carInsurance.policyNumber}
       </Text>
     </TouchableOpacity>
   );

@@ -2,7 +2,11 @@ import React, { useState, useCallback } from "react";
 import { View, Text, Alert, ScrollView, TouchableOpacity } from "react-native";
 import Carousel from "react-native-snap-carousel";
 import { styles } from "./DashboardScreen.styles";
-import { getCarsApiCall, updateCarApiCall } from "../../api/api-service";
+import {
+  addInsuranceApiCall,
+  getCarsApiCall,
+  updateCarApiCall,
+} from "../../api/api-service";
 import { Car } from "../../models/Car.model";
 import {
   retrieveCarWidgets,
@@ -21,13 +25,14 @@ import ServiceWidget from "../../components/ServiceWidget/ServiceWidget";
 import ServiceFormModal from "../../components/ServiceFormModal/ServiceFormModal";
 import VignetteWidget from "../../components/VignetteWidget/VignetteWidget";
 import VignetteFormModal from "../../components/VignetteFormModal/VignetteFormModal";
+import { ActiveInsurance } from "../../models/Active-Insurance.model";
 
 type FormData = { [key: string]: any };
 type SetIsModalVisibleFunction = (isVisible: boolean) => void;
 type WidgetName = string;
 
 type HandleSubmitFormParams = {
-  formData: FormData;
+  formData?: FormData;
   setIsModalVisible: SetIsModalVisibleFunction;
   widgetName: WidgetName;
 };
@@ -40,13 +45,9 @@ const DashboardScreen: React.FC = () => {
     {},
   );
   const [isInsuranceModalVisible, setIsInsuranceModalVisible] = useState(false);
-  const [insuranceFormData, setInsuranceFormData] = useState({
-    insuranceStartDate: new Date(),
-    insuranceExpiryDate: new Date(),
-    insurancePolicyNumber: "",
-    insuranceCompany: "",
-    insurancePicture: "",
-  });
+  const [insurance, setInsurance] = useState<ActiveInsurance>(
+    new ActiveInsurance(),
+  );
 
   const [isITPModalVisible, setIsITPModalVisible] = useState(false);
   const [ITPFormData, setITPFormData] = useState({
@@ -158,13 +159,8 @@ const DashboardScreen: React.FC = () => {
   );
 
   const carHasInsurance = (car: Car) => {
-    return (
-      car.insuranceCompany ||
-      car.insurancePolicyNumber ||
-      car.insuranceStartDate ||
-      car.insuranceExpiryDate ||
-      car.insurancePicture
-    );
+    console.log("Car insurance:", car.activeInsurance);
+    return car.activeInsurance;
   };
 
   const carHasITP = (car: Car) => {
@@ -232,18 +228,14 @@ const DashboardScreen: React.FC = () => {
     );
   };
 
-  const handleSubmitForm = async ({
-    formData,
-    setIsModalVisible,
-    widgetName,
-  }: HandleSubmitFormParams) => {
-    if (!selectedCarId) {
-      Alert.alert("Error", "No car selected.");
-      return;
-    }
+  const handleInsuranceFormSubmit = async () => {
     const token = await retrieveString("userToken");
     if (!token) {
       Alert.alert("Error", "User token not found.");
+      return;
+    }
+    if (!selectedCarId) {
+      Alert.alert("Error", "No car selected.");
       return;
     }
     const carToUpdate = cars.find((car) => car.id === selectedCarId);
@@ -253,20 +245,23 @@ const DashboardScreen: React.FC = () => {
     }
     const updatedCar = {
       ...carToUpdate,
-      ...formData,
+      activeInsurance: {
+        ...insurance,
+        carId: selectedCarId,
+      },
     };
     try {
-      await updateCarApiCall(updatedCar, token);
-      Alert.alert(
-        "Success",
-        `Car ${widgetName} information updated successfully.`,
+      console.log(
+        `Updating insurance for carId: ${selectedCarId}: ${JSON.stringify(updatedCar.activeInsurance)}`,
       );
-      setIsModalVisible(false);
+      await updateCarApiCall(updatedCar, token);
+      Alert.alert("Success", "Insurance information updated successfully.");
+      setIsInsuranceModalVisible(false);
       setCars(cars.map((car) => (car.id === selectedCarId ? updatedCar : car)));
-      if (!carWidgets[selectedCarId.toString()].includes(widgetName)) {
+      if (!carWidgets[selectedCarId.toString()].includes("Insurance")) {
         const updatedWidgets = [
           ...carWidgets[selectedCarId.toString()],
-          widgetName,
+          "Insurance",
         ];
         setCarWidgets({
           ...carWidgets,
@@ -275,42 +270,82 @@ const DashboardScreen: React.FC = () => {
         saveCarWidgets(selectedCarId.toString(), updatedWidgets);
       }
     } catch (error) {
-      console.error(`Error updating ${widgetName} information:`, error);
-      Alert.alert("Error", `Failed to update ${widgetName} information.`);
+      console.error("Error updating insurance information:", error);
+      Alert.alert("Error", "Failed to update insurance information.");
     }
   };
 
-  const handleInsuranceFormSubmit = async () => {
-    await handleSubmitForm({
-      formData: insuranceFormData,
-      setIsModalVisible: setIsInsuranceModalVisible,
-      widgetName: "Insurance",
-    });
-  };
+  // const handleSubmitForm = async ({
+  //   formData,
+  //   setIsModalVisible,
+  //   widgetName,
+  // }: HandleSubmitFormParams) => {
+  //   if (!selectedCarId) {
+  //     Alert.alert("Error", "No car selected.");
+  //     return;
+  //   }
+  //   const token = await retrieveString("userToken");
+  //   if (!token) {
+  //     Alert.alert("Error", "User token not found.");
+  //     return;
+  //   }
+  //   const carToUpdate = cars.find((car) => car.id === selectedCarId);
+  //   if (!carToUpdate) {
+  //     Alert.alert("Error", "Car not found.");
+  //     return;
+  //   }
+  //   const updatedCar = {
+  //     ...carToUpdate,
+  //     ...formData,
+  //   };
+  //   try {
+  //     await updateCarApiCall(updatedCar, token);
+  //     Alert.alert(
+  //       "Success",
+  //       `Car ${widgetName} information updated successfully.`
+  //     );
+  //     setIsModalVisible(false);
+  //     setCars(cars.map((car) => (car.id === selectedCarId ? updatedCar : car)));
+  //     if (!carWidgets[selectedCarId.toString()].includes(widgetName)) {
+  //       const updatedWidgets = [
+  //         ...carWidgets[selectedCarId.toString()],
+  //         widgetName,
+  //       ];
+  //       setCarWidgets({
+  //         ...carWidgets,
+  //         [selectedCarId.toString()]: updatedWidgets,
+  //       });
+  //       saveCarWidgets(selectedCarId.toString(), updatedWidgets);
+  //     }
+  //   } catch (error) {
+  //     console.error(`Error updating ${widgetName} information:`, error);
+  //     Alert.alert("Error", `Failed to update ${widgetName} information.`);
+  //   }
+  // };
 
-  const handleITPFormSubmit = async () => {
-    await handleSubmitForm({
-      formData: ITPFormData,
-      setIsModalVisible: setIsITPModalVisible,
-      widgetName: "ITP (Technical Inspection)",
-    });
-  };
+  // const handleITPFormSubmit = async () => {
+  //   await handleSubmitForm({
+  //     formData: ITPFormData,
+  //     setIsModalVisible: setIsITPModalVisible,
+  //     widgetName: "ITP (Technical Inspection)",
+  //   });
+  // };
 
-  const handleServiceFormSubmit = async () => {
-    await handleSubmitForm({
-      formData: serviceFormData,
-      setIsModalVisible: setServiceModalVisible,
-      widgetName: "Service & Maintenance",
-    });
-  };
+  // const handleServiceFormSubmit = async () => {
+  //   await handleSubmitForm({
+  //     formData: serviceFormData,
+  //     setIsModalVisible: setServiceModalVisible,
+  //     widgetName: "Service & Maintenance",
+  //   });
+  // };
 
-  const handleVignetteFormSubmit = async () => {
-    await handleSubmitForm({
-      formData: vignetteFormData,
-      setIsModalVisible: setIsVignetteModalVisible,
-      widgetName: "Vignette",
-    });
-  };
+  // const handleVignetteFormSubmit = async () => {
+  //   await handleSubmitForm({
+  //     formData: vignetteFormData,
+  //     setIsModalVisible: setIsVignetteModalVisible,
+  //     widgetName: "Vignette",
+  //   });
+  // };
 
   return (
     <View style={styles.container}>
@@ -336,12 +371,12 @@ const DashboardScreen: React.FC = () => {
         transparent={true}
         visible={isInsuranceModalVisible}
         onRequestClose={() => setIsInsuranceModalVisible(false)}
-        insuranceFormData={insuranceFormData}
-        setInsuranceFormData={setInsuranceFormData}
+        insurance={insurance}
+        setInsurance={setInsurance}
         onSave={handleInsuranceFormSubmit}
       />
 
-      <ITPFormModal
+      {/* <ITPFormModal
         animationType="none"
         transparent={true}
         visible={isITPModalVisible}
@@ -369,7 +404,7 @@ const DashboardScreen: React.FC = () => {
         vignetteFormData={vignetteFormData}
         setVignetteFormData={setVignetteFormData}
         onSave={handleVignetteFormSubmit}
-      />
+      /> */}
     </View>
   );
 };
