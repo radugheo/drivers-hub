@@ -6,6 +6,8 @@ import { ActiveInsurance } from './entities/ActiveInsurance';
 import { InsuranceHistory } from './entities/InsuranceHistory';
 import { ActiveInspection } from './entities/ActiveInspection';
 import { InspectionHistory } from './entities/InspectionHistory';
+import { ActiveService } from './entities/ActiveService';
+import { ServiceHistory } from './entities/ServiceHistory';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -16,7 +18,16 @@ export const AppDataSource = new DataSource({
   database: 'drivers-hub-db',
   synchronize: true,
   logging: false,
-  entities: [User, Car, ActiveInsurance, InsuranceHistory, ActiveInspection, InspectionHistory],
+  entities: [
+    User,
+    Car,
+    ActiveInsurance,
+    InsuranceHistory,
+    ActiveInspection,
+    InspectionHistory,
+    ActiveService,
+    ServiceHistory,
+  ],
   migrations: [],
   subscribers: [],
 });

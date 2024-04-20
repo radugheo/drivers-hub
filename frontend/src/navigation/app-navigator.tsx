@@ -17,6 +17,7 @@ import ServiceScreen from "../screens/ServiceScreen/ServiceScreen";
 import VignetteScreen from "../screens/VignetteScreen/VignetteScreen";
 import { ActiveInsurance } from "../models/Active-Insurance.model";
 import { ActiveInspection } from "../models/Active-Inspection.model";
+import { ActiveService } from "../models/Active-Service.model";
 
 export type RootStackParamList = {
   Login: undefined;
@@ -30,7 +31,7 @@ export type RootStackParamList = {
   FindMyCarScreen: undefined;
   InsuranceScreen: { carItem: Car; insuranceItem: ActiveInsurance };
   ITPScreen: { carItem: Car; inspectionItem: ActiveInspection };
-  ServiceScreen: { item: Car };
+  ServiceScreen: { carItem: Car; serviceItem: ActiveService };
   VignetteScreen: { item: Car };
 };
 

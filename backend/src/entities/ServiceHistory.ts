@@ -2,27 +2,30 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Car } from './Car';
 
 @Entity()
-export class InsuranceHistory {
+export class ServiceHistory {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Car, (car) => car.insuranceHistory)
+  @ManyToOne(() => Car, (car) => car.serviceHistory)
   car: Car;
 
-  @Column({ nullable: true })
+  @Column()
   validFrom: Date;
 
-  @Column({ nullable: true })
+  @Column()
   validUntil: Date;
 
   @Column({ nullable: true })
-  policyNumber: string;
+  serviceMileage: number;
 
   @Column({ nullable: true })
-  company: string;
+  mileageInterval: number;
 
   @Column({ nullable: true })
-  picture: string;
+  companyName: string;
+
+  @Column({ nullable: true })
+  description: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

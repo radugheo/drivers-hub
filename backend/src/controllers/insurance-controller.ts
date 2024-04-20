@@ -6,7 +6,7 @@ import { InsuranceHistory } from '../entities/InsuranceHistory';
 import { CustomError } from '../models/custom-error';
 
 const updateInsuranceFields = async (insurance, data, carRepository) => {
-  const fields = ['policyNumber', 'company', 'picture', 'startDate', 'expiryDate'];
+  const fields = ['policyNumber', 'company', 'picture', 'validFrom', 'validUntil'];
 
   fields.forEach(async (field) => {
     if (data[field] !== undefined) {
@@ -41,9 +41,9 @@ export class InsuranceController {
   };
 
   saveActive = async (req: Request, res: Response) => {
-    const { carId, policyNumber, company, picture, startDate, expiryDate } = req.body;
+    const { carId, policyNumber, company, picture, validFrom, validUntil } = req.body;
     console.log(req.body);
-    if (!carId || !startDate || !expiryDate) {
+    if (!carId || !validFrom || !validUntil) {
       throw new CustomError(400, 'Car id, start date and expiry date are required');
     }
     const car = await this.carRepository.findOneBy({ id: carId });
@@ -55,8 +55,8 @@ export class InsuranceController {
       policyNumber,
       company,
       picture,
-      startDate,
-      expiryDate,
+      validFrom,
+      validUntil,
     });
     await this.activeInsuranceRepository.save(insurance);
     return 'Active insurance inserted';

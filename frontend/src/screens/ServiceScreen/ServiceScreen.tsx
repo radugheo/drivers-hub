@@ -16,18 +16,25 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import TopBar from "../../components/TopBar/TopBar";
 import FormInputField from "../../components/FormInputField/FormInputField";
 import OpacityButton from "../../components/OpacityButton/OpacityButton";
-import { removeCarWidgets, retrieveString } from "../../utils/storage-handler";
-import { updateCarApiCall } from "../../api/api-service";
+import { removeCarWidget, retrieveString } from "../../utils/storage-handler";
+import {
+  deleteServiceApiCall,
+  updateCarApiCall,
+  updateServiceApiCall,
+} from "../../api/api-service";
 import DateInputField from "../../components/DateInputField/DateInputField";
 import { Car } from "../../models/Car.model";
 import NumberInputField from "../../components/NumberInputField/NumberInputField";
 import FormTextAreaField from "../../components/FormTextAreaField/FormTextAreaField";
+import { ActiveService } from "../../models/Active-Service.model";
+import FormDropdownField from "../../components/FormDropdownField/FormDropdownField";
 
 LogBox.ignoreLogs([
   "Non-serializable values were found in the navigation state",
 ]);
 
 type ServiceScreenRouteProp = RouteProp<RootStackParamList, "ServiceScreen">;
+
 type ServiceScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   "ServiceScreen"
@@ -40,44 +47,45 @@ interface ServiceScreenProps {
 
 const ServiceScreen: React.FC<ServiceScreenProps> = ({ route }) => {
   const navigation = useNavigation();
-  const { item } = route.params;
-  const [car, setCar] = useState<Car>(item);
+  const { carItem, serviceItem } = route.params;
+  const [car, setCar] = useState<Car>(carItem);
+  const [service, setService] = useState(serviceItem);
 
   const handleSaveService = async () => {
     try {
-      for (const key in car) {
-        if (car[key as keyof Car] === "") {
-          (car[key as keyof Car] as Car[keyof Car] | null) = null;
+      for (const key in service) {
+        if (service[key as keyof ActiveService] === "") {
+          (service[key as keyof ActiveService] as
+            | ActiveService[keyof ActiveService]
+            | null) = null;
         }
       }
+      console.log("Updating service with ID: ", service.id);
+      console.log("Updating car with ID: ", car.id);
+      const updatedCar = { ...car, activeService: service };
       const token = await retrieveString("userToken");
-      const result = await updateCarApiCall(car, token);
-      if (result) {
-        Alert.alert("Success", "Car updated successfully.");
+      const resultServiceCall = await updateServiceApiCall(service, token);
+      const resultCarCall = await updateCarApiCall(updatedCar, token);
+      if (resultServiceCall && resultCarCall) {
+        Alert.alert("Success", "Service details have been updated.");
         navigation.goBack();
       }
     } catch (error) {
-      console.error("Error updating the car:", error);
+      console.error("Error updating the Service details:", error);
     }
   };
 
   const handleDeleteService = async () => {
     try {
+      const updatedCar = { ...car, activeService: null };
+      console.log("Deleting service with ID: ", service.id);
+      console.log("Updating car with ID: ", car.id);
       const token = await retrieveString("userToken");
-      const result = await updateCarApiCall(
-        {
-          id: car.id,
-          lastService: null,
-          nextService: null,
-          lastServiceMileage: null,
-          nextServiceMileageInterval: null,
-          serviceCompany: null,
-        },
-        token,
-      );
-      if (result) {
+      const resultServiceCall = await deleteServiceApiCall(service.id!, token);
+      const resultCarCall = await updateCarApiCall(updatedCar, token);
+      if (resultServiceCall && resultCarCall) {
         Alert.alert("Success", "Service details have been deleted.");
-        await removeCarWidgets(car.id!.toString());
+        await removeCarWidget(car.id!.toString(), "Service & Maintenance");
         navigation.goBack();
       }
     } catch (error) {
@@ -85,8 +93,11 @@ const ServiceScreen: React.FC<ServiceScreenProps> = ({ route }) => {
     }
   };
 
-  const handleServiceInputChange = (name: keyof Car, value: string | null) => {
-    setCar((prevCar) => ({ ...prevCar, [name]: value }));
+  const handleServiceInputChange = (
+    name: keyof ActiveService,
+    value: string | null,
+  ) => {
+    setService((prevService) => ({ ...prevService, [name]: value }));
   };
 
   return (
@@ -101,10 +112,10 @@ const ServiceScreen: React.FC<ServiceScreenProps> = ({ route }) => {
             <Text style={styles.editField}>Service Company</Text>
             <FormInputField
               iconName="building"
-              placeholder={car.serviceCompany || "Service Company"}
-              value={car.serviceCompany || ""}
-              onChangeText={(serviceCompany) =>
-                handleServiceInputChange("serviceCompany", serviceCompany)
+              placeholder={service.companyName || "Service Company"}
+              value={service.companyName || ""}
+              onChangeText={(companyName) =>
+                handleServiceInputChange("companyName", companyName)
               }
             />
 
@@ -112,9 +123,9 @@ const ServiceScreen: React.FC<ServiceScreenProps> = ({ route }) => {
             <DateInputField
               iconName="calendar"
               placeholder="Start Date"
-              value={new Date(car.lastService || new Date().toISOString())}
+              value={new Date(service.validFrom || new Date().toISOString())}
               onChange={(date) =>
-                handleServiceInputChange("lastService", date.toISOString())
+                handleServiceInputChange("validFrom", date.toISOString())
               }
             />
 
@@ -122,47 +133,42 @@ const ServiceScreen: React.FC<ServiceScreenProps> = ({ route }) => {
             <DateInputField
               iconName="calendar"
               placeholder="End Date"
-              value={new Date(car.nextService || new Date().toISOString())}
+              value={new Date(service.validUntil || new Date().toISOString())}
               onChange={(date) =>
-                handleServiceInputChange("nextService", date.toISOString())
+                handleServiceInputChange("validUntil", date.toISOString())
               }
             />
 
             <Text style={styles.editField}>Mileage</Text>
             <NumberInputField
               iconName="tachometer-alt"
-              placeholder={car.lastServiceMileage?.toString() || "Mileage"}
-              value={car.lastServiceMileage?.toString() || null}
-              onChangeText={(lastServiceMileage) =>
-                handleServiceInputChange(
-                  "lastServiceMileage",
-                  lastServiceMileage,
-                )
+              placeholder={service.serviceMileage?.toString() || "Mileage"}
+              value={service.serviceMileage?.toString() || null}
+              onChangeText={(serviceMileage) =>
+                handleServiceInputChange("serviceMileage", serviceMileage)
               }
             />
 
             <Text style={styles.editField}>Next service in: </Text>
-            <NumberInputField
+            <FormDropdownField
               iconName="tachometer-alt"
-              placeholder={
-                car.nextServiceMileageInterval?.toString() || "Mileage"
-              }
-              value={car.nextServiceMileageInterval?.toString() || null}
-              onChangeText={(nextServiceMileageInterval) =>
-                handleServiceInputChange(
-                  "nextServiceMileageInterval",
-                  nextServiceMileageInterval,
-                )
+              selectedValue={service.mileageInterval?.toString() || ""}
+              items={[
+                { label: "10,000", value: "10000" },
+                { label: "15,000", value: "15000" },
+              ]}
+              onValueChange={(mileageInterval) =>
+                handleServiceInputChange("mileageInterval", mileageInterval)
               }
             />
 
             <Text style={styles.editField}>Service Details</Text>
             <FormTextAreaField
               iconName="file"
-              placeholder={car.serviceDetails || "Service Details"}
-              value={car.serviceDetails || ""}
-              onChangeText={(serviceDetails) =>
-                handleServiceInputChange("serviceDetails", serviceDetails)
+              placeholder={service.description || "Service Details"}
+              value={service.description || ""}
+              onChangeText={(description) =>
+                handleServiceInputChange("description", description)
               }
             />
           </ScrollView>

@@ -254,3 +254,58 @@ export const deleteInspectionApiCall = async (
       : new Error("An error occurred while deleting inspection");
   }
 };
+
+export const addServiceApiCall = async (service: any, token: string) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/service/active`, service, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    throw error.response
+      ? error.response.data
+      : new Error("An error occurred while adding service");
+  }
+};
+
+export const updateServiceApiCall = async (service: any, token: string) => {
+  try {
+    const response = await axios.put(
+      `${BASE_URL}/service/active/${service.id}`,
+      service,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (error: any) {
+    throw error.response
+      ? error.response.data
+      : new Error("An error occurred while updating service");
+  }
+};
+
+export const deleteServiceApiCall = async (
+  serviceId: number,
+  token: string,
+) => {
+  try {
+    const response = await axios.delete(
+      `${BASE_URL}/service/active/${serviceId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (error: any) {
+    throw error.response
+      ? error.response.data
+      : new Error("An error occurred while deleting service");
+  }
+};

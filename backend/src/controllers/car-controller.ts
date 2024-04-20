@@ -15,23 +15,11 @@ const updateCarFields = async (car, data, userRepository) => {
     'horsepower',
     'displacement',
     'transmission',
-    'lastService',
-    'nextService',
-    'lastServiceMileage',
-    'nextServiceMileageInterval',
-    'serviceCompany',
-    'serviceDetails',
-    'cascoStartDate',
-    'cascoExpiryDate',
-    'cascoPolicyNumber',
-    'cascoCompany',
-    'cascoPicture',
-    'vignetteStartDate',
-    'vignetteExpiryDate',
     'fuel',
     'vin',
     'activeInsurance',
     'activeInspection',
+    'activeService',
   ];
 
   fields.forEach(async (field) => {
@@ -65,7 +53,15 @@ export class CarController {
     }
     const cars = await this.carRepository.find({
       where: { owner: { id: ownerId } },
-      relations: ['owner', 'activeInsurance', 'insuranceHistory', 'activeInspection', 'inspectionHistory'],
+      relations: [
+        'owner',
+        'activeInsurance',
+        'insuranceHistory',
+        'activeInspection',
+        'inspectionHistory',
+        'activeService',
+        'serviceHistory',
+      ],
     });
     return cars;
   };
@@ -92,8 +88,6 @@ export class CarController {
       displacement,
       transmission,
       fuel,
-      lastService,
-      nextService,
       vin,
     } = req.body;
     console.log(JSON.stringify(req.body));
@@ -116,8 +110,6 @@ export class CarController {
       displacement,
       transmission,
       fuel,
-      lastService,
-      nextService,
       vin,
     });
     await this.carRepository.save(car);

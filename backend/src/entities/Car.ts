@@ -4,6 +4,8 @@ import { InsuranceHistory } from './InsuranceHistory';
 import { ActiveInsurance } from './ActiveInsurance';
 import { ActiveInspection } from './ActiveInspection';
 import { InspectionHistory } from './InspectionHistory';
+import { ActiveService } from './ActiveService';
+import { ServiceHistory } from './ServiceHistory';
 
 @Entity()
 export class Car {
@@ -44,45 +46,6 @@ export class Car {
   fuel: string;
 
   @Column({ nullable: true })
-  cascoStartDate: Date;
-
-  @Column({ nullable: true })
-  cascoExpiryDate: Date;
-
-  @Column({ nullable: true })
-  cascoPolicyNumber: string;
-
-  @Column({ nullable: true })
-  cascoCompany: string;
-
-  @Column({ nullable: true })
-  cascoPicture: string;
-
-  @Column({ nullable: true })
-  vignetteStartDate: Date;
-
-  @Column({ nullable: true })
-  vignetteExpiryDate: Date;
-
-  @Column({ nullable: true })
-  lastService: Date;
-
-  @Column({ nullable: true })
-  nextService: Date;
-
-  @Column({ nullable: true })
-  lastServiceMileage: number;
-
-  @Column({ nullable: true })
-  nextServiceMileageInterval: number;
-
-  @Column({ nullable: true })
-  serviceCompany: string;
-
-  @Column({ nullable: true })
-  serviceDetails: string;
-
-  @Column({ nullable: true })
   vin: string;
 
   @ManyToOne(() => User, (owner) => owner.cars)
@@ -105,4 +68,13 @@ export class Car {
 
   @OneToMany(() => InspectionHistory, (inspection) => inspection.car)
   inspectionHistory: InspectionHistory[];
+
+  @OneToOne(() => ActiveService, (service) => service.car, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  activeService: ActiveService;
+
+  @OneToMany(() => ServiceHistory, (service) => service.car)
+  serviceHistory: ServiceHistory[];
 }

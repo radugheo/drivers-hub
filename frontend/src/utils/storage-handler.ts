@@ -66,9 +66,20 @@ export const retrieveCarWidgets = async (carId: string): Promise<string[]> => {
   }
 };
 
-export const removeCarWidgets = async (carId: string) => {
+export const removeCarWidget = async (
+  carId: string,
+  widgetToRemove: string,
+) => {
   try {
-    await removeString(`carWidgets_${carId}`);
+    const widgetsStr = await retrieveString(`carWidgets_${carId}`);
+    if (widgetsStr) {
+      const widgets = JSON.parse(widgetsStr);
+      const updatedWidgets = widgets.filter(
+        (widget: string) => widget !== widgetToRemove,
+      );
+      await removeString(`carWidgets_${carId}`);
+      await saveCarWidgets(carId, updatedWidgets);
+    }
   } catch (error) {
     console.error("Error removing car widgets:", error);
   }
