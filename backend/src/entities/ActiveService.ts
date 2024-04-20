@@ -2,11 +2,11 @@ import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'ty
 import { Car } from './Car';
 
 @Entity()
-export class ActiveInsurance {
+export class ActiveService {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => Car, (car) => car.activeInsurance, { onDelete: 'CASCADE' })
+  @OneToOne(() => Car, (car) => car.activeService, { onDelete: 'CASCADE' })
   @JoinColumn()
   car: Car;
 
@@ -17,11 +17,14 @@ export class ActiveInsurance {
   validUntil: Date;
 
   @Column({ nullable: true })
-  policyNumber: string;
+  serviceMileage: number;
 
   @Column({ nullable: true })
-  company: string;
+  mileageInterval: number;
 
   @Column({ nullable: true })
-  picture: string;
+  companyName: string;
+
+  @Column({ nullable: true })
+  description: string;
 }

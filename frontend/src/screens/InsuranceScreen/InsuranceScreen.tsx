@@ -17,7 +17,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import TopBar from "../../components/TopBar/TopBar";
 import FormInputField from "../../components/FormInputField/FormInputField";
 import OpacityButton from "../../components/OpacityButton/OpacityButton";
-import { removeCarWidgets, retrieveString } from "../../utils/storage-handler";
+import { removeCarWidget, retrieveString } from "../../utils/storage-handler";
 import {
   deleteInsuranceApiCall,
   updateCarApiCall,
@@ -93,7 +93,7 @@ const InsuranceScreen: React.FC<InsuranceScreenProps> = ({ route }) => {
       const resultCarCall = await updateCarApiCall(updatedCar, token);
       if (resultInsuranceCall && resultCarCall) {
         Alert.alert("Success", "Insurance details have been deleted.");
-        await removeCarWidgets(car.id!.toString());
+        await removeCarWidget(car.id!.toString(), "Insurance");
         navigation.goBack();
       }
     } catch (error) {
@@ -150,9 +150,9 @@ const InsuranceScreen: React.FC<InsuranceScreenProps> = ({ route }) => {
             <DateInputField
               iconName="calendar"
               placeholder="Start Date"
-              value={new Date(insurance.startDate || new Date().toISOString())}
+              value={new Date(insurance.validFrom || new Date().toISOString())}
               onChange={(date) =>
-                handleServiceInputChange("startDate", date.toISOString())
+                handleServiceInputChange("validFrom", date.toISOString())
               }
             />
 
@@ -160,9 +160,9 @@ const InsuranceScreen: React.FC<InsuranceScreenProps> = ({ route }) => {
             <DateInputField
               iconName="calendar"
               placeholder="End Date"
-              value={new Date(insurance.expiryDate || new Date().toISOString())}
+              value={new Date(insurance.validUntil || new Date().toISOString())}
               onChange={(date) =>
-                handleServiceInputChange("expiryDate", date.toISOString())
+                handleServiceInputChange("validUntil", date.toISOString())
               }
             />
 

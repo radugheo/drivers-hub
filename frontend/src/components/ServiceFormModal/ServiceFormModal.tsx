@@ -12,21 +12,16 @@ import { styles } from "./ServiceFormModal.styles";
 import FormInputField from "../FormInputField/FormInputField";
 import NumberInputField from "../NumberInputField/NumberInputField";
 import FormTextAreaField from "../FormTextAreaField/FormTextAreaField";
+import { ActiveService } from "../../models/Active-Service.model";
+import FormDropdownField from "../FormDropdownField/FormDropdownField";
 
 interface ServiceFormModal {
   animationType: "none" | "slide" | "fade";
   transparent: boolean;
   visible: boolean;
   onRequestClose: () => void;
-  serviceFormData: {
-    lastService: Date;
-    nextService: Date;
-    lastServiceMileage: number;
-    nextServiceMileageInterval: number;
-    serviceCompany: string;
-    serviceDetails: string;
-  };
-  setServiceFormData: (data: any) => void;
+  service: ActiveService;
+  setService: (data: any) => void;
   onSave: () => void;
 }
 
@@ -35,8 +30,8 @@ const ServiceFormModal: React.FC<ServiceFormModal> = ({
   transparent,
   visible,
   onRequestClose,
-  serviceFormData,
-  setServiceFormData,
+  service,
+  setService,
   onSave,
 }) => {
   return (
@@ -56,24 +51,24 @@ const ServiceFormModal: React.FC<ServiceFormModal> = ({
                 <FormInputField
                   iconName="building"
                   placeholder="Service Company"
-                  value={serviceFormData.serviceCompany}
-                  onChangeText={(serviceCompany) =>
-                    setServiceFormData({
-                      ...serviceFormData,
-                      serviceCompany,
+                  value={service.companyName || ""}
+                  onChangeText={(companyName) =>
+                    setService({
+                      ...service,
+                      companyName,
                     })
                   }
                 />
 
-                <Text style={styles.editField}>Last maintainance</Text>
+                <Text style={styles.editField}>Valid from</Text>
                 <DateInputField
                   iconName="calendar-alt"
-                  placeholder="Last mainatance date"
-                  value={serviceFormData.lastService}
+                  placeholder="Valid from"
+                  value={service.validFrom!}
                   onChange={(date) =>
-                    setServiceFormData({
-                      ...serviceFormData,
-                      lastService: date || new Date(),
+                    setService({
+                      ...service,
+                      validFrom: date || new Date(),
                     })
                   }
                 />
@@ -84,11 +79,11 @@ const ServiceFormModal: React.FC<ServiceFormModal> = ({
                 <DateInputField
                   iconName="calendar-alt"
                   placeholder="Next maintainance date"
-                  value={serviceFormData.nextService}
+                  value={service.validUntil!}
                   onChange={(date) =>
-                    setServiceFormData({
-                      ...serviceFormData,
-                      nextService: date || new Date(),
+                    setService({
+                      ...service,
+                      validUntil: date || new Date(),
                     })
                   }
                 />
@@ -98,32 +93,45 @@ const ServiceFormModal: React.FC<ServiceFormModal> = ({
                   iconName="tachometer-alt"
                   placeholder="Mileage"
                   value={
-                    serviceFormData.lastServiceMileage === 0
+                    service.serviceMileage === 0
                       ? ""
-                      : serviceFormData.lastServiceMileage?.toString() || ""
+                      : service.serviceMileage?.toString() || ""
                   }
-                  onChangeText={(lastServiceMileage) =>
-                    setServiceFormData({
-                      ...serviceFormData,
-                      lastServiceMileage,
+                  onChangeText={(serviceMileage) =>
+                    setService({
+                      ...service,
+                      serviceMileage,
                     })
                   }
                 />
 
                 <Text style={styles.editField}>Next service in:</Text>
-                <NumberInputField
+                {/* <NumberInputField
                   iconName="tachometer-alt"
                   placeholder="Mileage interval"
                   value={
-                    serviceFormData.nextServiceMileageInterval === 0
+                    service.mileageInterval === 0
                       ? ""
-                      : serviceFormData.nextServiceMileageInterval?.toString() ||
-                        ""
+                      : service.mileageInterval?.toString() || ""
                   }
-                  onChangeText={(nextServiceMileageInterval) =>
-                    setServiceFormData({
-                      ...serviceFormData,
-                      nextServiceMileageInterval,
+                  onChangeText={(mileageInterval) =>
+                    setService({
+                      ...service,
+                      mileageInterval,
+                    })
+                  }
+                /> */}
+                <FormDropdownField
+                  iconName="tachometer-alt"
+                  selectedValue={service.mileageInterval?.toString() || ""}
+                  items={[
+                    { label: "10,000", value: "10000" },
+                    { label: "15,000", value: "15000" },
+                  ]}
+                  onValueChange={(mileageInterval) =>
+                    setService({
+                      ...service,
+                      mileageInterval,
                     })
                   }
                 />
@@ -132,11 +140,11 @@ const ServiceFormModal: React.FC<ServiceFormModal> = ({
                 <FormTextAreaField
                   iconName="file"
                   placeholder="Service Details"
-                  value={serviceFormData.serviceDetails}
-                  onChangeText={(serviceDetails) =>
-                    setServiceFormData({
-                      ...serviceFormData,
-                      serviceDetails,
+                  value={service.description || ""}
+                  onChangeText={(description) =>
+                    setService({
+                      ...service,
+                      description,
                     })
                   }
                 />

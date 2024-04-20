@@ -15,7 +15,7 @@ import { RootStackParamList } from "../../navigation/app-navigator";
 import { StackNavigationProp } from "@react-navigation/stack";
 import TopBar from "../../components/TopBar/TopBar";
 import OpacityButton from "../../components/OpacityButton/OpacityButton";
-import { removeCarWidgets, retrieveString } from "../../utils/storage-handler";
+import { removeCarWidget, retrieveString } from "../../utils/storage-handler";
 import {
   deleteInspectionApiCall,
   updateCarApiCall,
@@ -85,7 +85,7 @@ const ITPScreen: React.FC<ITPScreenProps> = ({ route }) => {
       const resultCarCall = await updateCarApiCall(updatedCar, token);
       if (resultInspectionCall && resultCarCall) {
         Alert.alert("Success", "ITP details have been deleted.");
-        await removeCarWidgets(car.id!.toString());
+        await removeCarWidget(car.id!.toString(), "ITP (Technical Inspection)");
         navigation.goBack();
       }
     } catch (error) {

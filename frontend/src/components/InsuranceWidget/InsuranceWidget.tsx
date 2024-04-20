@@ -21,8 +21,8 @@ const InsuranceWidget: React.FC<InsuranceWidgetProps> = ({ item }) => {
   const navigation = useNavigation<InsuranceWidgetNavigationProp>();
 
   const calculateProgress = () => {
-    const start = new Date(carInsurance.startDate!).getTime();
-    const end = new Date(carInsurance.expiryDate!).getTime();
+    const start = new Date(carInsurance.validFrom!).getTime();
+    const end = new Date(carInsurance.validUntil!).getTime();
     const now = new Date().getTime();
     const totalDuration = end - start;
     const timeElapsedSinceStart = now - start;
@@ -31,7 +31,7 @@ const InsuranceWidget: React.FC<InsuranceWidgetProps> = ({ item }) => {
   };
 
   const calculateDaysLeft = () => {
-    const end = new Date(carInsurance.expiryDate!).getTime();
+    const end = new Date(carInsurance.validUntil!).getTime();
     const now = new Date().getTime();
     const totalDuration = end - now;
     const daysLeft = Math.floor(totalDuration / (1000 * 60 * 60 * 24));
@@ -73,7 +73,7 @@ const InsuranceWidget: React.FC<InsuranceWidgetProps> = ({ item }) => {
           {" days left"}
         </Text>
         <Text>
-          {formatDate(new Date(carInsurance.expiryDate!).toDateString()!)}
+          {formatDate(new Date(carInsurance.validUntil!).toDateString()!)}
         </Text>
       </View>
       <View style={styles.progressBarBackground}>

@@ -37,8 +37,8 @@ const NavBar = () => {
         },
       })}
     >
-      <Tab.Screen name="Garage" component={GarageScreen} />
       <Tab.Screen name="Dashboard" component={DashboardScreen} />
+      <Tab.Screen name="Garage" component={GarageScreen} />
       <Tab.Screen name="Find my Car" component={FindMyCarScreen} />
     </Tab.Navigator>
   );
