@@ -2,6 +2,8 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGene
 import { User } from './User';
 import { InsuranceHistory } from './InsuranceHistory';
 import { ActiveInsurance } from './ActiveInsurance';
+import { ActiveInspection } from './ActiveInspection';
+import { InspectionHistory } from './InspectionHistory';
 
 @Entity()
 export class Car {
@@ -63,12 +65,6 @@ export class Car {
   vignetteExpiryDate: Date;
 
   @Column({ nullable: true })
-  lastInspection: Date;
-
-  @Column({ nullable: true })
-  nextInspection: Date;
-
-  @Column({ nullable: true })
   lastService: Date;
 
   @Column({ nullable: true })
@@ -100,4 +96,13 @@ export class Car {
 
   @OneToMany(() => InsuranceHistory, (insurance) => insurance.car)
   insuranceHistory: InsuranceHistory[];
+
+  @OneToOne(() => ActiveInspection, (inspection) => inspection.car, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  activeInspection: ActiveInspection;
+
+  @OneToMany(() => InspectionHistory, (inspection) => inspection.car)
+  inspectionHistory: InspectionHistory[];
 }

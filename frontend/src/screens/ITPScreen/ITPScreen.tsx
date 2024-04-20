@@ -16,9 +16,14 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import TopBar from "../../components/TopBar/TopBar";
 import OpacityButton from "../../components/OpacityButton/OpacityButton";
 import { removeCarWidgets, retrieveString } from "../../utils/storage-handler";
-import { updateCarApiCall } from "../../api/api-service";
+import {
+  deleteInspectionApiCall,
+  updateCarApiCall,
+  updateInspectionApiCall,
+} from "../../api/api-service";
 import DateInputField from "../../components/DateInputField/DateInputField";
 import { Car } from "../../models/Car.model";
+import { ActiveInspection } from "../../models/Active-Inspection.model";
 
 LogBox.ignoreLogs([
   "Non-serializable values were found in the navigation state",
@@ -37,39 +42,48 @@ interface ITPScreenProps {
 
 const ITPScreen: React.FC<ITPScreenProps> = ({ route }) => {
   const navigation = useNavigation();
-  const { item } = route.params;
-  const [car, setCar] = useState<Car>(item);
+  const { carItem, inspectionItem } = route.params;
+  const [car, setCar] = useState<Car>(carItem);
+  const [inspection, setInspection] =
+    useState<ActiveInspection>(inspectionItem);
 
   const handleSaveITP = async () => {
     try {
-      for (const key in car) {
-        if (car[key as keyof Car] === "") {
-          (car[key as keyof Car] as Car[keyof Car] | null) = null;
+      for (const key in inspection) {
+        if (inspection[key as keyof ActiveInspection] === null) {
+          (inspection[key as keyof ActiveInspection] as
+            | ActiveInspection[keyof ActiveInspection]
+            | null) = null;
         }
       }
+      console.log("Updating inspection with ID: ", inspection.id);
+      console.log("Udating car with ID: ", car.id);
+      const updatedCar = { ...car, activeInspection: inspection };
       const token = await retrieveString("userToken");
-      const result = await updateCarApiCall(car, token);
-      if (result) {
-        Alert.alert("Success", "Car updated successfully.");
+      const resultInspectionCall = await updateInspectionApiCall(
+        inspection,
+        token,
+      );
+      const resultCarCall = await updateCarApiCall(updatedCar, token);
+      if (resultInspectionCall && resultCarCall) {
+        Alert.alert("Success", "Car inspection updated successfully.");
         navigation.goBack();
       }
     } catch (error) {
-      console.error("Error updating the car:", error);
+      console.error("Error updating the car inspection:", error);
     }
   };
 
   const handleDeleteITP = async () => {
     try {
+      const updatedCar = { ...car, activeInspection: null };
       const token = await retrieveString("userToken");
-      const result = await updateCarApiCall(
-        {
-          id: car.id,
-          lastInspection: null,
-          nextInspection: null,
-        },
+      const resultInspectionCall = await deleteInspectionApiCall(
+        inspection.id!,
         token,
       );
-      if (result) {
+      const resultCarCall = await updateCarApiCall(updatedCar, token);
+      if (resultInspectionCall && resultCarCall) {
         Alert.alert("Success", "ITP details have been deleted.");
         await removeCarWidgets(car.id!.toString());
         navigation.goBack();
@@ -79,8 +93,11 @@ const ITPScreen: React.FC<ITPScreenProps> = ({ route }) => {
     }
   };
 
-  const handleServiceInputChange = (name: keyof Car, value: string | null) => {
-    setCar((prevCar) => ({ ...prevCar, [name]: value }));
+  const handleServiceInputChange = (
+    name: keyof ActiveInspection,
+    value: string | null,
+  ) => {
+    setInspection((prevInspection) => ({ ...prevInspection, [name]: value }));
   };
 
   return (
@@ -96,9 +113,9 @@ const ITPScreen: React.FC<ITPScreenProps> = ({ route }) => {
             <DateInputField
               iconName="calendar"
               placeholder="Start Date"
-              value={new Date(car.lastInspection || new Date().toISOString())}
+              value={new Date(inspection.validFrom || new Date().toISOString())}
               onChange={(date) =>
-                handleServiceInputChange("lastInspection", date.toISOString())
+                handleServiceInputChange("validFrom", date.toISOString())
               }
             />
 
@@ -106,9 +123,11 @@ const ITPScreen: React.FC<ITPScreenProps> = ({ route }) => {
             <DateInputField
               iconName="calendar"
               placeholder="End Date"
-              value={new Date(car.nextInspection || new Date().toISOString())}
+              value={
+                new Date(inspection.validUntil || new Date().toISOString())
+              }
               onChange={(date) =>
-                handleServiceInputChange("nextInspection", date.toISOString())
+                handleServiceInputChange("validUntil", date.toISOString())
               }
             />
           </ScrollView>

@@ -4,26 +4,25 @@ import { styles } from "./ITPWidget.styles";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Car } from "../../models/Car.model";
+import { RootStackParamList } from "../../navigation/app-navigator";
+import { ActiveInspection } from "../../models/Active-Inspection.model";
 
 type ITPWidgetNavigationProp = StackNavigationProp<
   RootStackParamList,
   "ITPScreen"
 >;
 
-export type RootStackParamList = {
-  ITPScreen: { item: Car };
-};
-
 interface ITPWidgetProps {
   item: Car;
 }
 
 const ITPWidget: React.FC<ITPWidgetProps> = ({ item }) => {
+  const carInspection: ActiveInspection = item.activeInspection!;
   const navigation = useNavigation<ITPWidgetNavigationProp>();
 
   const calculateProgress = () => {
-    const start = new Date(item.lastInspection!).getTime();
-    const end = new Date(item.nextInspection!).getTime();
+    const start = new Date(carInspection.validFrom!).getTime();
+    const end = new Date(carInspection.validUntil!).getTime();
     const now = new Date().getTime();
     const totalDuration = end - start;
     const timeElapsedSinceStart = now - start;
@@ -32,7 +31,7 @@ const ITPWidget: React.FC<ITPWidgetProps> = ({ item }) => {
   };
 
   const calculateDaysLeft = () => {
-    const end = new Date(item.nextInspection!).getTime();
+    const end = new Date(carInspection.validUntil!).getTime();
     const now = new Date().getTime();
     const totalDuration = end - now;
     const daysLeft = Math.floor(totalDuration / (1000 * 60 * 60 * 24));
@@ -53,7 +52,10 @@ const ITPWidget: React.FC<ITPWidgetProps> = ({ item }) => {
   };
 
   const navigateToITPScreen = () => {
-    navigation.navigate("ITPScreen", { item });
+    navigation.navigate("ITPScreen", {
+      carItem: item,
+      inspectionItem: item.activeInspection!,
+    });
   };
 
   const progress = calculateProgress();
@@ -68,7 +70,7 @@ const ITPWidget: React.FC<ITPWidgetProps> = ({ item }) => {
           {" days left"}
         </Text>
         <Text>
-          {formatDate(new Date(item.nextInspection!).toDateString()!)}
+          {formatDate(new Date(carInspection.validUntil!).toDateString()!)}
         </Text>
       </View>
       <View style={styles.progressBarBackground}>

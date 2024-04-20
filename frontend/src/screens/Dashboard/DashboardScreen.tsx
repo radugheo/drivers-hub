@@ -26,6 +26,7 @@ import ServiceFormModal from "../../components/ServiceFormModal/ServiceFormModal
 import VignetteWidget from "../../components/VignetteWidget/VignetteWidget";
 import VignetteFormModal from "../../components/VignetteFormModal/VignetteFormModal";
 import { ActiveInsurance } from "../../models/Active-Insurance.model";
+import { ActiveInspection } from "../../models/Active-Inspection.model";
 
 type FormData = { [key: string]: any };
 type SetIsModalVisibleFunction = (isVisible: boolean) => void;
@@ -49,11 +50,11 @@ const DashboardScreen: React.FC = () => {
     new ActiveInsurance(),
   );
 
-  const [isITPModalVisible, setIsITPModalVisible] = useState(false);
-  const [ITPFormData, setITPFormData] = useState({
-    lastInspection: new Date(),
-    nextInspection: new Date(),
-  });
+  const [isInspectionModalVisible, setIsInspectionModalVisible] =
+    useState(false);
+  const [inspection, setInspection] = useState<ActiveInspection>(
+    new ActiveInspection(),
+  );
 
   const [isServiceModalVisible, setServiceModalVisible] = useState(false);
   const [serviceFormData, setServiceFormData] = useState({
@@ -138,7 +139,7 @@ const DashboardScreen: React.FC = () => {
             setIsInsuranceModalVisible(true);
             setOptionsModalVisible(false);
           } else if (selectedCarId && item === "ITP (Technical Inspection)") {
-            setIsITPModalVisible(true);
+            setIsInspectionModalVisible(true);
             setOptionsModalVisible(false);
           } else if (selectedCarId && item === "Service & Maintenance") {
             setServiceModalVisible(true);
@@ -164,7 +165,8 @@ const DashboardScreen: React.FC = () => {
   };
 
   const carHasITP = (car: Car) => {
-    return car.lastInspection || car.nextInspection;
+    console.log("Car inspection:", car.activeInspection);
+    return car.activeInspection;
   };
 
   const carHasService = (car: Car) => {
@@ -275,6 +277,57 @@ const DashboardScreen: React.FC = () => {
     }
   };
 
+  const handleITPFormSubmit = async () => {
+    const token = await retrieveString("userToken");
+    if (!token) {
+      Alert.alert("Error", "User token not found.");
+      return;
+    }
+    if (!selectedCarId) {
+      Alert.alert("Error", "No car selected.");
+      return;
+    }
+    const carToUpdate = cars.find((car) => car.id === selectedCarId);
+    if (!carToUpdate) {
+      Alert.alert("Error", "Car not found.");
+      return;
+    }
+    const updatedCar = {
+      ...carToUpdate,
+      activeInspection: {
+        ...inspection,
+        carId: selectedCarId,
+      },
+    };
+    try {
+      console.log(
+        `Updating inspection for carId: ${selectedCarId}: ${JSON.stringify(updatedCar.activeInspection)}`,
+      );
+      await updateCarApiCall(updatedCar, token);
+      Alert.alert("Success", "ITP information updated successfully.");
+      setIsInspectionModalVisible(false);
+      setCars(cars.map((car) => (car.id === selectedCarId ? updatedCar : car)));
+      if (
+        !carWidgets[selectedCarId.toString()].includes(
+          "ITP (Technical Inspection)",
+        )
+      ) {
+        const updatedWidgets = [
+          ...carWidgets[selectedCarId.toString()],
+          "ITP (Technical Inspection)",
+        ];
+        setCarWidgets({
+          ...carWidgets,
+          [selectedCarId.toString()]: updatedWidgets,
+        });
+        saveCarWidgets(selectedCarId.toString(), updatedWidgets);
+      }
+    } catch (error) {
+      console.error("Error updating ITP information:", error);
+      Alert.alert("Error", "Failed to update ITP information.");
+    }
+  };
+
   // const handleSubmitForm = async ({
   //   formData,
   //   setIsModalVisible,
@@ -374,6 +427,16 @@ const DashboardScreen: React.FC = () => {
         insurance={insurance}
         setInsurance={setInsurance}
         onSave={handleInsuranceFormSubmit}
+      />
+
+      <ITPFormModal
+        animationType="none"
+        transparent={true}
+        visible={isInspectionModalVisible}
+        onRequestClose={() => setIsInspectionModalVisible(false)}
+        inspection={inspection}
+        setInspection={setInspection}
+        onSave={handleITPFormSubmit}
       />
 
       {/* <ITPFormModal

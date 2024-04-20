@@ -192,3 +192,65 @@ export const deleteInsuranceApiCall = async (
       : new Error("An error occurred while deleting insurance");
   }
 };
+
+export const addInspectionApiCall = async (inspection: any, token: string) => {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/inspection/active`,
+      inspection,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (error: any) {
+    throw error.response
+      ? error.response.data
+      : new Error("An error occurred while adding inspection");
+  }
+};
+
+export const updateInspectionApiCall = async (
+  inspection: any,
+  token: string,
+) => {
+  try {
+    const response = await axios.put(
+      `${BASE_URL}/inspection/active/${inspection.id}`,
+      inspection,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (error: any) {
+    throw error.response
+      ? error.response.data
+      : new Error("An error occurred while updating inspection");
+  }
+};
+
+export const deleteInspectionApiCall = async (
+  inspectionId: number,
+  token: string,
+) => {
+  try {
+    const response = await axios.delete(
+      `${BASE_URL}/inspection/active/${inspectionId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (error: any) {
+    throw error.response
+      ? error.response.data
+      : new Error("An error occurred while deleting inspection");
+  }
+};

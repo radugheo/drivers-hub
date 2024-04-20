@@ -1,4 +1,5 @@
 import { ActiveInsurance } from "./Active-Insurance.model";
+import { ActiveInspection } from "./Active-Inspection.model";
 
 export class Car {
   id?: number;
@@ -14,8 +15,6 @@ export class Car {
   horsepower?: number;
   vignetteStartDate?: Date;
   vignetteExpiryDate?: Date;
-  lastInspection?: Date;
-  nextInspection?: Date;
   lastService?: Date;
   nextService?: Date;
   lastServiceMileage?: number;
@@ -25,6 +24,7 @@ export class Car {
   vin?: string;
   ownerId: string;
   activeInsurance?: ActiveInsurance;
+  activeInspection?: ActiveInspection;
   constructor(
     make: string,
     model: string,
@@ -59,8 +59,6 @@ export class Car {
     this.horsepower = horsepower;
     this.vignetteStartDate = vignetteStartDate;
     this.vignetteExpiryDate = vignetteExpiryDate;
-    this.lastInspection = lastInspection;
-    this.nextInspection = nextInspection;
     this.lastService = lastService;
     this.nextService = nextService;
     this.lastServiceMileage = lastServiceMileage;
