@@ -69,7 +69,10 @@ export class Car {
   })
   activeInspection: ActiveInspection;
 
-  @OneToMany(() => InspectionHistory, (inspection) => inspection.car)
+  @OneToMany(() => InspectionHistory, (inspection) => inspection.car, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   inspectionHistory: InspectionHistory[];
 
   @OneToOne(() => ActiveService, (service) => service.car, {
@@ -78,6 +81,9 @@ export class Car {
   })
   activeService: ActiveService;
 
-  @OneToMany(() => ServiceHistory, (service) => service.car)
+  @OneToMany(() => ServiceHistory, (service) => service.car, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   serviceHistory: ServiceHistory[];
 }
