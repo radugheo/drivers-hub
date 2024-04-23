@@ -12,6 +12,8 @@ node_modules/
 # dependencies
 node_modules/
 
+ml/
+
 # Expo
 .expo/
 dist/

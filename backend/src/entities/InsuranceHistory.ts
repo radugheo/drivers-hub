@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Car } from './Car';
 
 @Entity()
@@ -6,7 +6,8 @@ export class InsuranceHistory {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Car, (car) => car.insuranceHistory)
+  @ManyToOne(() => Car, (car) => car.insuranceHistory, { onDelete: 'CASCADE' })
+  @JoinColumn()
   car: Car;
 
   @Column({ nullable: true })

@@ -94,20 +94,6 @@ const carRoutes = [
 
 const insuranceRoutes = [
   {
-    method: 'get',
-    route: '/insurance/active/:id',
-    controller: InsuranceController,
-    action: 'activeByCar',
-    middlewares: [isAuthenticated],
-  },
-  {
-    method: 'post',
-    route: '/insurance/active',
-    controller: InsuranceController,
-    action: 'saveActive',
-    middlewares: [isAuthenticated],
-  },
-  {
     method: 'put',
     route: '/insurance/active/:id',
     controller: InsuranceController,
@@ -126,13 +112,6 @@ const insuranceRoutes = [
     route: '/insurance/history/:id',
     controller: InsuranceController,
     action: 'historyByCar',
-    middlewares: [isAuthenticated],
-  },
-  {
-    method: 'post',
-    route: '/insurance/history',
-    controller: InsuranceController,
-    action: 'expire',
     middlewares: [isAuthenticated],
   },
   {
@@ -146,20 +125,6 @@ const insuranceRoutes = [
 
 const inspectionRoutes = [
   {
-    method: 'get',
-    route: '/inspection/active/:id',
-    controller: InspectionController,
-    action: 'activeByCar',
-    middlewares: [isAuthenticated],
-  },
-  {
-    method: 'post',
-    route: '/inspection/active',
-    controller: InspectionController,
-    action: 'saveActive',
-    middlewares: [isAuthenticated],
-  },
-  {
     method: 'put',
     route: '/inspection/active/:id',
     controller: InspectionController,
@@ -181,13 +146,6 @@ const inspectionRoutes = [
     middlewares: [isAuthenticated],
   },
   {
-    method: 'post',
-    route: '/inspection/history',
-    controller: InspectionController,
-    action: 'expire',
-    middlewares: [isAuthenticated],
-  },
-  {
     method: 'delete',
     route: '/inspection/history/:id',
     controller: InspectionController,
@@ -197,20 +155,6 @@ const inspectionRoutes = [
 ];
 
 const serviceRoutes = [
-  {
-    method: 'get',
-    route: '/service/active/:id',
-    controller: ServiceController,
-    action: 'activeByCar',
-    middlewares: [isAuthenticated],
-  },
-  {
-    method: 'post',
-    route: '/service/active',
-    controller: ServiceController,
-    action: 'saveActive',
-    middlewares: [isAuthenticated],
-  },
   {
     method: 'put',
     route: '/service/active/:id',
@@ -230,13 +174,6 @@ const serviceRoutes = [
     route: '/service/history/:id',
     controller: ServiceController,
     action: 'historyByCar',
-    middlewares: [isAuthenticated],
-  },
-  {
-    method: 'post',
-    route: '/service/history',
-    controller: ServiceController,
-    action: 'expire',
     middlewares: [isAuthenticated],
   },
   {

@@ -57,7 +57,10 @@ export class Car {
   })
   activeInsurance: ActiveInsurance;
 
-  @OneToMany(() => InsuranceHistory, (insurance) => insurance.car)
+  @OneToMany(() => InsuranceHistory, (insurance) => insurance.car, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   insuranceHistory: InsuranceHistory[];
 
   @OneToOne(() => ActiveInspection, (inspection) => inspection.car, {

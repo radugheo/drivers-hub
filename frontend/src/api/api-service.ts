@@ -128,28 +128,6 @@ export const deleteCarApiCall = async (carId: number, token: string) => {
   }
 };
 
-export const addInsuranceApiCall = async (
-  insurance: ActiveInsurance,
-  token: string,
-) => {
-  try {
-    const response = await axios.post(
-      `${BASE_URL}/insurance/active`,
-      insurance,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-    return response.data;
-  } catch (error: any) {
-    throw error.response
-      ? error.response.data
-      : new Error("An error occurred while adding insurance");
-  }
-};
-
 export const updateInsuranceApiCall = async (
   insurance: ActiveInsurance,
   token: string,
@@ -193,25 +171,6 @@ export const deleteInsuranceApiCall = async (
   }
 };
 
-export const addInspectionApiCall = async (inspection: any, token: string) => {
-  try {
-    const response = await axios.post(
-      `${BASE_URL}/inspection/active`,
-      inspection,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-    return response.data;
-  } catch (error: any) {
-    throw error.response
-      ? error.response.data
-      : new Error("An error occurred while adding inspection");
-  }
-};
-
 export const updateInspectionApiCall = async (
   inspection: any,
   token: string,
@@ -252,21 +211,6 @@ export const deleteInspectionApiCall = async (
     throw error.response
       ? error.response.data
       : new Error("An error occurred while deleting inspection");
-  }
-};
-
-export const addServiceApiCall = async (service: any, token: string) => {
-  try {
-    const response = await axios.post(`${BASE_URL}/service/active`, service, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error: any) {
-    throw error.response
-      ? error.response.data
-      : new Error("An error occurred while adding service");
   }
 };
 

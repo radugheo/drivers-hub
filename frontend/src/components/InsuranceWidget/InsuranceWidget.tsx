@@ -34,7 +34,7 @@ const InsuranceWidget: React.FC<InsuranceWidgetProps> = ({ item }) => {
     const end = new Date(carInsurance.validUntil!).getTime();
     const now = new Date().getTime();
     const totalDuration = end - now;
-    const daysLeft = Math.floor(totalDuration / (1000 * 60 * 60 * 24));
+    const daysLeft = Math.floor(totalDuration / (1000 * 60 * 60 * 24)) + 1;
     return daysLeft;
   };
 

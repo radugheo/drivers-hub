@@ -95,15 +95,26 @@ export class InspectionController {
     return inspections;
   };
 
-  expire = async (req: Request, res: Response) => {
-    const id = parseInt(req.params.id);
-    const inspection = await this.inspectionHistoryRepository.findOneBy({ id });
-    if (!inspection) {
-      throw new CustomError(404, 'Inspection not found');
-    }
-    const history = this.inspectionHistoryRepository.create(inspection);
-    await this.inspectionHistoryRepository.save(history);
-    await this.activeInspectionRepository.remove(inspection);
+  expireById = async (inspectionId: number) => {
+    await AppDataSource.transaction(async (transactionalEntityManager) => {
+      const inspection = await transactionalEntityManager.findOne(ActiveInspection, {
+        where: { id: inspectionId },
+        relations: ['car'],
+      });
+
+      if (!inspection) {
+        throw new CustomError(404, 'Inspection not found');
+      }
+
+      const history = transactionalEntityManager.create(InspectionHistory, {
+        ...inspection,
+        car: inspection.car,
+      });
+
+      await transactionalEntityManager.save(InspectionHistory, history);
+
+      await transactionalEntityManager.remove(ActiveInspection, inspection);
+    });
     return 'Inspection expired';
   };
 

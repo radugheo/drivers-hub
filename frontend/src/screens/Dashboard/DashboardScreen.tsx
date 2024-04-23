@@ -1,10 +1,18 @@
 import React, { useState, useCallback } from "react";
-import { View, Text, Alert, ScrollView, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Alert,
+  ScrollView,
+  TouchableOpacity,
+  RefreshControl,
+} from "react-native";
 import Carousel from "react-native-snap-carousel";
 import { styles } from "./DashboardScreen.styles";
 import { getCarsApiCall, updateCarApiCall } from "../../api/api-service";
 import { Car } from "../../models/Car.model";
 import {
+  removeCarWidget,
   retrieveCarWidgets,
   retrieveString,
   saveCarWidgets,
@@ -31,6 +39,8 @@ const DashboardScreen: React.FC = () => {
   const [carWidgets, setCarWidgets] = useState<{ [carId: string]: string[] }>(
     {},
   );
+  const [refreshing, setRefreshing] = useState(false);
+
   const [isInsuranceModalVisible, setIsInsuranceModalVisible] = useState(false);
   const [insurance, setInsurance] = useState<ActiveInsurance>(
     new ActiveInsurance(),
@@ -61,13 +71,34 @@ const DashboardScreen: React.FC = () => {
           retrieveCarWidgets(car.id!.toString()),
         );
         const allWidgets = await Promise.all(widgetsFetchPromises);
-        const widgetsMap = fetchedCars.reduce(
-          (acc, car, index) => ({
+        const widgetsMap = fetchedCars.reduce((acc, car, index) => {
+          const validWidgets = allWidgets[index].filter((widgetName) => {
+            if (widgetName === "Insurance" && !carHasInsurance(car)) {
+              removeCarWidget(car.id!.toString(), widgetName);
+              return false;
+            } else if (
+              widgetName === "ITP (Technical Inspection)" &&
+              !carHasITP(car)
+            ) {
+              removeCarWidget(car.id!.toString(), widgetName);
+              return false;
+            } else if (
+              widgetName === "Service & Maintenance" &&
+              !carHasService(car)
+            ) {
+              removeCarWidget(car.id!.toString(), widgetName);
+              return false;
+            } else if (widgetName === "Vignette" && !carHasVignette(car)) {
+              removeCarWidget(car.id!.toString(), widgetName);
+              return false;
+            }
+            return true;
+          });
+          return {
             ...acc,
-            [car.id!.toString()]: allWidgets[index] || [],
-          }),
-          {},
-        );
+            [car.id!.toString()]: validWidgets,
+          };
+        }, {});
         console.log("Widgets map", widgetsMap);
         setCarWidgets(widgetsMap);
       } else {
@@ -78,6 +109,11 @@ const DashboardScreen: React.FC = () => {
       Alert.alert("Error", "Unable to retrieve cars and widgets");
     }
   }, []);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchCarsAndWidgets().then(() => setRefreshing(false));
+  }, [fetchCarsAndWidgets]);
 
   useFocusEffect(
     useCallback(() => {
@@ -173,7 +209,11 @@ const DashboardScreen: React.FC = () => {
           </Text>
           <Text style={styles.carSubtitle}>{item.licensePlate}</Text>
         </View>
-        <ScrollView>
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
           {widgets.map((widgetName, index) => {
             if (widgetName === "Insurance") {
               if (carHasInsurance(item)) {

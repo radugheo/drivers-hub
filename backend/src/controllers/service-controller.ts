@@ -99,16 +99,26 @@ export class ServiceController {
     return services;
   };
 
-  expire = async (req: Request, res: Response) => {
-    const id = parseInt(req.params.id);
-    const service = await this.activeServiceRepository.findOneBy({ id });
-    if (!service) {
-      throw new CustomError(404, 'Service not found');
-    }
-    const history = this.serviceHistoryRepository.create(service);
-    await this.serviceHistoryRepository.save(history);
-    await this.activeServiceRepository.remove(service);
-    return 'Service expired';
+  expireById = async (serviceId: number) => {
+    await AppDataSource.transaction(async (transactionalEntityManager) => {
+      const service = await transactionalEntityManager.findOne(ActiveService, {
+        where: { id: serviceId },
+        relations: ['car'],
+      });
+
+      if (!service) {
+        throw new CustomError(404, 'Service not found');
+      }
+
+      const history = transactionalEntityManager.create(ServiceHistory, {
+        ...service,
+        car: service.car,
+      });
+
+      await transactionalEntityManager.save(ServiceHistory, history);
+
+      await transactionalEntityManager.remove(ActiveService, service);
+    });
   };
 
   removeExpired = async (req: Request, res: Response) => {
