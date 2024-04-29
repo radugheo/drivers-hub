@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import GarageScreen from "../../screens/Garage/GarageScreen";
 import FindMyCarScreen from "../../screens/FindMyCar/FindMyCarScreen";
 import DashboardScreen from "../../screens/Dashboard/DashboardScreen";
+import NearbyCarServicesScreen from "../../screens/NearbyCarServices/NearbyCarServices";
 
 const Tab = createBottomTabNavigator();
 
@@ -30,6 +31,8 @@ const NavBar = () => {
             iconName = focused ? "car-sport" : "car-sport-outline";
           } else if (route.name === "Dashboard") {
             iconName = focused ? "grid" : "grid-outline";
+          } else if (route.name === "Nearby services") {
+            iconName = focused ? "map" : "map-outline";
           } else if (route.name === "Find my Car") {
             iconName = focused ? "location" : "location-outline";
           }
@@ -39,6 +42,7 @@ const NavBar = () => {
     >
       <Tab.Screen name="Dashboard" component={DashboardScreen} />
       <Tab.Screen name="Garage" component={GarageScreen} />
+      <Tab.Screen name="Nearby services" component={NearbyCarServicesScreen} />
       <Tab.Screen name="Find my Car" component={FindMyCarScreen} />
     </Tab.Navigator>
   );

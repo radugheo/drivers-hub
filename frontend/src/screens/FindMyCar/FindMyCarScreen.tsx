@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { View, StyleSheet, Alert, Dimensions } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, Region } from "react-native-maps";
 import * as Location from "expo-location";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { styles } from "./FindMyCarScreen.styles";
@@ -13,16 +13,9 @@ import MapViewDirections from "react-native-maps-directions";
 
 const PARKING_SPOT_KEY = "PARKING_SPOT_KEY";
 
-type LocationState = {
-  latitude: number;
-  longitude: number;
-  latitudeDelta: number;
-  longitudeDelta: number;
-} | null;
-
-const FindMyCarScreen = () => {
-  const [location, setLocation] = useState<LocationState>(null);
-  const [parkingSpot, setParkingSpot] = useState<LocationState>(null);
+const FindMyCarScreen: React.FC = () => {
+  const [location, setLocation] = useState<Region | undefined>(undefined);
+  const [parkingSpot, setParkingSpot] = useState<Region | undefined>(undefined);
   const mapRef = useRef<MapView | null>(null);
 
   useEffect(() => {
@@ -90,7 +83,7 @@ const FindMyCarScreen = () => {
   };
 
   const deleteParkingSpot = () => {
-    setParkingSpot(null);
+    setParkingSpot(undefined);
     AsyncStorage.removeItem(PARKING_SPOT_KEY);
   };
 

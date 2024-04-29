@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import AppNavigator from "./src/navigation/app-navigator";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, LogBox } from "react-native";
 import * as Font from "expo-font";
 
 export default function App() {
@@ -15,6 +15,7 @@ export default function App() {
   };
 
   useEffect(() => {
+    LogBox.ignoreLogs(['ViewPropTypes will be removed']);
     loadFonts();
   }, []);
 

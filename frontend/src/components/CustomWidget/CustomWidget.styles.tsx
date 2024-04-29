@@ -13,6 +13,15 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     marginBottom: 5,
   },
+  subtitle: {
+    fontSize: 14,
+
+    fontStyle: "italic",
+  },
+  allContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
   progressBarBackground: {
     height: 15,
     backgroundColor: "#eee",
@@ -20,7 +29,11 @@ export const styles = StyleSheet.create({
   },
   progressBarForeground: {
     height: "100%",
-    backgroundColor: "green",
+    backgroundColor: "red",
     borderRadius: 10,
+  },
+  deleteIcon: {
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

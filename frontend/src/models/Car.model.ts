@@ -27,6 +27,9 @@ export class Car {
   activeInsurance?: ActiveInsurance;
   activeInspection?: ActiveInspection;
   activeService?: ActiveService;
+  insuranceHistory?: ActiveInsurance[];
+  inspectionHistory?: ActiveInspection[];
+  serviceHistory?: ActiveService[];
   constructor(
     make: string,
     model: string,

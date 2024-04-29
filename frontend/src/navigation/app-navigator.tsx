@@ -18,6 +18,7 @@ import VignetteScreen from "../screens/VignetteScreen/VignetteScreen";
 import { ActiveInsurance } from "../models/Active-Insurance.model";
 import { ActiveInspection } from "../models/Active-Inspection.model";
 import { ActiveService } from "../models/Active-Service.model";
+import NearbyCarServicesScreen from "../screens/NearbyCarServices/NearbyCarServices";
 
 export type RootStackParamList = {
   Login: undefined;
@@ -33,6 +34,7 @@ export type RootStackParamList = {
   ITPScreen: { carItem: Car; inspectionItem: ActiveInspection };
   ServiceScreen: { carItem: Car; serviceItem: ActiveService };
   VignetteScreen: { item: Car };
+  NearbyCarServicesScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -96,6 +98,11 @@ const AppNavigator = () => {
         <Stack.Screen
           name="VignetteScreen"
           component={VignetteScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="NearbyCarServicesScreen"
+          component={NearbyCarServicesScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

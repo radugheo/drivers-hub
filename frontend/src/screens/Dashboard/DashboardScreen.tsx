@@ -1,36 +1,27 @@
 import React, { useState, useCallback } from "react";
-import {
-  View,
-  Text,
-  Alert,
-  ScrollView,
-  TouchableOpacity,
-  RefreshControl,
-} from "react-native";
+import { View, Text, Alert, TouchableOpacity } from "react-native";
 import Carousel from "react-native-snap-carousel";
 import { styles } from "./DashboardScreen.styles";
 import { getCarsApiCall, updateCarApiCall } from "../../api/api-service";
 import { Car } from "../../models/Car.model";
 import {
+  removeCarHistoryWidget,
   removeCarWidget,
+  retrieveCarHistoryWidgets,
   retrieveCarWidgets,
   retrieveString,
+  saveCarHistoryWidgets,
   saveCarWidgets,
 } from "../../utils/storage-handler";
-import OpacityButton from "../../components/OpacityButton/OpacityButton";
-import CustomWidget from "../../components/CustomWidget/CustomWidget";
 import OptionsModal from "../../components/OptionsModal/OptionsModal";
 import InsuranceFormModal from "../../components/InsuranceFormModal/InsuranceFormModal";
 import { useFocusEffect } from "@react-navigation/native";
-import InsuranceWidget from "../../components/InsuranceWidget/InsuranceWidget";
 import ITPFormModal from "../../components/ITPFormModal/ITPFormModal";
-import ITPWidget from "../../components/ITPWidget/ITPWidget";
-import ServiceWidget from "../../components/ServiceWidget/ServiceWidget";
 import ServiceFormModal from "../../components/ServiceFormModal/ServiceFormModal";
-import VignetteWidget from "../../components/VignetteWidget/VignetteWidget";
 import { ActiveInsurance } from "../../models/Active-Insurance.model";
 import { ActiveInspection } from "../../models/Active-Inspection.model";
 import { ActiveService } from "../../models/Active-Service.model";
+import CarItemDashboard from "../../components/CarItemDashboard/CarItemDashboard";
 
 const DashboardScreen: React.FC = () => {
   const [cars, setCars] = useState<Car[]>([]);
@@ -39,7 +30,11 @@ const DashboardScreen: React.FC = () => {
   const [carWidgets, setCarWidgets] = useState<{ [carId: string]: string[] }>(
     {},
   );
-  const [refreshing, setRefreshing] = useState(false);
+  const [historyWidgets, setHistoryWidgets] = useState<{
+    [carId: string]: any[];
+  }>({});
+
+  const [refreshingActive, setRefreshingActive] = useState(false);
 
   const [isInsuranceModalVisible, setIsInsuranceModalVisible] = useState(false);
   const [insurance, setInsurance] = useState<ActiveInsurance>(
@@ -55,18 +50,52 @@ const DashboardScreen: React.FC = () => {
   const [isServiceModalVisible, setServiceModalVisible] = useState(false);
   const [service, setService] = useState<ActiveService>(new ActiveService());
 
-  const [isVignetteModalVisible, setIsVignetteModalVisible] = useState(false);
-  const [vignetteFormData, setVignetteFormData] = useState({
-    vignetteStartDate: new Date(),
-    vignetteExpiryDate: new Date(),
-  });
-
   const fetchCarsAndWidgets = useCallback(async () => {
     try {
       const token = await retrieveString("userToken");
       if (token) {
         let fetchedCars: Car[] = await getCarsApiCall(token);
         setCars(fetchedCars);
+
+        const historyWidgetsFetchPromises = fetchedCars.map(async (car) => {
+          const carIdStr = car.id!.toString();
+          let historyWidgets = await retrieveCarHistoryWidgets(carIdStr);
+          if (historyWidgets.length === 0) {
+            const historyWidgets = [
+              ...(car.insuranceHistory || []).map((item) => ({
+                type: "Insurance",
+                status: "Expired",
+                data: item,
+              })),
+              ...(car.inspectionHistory || []).map((item) => ({
+                type: "ITP",
+                status: "Expired",
+                data: item,
+              })),
+              ...(car.serviceHistory || []).map((item) => ({
+                type: "Service",
+                status: "Expired",
+                data: item,
+              })),
+            ];
+            await saveCarHistoryWidgets(carIdStr, historyWidgets);
+          }
+          return { carId: carIdStr, historyWidgets };
+        });
+        const allHistoryWidgets = await Promise.all(
+          historyWidgetsFetchPromises,
+        );
+        const historyWidgetsMap = allHistoryWidgets.reduce(
+          (acc, { carId, historyWidgets }) => {
+            return { ...acc, [carId]: historyWidgets };
+          },
+          {},
+        );
+        console.log("History widgets map", historyWidgetsMap);
+        setHistoryWidgets(historyWidgetsMap);
+
+        /// ----------------------------
+
         const widgetsFetchPromises = fetchedCars.map((car) =>
           retrieveCarWidgets(car.id!.toString()),
         );
@@ -88,9 +117,6 @@ const DashboardScreen: React.FC = () => {
             ) {
               removeCarWidget(car.id!.toString(), widgetName);
               return false;
-            } else if (widgetName === "Vignette" && !carHasVignette(car)) {
-              removeCarWidget(car.id!.toString(), widgetName);
-              return false;
             }
             return true;
           });
@@ -110,9 +136,9 @@ const DashboardScreen: React.FC = () => {
     }
   }, []);
 
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    fetchCarsAndWidgets().then(() => setRefreshing(false));
+  const onRefreshActive = useCallback(() => {
+    setRefreshingActive(true);
+    fetchCarsAndWidgets().then(() => setRefreshingActive(false));
   }, [fetchCarsAndWidgets]);
 
   useFocusEffect(
@@ -139,16 +165,15 @@ const DashboardScreen: React.FC = () => {
     return false;
   };
 
-  const addWidgetToCar = async (carId: string, widgetName: string) => {
-    const currentWidgets = carWidgets[carId] || [];
-    const updatedWidgets = [...currentWidgets, widgetName];
-    try {
-      await saveCarWidgets(carId, updatedWidgets);
-      setCarWidgets({ ...carWidgets, [carId]: updatedWidgets });
-      fetchCarsAndWidgets();
-    } catch (error) {
-      console.error("Error saving widgets:", error);
-      Alert.alert("Error", "Failed to save widgets.");
+  const deleteHistoryWidget = async (carId: string, widgetId: string) => {
+    const updatedWidgets = await removeCarHistoryWidget(carId, widgetId);
+    if (updatedWidgets !== null) {
+      setHistoryWidgets((prev) => ({
+        ...prev,
+        [carId]: updatedWidgets,
+      }));
+    } else {
+      Alert.alert("Error", "Failed to delete historical widget.");
     }
   };
 
@@ -164,12 +189,6 @@ const DashboardScreen: React.FC = () => {
             setOptionsModalVisible(false);
           } else if (selectedCarId && item === "Service & Maintenance") {
             setServiceModalVisible(true);
-            setOptionsModalVisible(false);
-          } else if (selectedCarId && item === "Vignette") {
-            setIsVignetteModalVisible(true);
-            setOptionsModalVisible(false);
-          } else {
-            addWidgetToCar(selectedCarId!.toString(), item);
             setOptionsModalVisible(false);
           }
         }
@@ -193,60 +212,6 @@ const DashboardScreen: React.FC = () => {
   const carHasService = (car: Car) => {
     console.log("Car service:", car.activeService);
     return car.activeService;
-  };
-
-  const carHasVignette = (car: Car) => {
-    return car.vignetteStartDate || car.vignetteExpiryDate;
-  };
-
-  const renderItem = ({ item }: { item: Car }) => {
-    const widgets = carWidgets[item.id!.toString()] || [];
-    return (
-      <View style={styles.carContainer}>
-        <View style={styles.cardContainer}>
-          <Text style={styles.carTitle}>
-            {item.make} {item.model} {item.year}
-          </Text>
-          <Text style={styles.carSubtitle}>{item.licensePlate}</Text>
-        </View>
-        <ScrollView
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        >
-          {widgets.map((widgetName, index) => {
-            if (widgetName === "Insurance") {
-              if (carHasInsurance(item)) {
-                return <InsuranceWidget key={index} item={item} />;
-              }
-            } else if (widgetName === "ITP (Technical Inspection)") {
-              if (carHasITP(item)) {
-                return <ITPWidget key={index} item={item} />;
-              }
-            } else if (widgetName === "Service & Maintenance") {
-              if (carHasService(item)) {
-                return <ServiceWidget key={index} item={item} />;
-              }
-            } else if (widgetName === "Vignette") {
-              if (carHasVignette(item)) {
-                return <VignetteWidget key={index} item={item} />;
-              }
-            } else {
-              return (
-                <CustomWidget key={index} title={widgetName} progress={30} />
-              );
-            }
-          })}
-        </ScrollView>
-        <OpacityButton
-          title="Add new information"
-          onPress={() => {
-            setSelectedCarId(item.id!);
-            setOptionsModalVisible(true);
-          }}
-        />
-      </View>
-    );
   };
 
   const updateWidgetsForCar = async (carId: string, widgetName: string) => {
@@ -392,6 +357,22 @@ const DashboardScreen: React.FC = () => {
     }
   };
 
+  const renderItem = ({ item }: { item: Car }) => (
+    <CarItemDashboard
+      item={item}
+      carWidgets={carWidgets}
+      deleteHistoryWidget={deleteHistoryWidget}
+      historyCarWidgets={historyWidgets}
+      refreshing={refreshingActive}
+      refreshCarsAndWidgets={onRefreshActive}
+      setSelectedCarId={setSelectedCarId}
+      setOptionsModalVisible={setOptionsModalVisible}
+      carHasInsurance={carHasInsurance}
+      carHasITP={carHasITP}
+      carHasService={carHasService}
+    />
+  );
+
   return (
     <View style={styles.container}>
       <Carousel
@@ -440,36 +421,6 @@ const DashboardScreen: React.FC = () => {
         setService={setService}
         onSave={handleServiceFormSubmit}
       />
-
-      {/* <ITPFormModal
-        animationType="none"
-        transparent={true}
-        visible={isITPModalVisible}
-        onRequestClose={() => setIsITPModalVisible(false)}
-        ITPFormData={ITPFormData}
-        setITPFormData={setITPFormData}
-        onSave={handleITPFormSubmit}
-      />
-
-      <ServiceFormModal
-        animationType="none"
-        transparent={true}
-        visible={isServiceModalVisible}
-        onRequestClose={() => setServiceModalVisible(false)}
-        serviceFormData={serviceFormData}
-        setServiceFormData={setServiceFormData}
-        onSave={handleServiceFormSubmit}
-      />
-
-      <VignetteFormModal
-        animationType="none"
-        transparent={true}
-        visible={isVignetteModalVisible}
-        onRequestClose={() => setIsVignetteModalVisible(false)}
-        vignetteFormData={vignetteFormData}
-        setVignetteFormData={setVignetteFormData}
-        onSave={handleVignetteFormSubmit}
-      /> */}
     </View>
   );
 };

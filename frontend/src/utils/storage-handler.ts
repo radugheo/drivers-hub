@@ -46,6 +46,50 @@ export const removeString = async (key: string): Promise<void> => {
   }
 };
 
+export const saveCarHistoryWidgets = async (
+  carId: string,
+  historyWidgets: any[],
+) => {
+  try {
+    const historyWidgetsStr = JSON.stringify(historyWidgets);
+    await storeString(`carHistoryWidgets_${carId}`, historyWidgetsStr);
+  } catch (error) {
+    console.error("Error saving car history widgets:", error);
+  }
+};
+
+export const retrieveCarHistoryWidgets = async (
+  carId: string,
+): Promise<any[]> => {
+  try {
+    const historyWidgetsStr = await retrieveString(
+      `carHistoryWidgets_${carId}`,
+    );
+    console.log("History widgets string:", historyWidgetsStr);
+    return historyWidgetsStr ? JSON.parse(historyWidgetsStr) : [];
+  } catch (error) {
+    console.error("Error retrieving car history widgets:", error);
+    return [];
+  }
+};
+
+export const removeCarHistoryWidget = async (
+  carId: string,
+  widgetId: string,
+) => {
+  try {
+    let historyWidgets = await retrieveCarHistoryWidgets(carId);
+    const updatedWidgets = historyWidgets.filter(
+      (widget) => widget.data.id !== widgetId,
+    );
+    await saveCarHistoryWidgets(carId, updatedWidgets);
+    return updatedWidgets;
+  } catch (error) {
+    console.error("Error removing history widget:", error);
+    return null;
+  }
+};
+
 export const saveCarWidgets = async (carId: string, widgets: string[]) => {
   try {
     const carWidgetsStr = JSON.stringify(widgets);
