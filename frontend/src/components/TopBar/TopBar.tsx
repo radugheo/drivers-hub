@@ -9,7 +9,6 @@ interface TopBarProps {
 }
 
 const TopBar: React.FC<TopBarProps> = ({ title }) => {
-  const navigation = useNavigation();
   return (
     <View style={styles.topBar}>
       <Text style={styles.topBarTitle}>{title}</Text>

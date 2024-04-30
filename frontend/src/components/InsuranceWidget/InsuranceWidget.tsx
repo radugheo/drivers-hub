@@ -68,11 +68,11 @@ const InsuranceWidget: React.FC<InsuranceWidgetProps> = ({ item }) => {
     >
       <Text style={styles.title}>RCA - {carInsurance.company}</Text>
       <View style={styles.datesContainer}>
-        <Text>
+        <Text style={styles.daysText}>
           {calculateDaysLeft()}
           {" days left"}
         </Text>
-        <Text>
+        <Text style={styles.daysText}>
           {formatDate(new Date(carInsurance.validUntil!).toDateString()!)}
         </Text>
       </View>

@@ -18,10 +18,14 @@ export const styles = StyleSheet.create({
   },
   carTitle: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontFamily: "Montserrat-Bold",
   },
   carSubtitle: {
     fontSize: 14,
+    fontFamily: "OktahRound-Regular",
+  },
+  statusText: {
+    fontFamily: "OktahRound-Regular",
   },
   switchContainer: {
     flexDirection: "row",

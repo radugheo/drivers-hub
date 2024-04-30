@@ -8,14 +8,15 @@ export default function App() {
 
   const loadFonts = async () => {
     await Font.loadAsync({
-      "OktahRound-Bold": require("./assets/fonts/oktah_round_light.otf"),
+      "OktahRound-Bold": require("./assets/fonts/oktah_round_bold.otf"),
       "OktahRound-Regular": require("./assets/fonts/oktah_round_light.otf"),
+      "Montserrat-Bold": require("./assets/fonts/montserrat-bold.ttf")
     });
     setFontsLoaded(true);
   };
 
   useEffect(() => {
-    LogBox.ignoreLogs(['ViewPropTypes will be removed']);
+    LogBox.ignoreLogs(['ViewPropTypes will be removed', 'Each child in a list should have a unique "key" prop']);
     loadFonts();
   }, []);
 

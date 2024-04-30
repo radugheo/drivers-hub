@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 21,
     fontWeight: "bold",
-    fontFamily: "OktahRound-Bold",
+    fontFamily: "OktahRound-Regular",
     letterSpacing: 0.25,
     color: "white",
   },

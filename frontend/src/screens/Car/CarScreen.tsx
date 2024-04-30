@@ -13,6 +13,8 @@ import TopBar from "../../components/TopBar/TopBar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FormDropdownField from "../../components/FormDropdownField/FormDropdownField";
 import NumberInputField from "../../components/NumberInputField/NumberInputField";
+import { formatLicensePlate } from "../../utils/format-text";
+import FormAuthField from "../../components/FormAuthField/FormAuthField";
 
 type CarScreenRouteProp = RouteProp<RootStackParamList, "CarScreen">;
 type CarScreenNavigationProp = StackNavigationProp<
@@ -33,6 +35,7 @@ const CarScreen: React.FC<CarScreenProps> = ({ route }) => {
   const handleSaveCar = async () => {
     try {
       const token = await retrieveString("userToken");
+      car.licensePlate = formatLicensePlate(car.licensePlate);
       const result = await updateCarApiCall(car, token);
       if (result) {
         Alert.alert("Success", "Car updated successfully.");
@@ -56,10 +59,6 @@ const CarScreen: React.FC<CarScreenProps> = ({ route }) => {
     }
   };
 
-  const handleServiceInputChange = (name: keyof Car, value: string) => {
-    setCar((prevCar) => ({ ...prevCar, [name]: value }));
-  };
-
   const years = Array.from(
     new Array(new Date().getFullYear() - 1970),
     (val, index) => 1970 + index + 1,
@@ -75,7 +74,7 @@ const CarScreen: React.FC<CarScreenProps> = ({ route }) => {
             iconName="car"
             placeholder={car.make}
             value={car.make}
-            onChangeText={(text) => handleServiceInputChange("make", text)}
+            onChangeText={(make) => setCar((prev) => ({ ...prev, make }))}
           />
 
           <Text style={styles.editField}>Model</Text>
@@ -83,7 +82,7 @@ const CarScreen: React.FC<CarScreenProps> = ({ route }) => {
             iconName="car-side"
             placeholder="Model"
             value={car.model}
-            onChangeText={(text) => handleServiceInputChange("model", text)}
+            onChangeText={(model) => setCar((prev) => ({ ...prev, model }))}
           />
 
           <Text style={styles.editField}>Year</Text>
@@ -94,7 +93,22 @@ const CarScreen: React.FC<CarScreenProps> = ({ route }) => {
               label: year.toString(),
               value: year.toString(),
             }))}
-            onValueChange={(year) => handleServiceInputChange("year", year)}
+            onValueChange={(year) =>
+              setCar((prev) => ({ ...prev, year: parseInt(year) }))
+            }
+          />
+
+          <Text style={styles.editField}>License Plate</Text>
+          <FormAuthField
+            iconName="window-maximize"
+            placeholder="License Plate"
+            value={car.licensePlate}
+            onChangeText={(licensePlate) =>
+              setCar((prev) => ({
+                ...prev,
+                licensePlate: licensePlate.toUpperCase().replace(" ", "-"),
+              }))
+            }
           />
 
           <Text style={styles.editField}>Mileage</Text>
@@ -102,7 +116,9 @@ const CarScreen: React.FC<CarScreenProps> = ({ route }) => {
             iconName="tachometer-alt"
             placeholder="Mileage"
             value={car.mileage?.toString() || ""}
-            onChangeText={(text) => handleServiceInputChange("mileage", text)}
+            onChangeText={(mileage) =>
+              setCar((prev) => ({ ...prev, mileage: parseInt(mileage) }))
+            }
           />
 
           <Text style={styles.editField}>Fuel</Text>
@@ -115,7 +131,7 @@ const CarScreen: React.FC<CarScreenProps> = ({ route }) => {
               { label: "Electric", value: "Electric" },
               { label: "Hybrid", value: "Hybrid" },
             ]}
-            onValueChange={(text) => handleServiceInputChange("fuel", text)}
+            onValueChange={(fuel) => setCar((prev) => ({ ...prev, fuel }))}
           />
 
           <Text style={styles.editField}>Transmission</Text>
@@ -126,8 +142,8 @@ const CarScreen: React.FC<CarScreenProps> = ({ route }) => {
               { label: "Manual", value: "Manual" },
               { label: "Automatic", value: "Automatic" },
             ]}
-            onValueChange={(text) =>
-              handleServiceInputChange("transmission", text)
+            onValueChange={(transmission) =>
+              setCar((prev) => ({ ...prev, transmission }))
             }
           />
 
@@ -136,8 +152,11 @@ const CarScreen: React.FC<CarScreenProps> = ({ route }) => {
             iconName="cog"
             placeholder="Displacement"
             value={car.displacement?.toString() || ""}
-            onChangeText={(text) =>
-              handleServiceInputChange("displacement", text)
+            onChangeText={(displacement) =>
+              setCar((prev) => ({
+                ...prev,
+                displacement: parseInt(displacement),
+              }))
             }
           />
 
@@ -146,8 +165,11 @@ const CarScreen: React.FC<CarScreenProps> = ({ route }) => {
             iconName="horse"
             placeholder="Horsepower"
             value={car.horsepower?.toString() || ""}
-            onChangeText={(text) =>
-              handleServiceInputChange("horsepower", text)
+            onChangeText={(horsepower) =>
+              setCar((prev) => ({
+                ...prev,
+                horsepower: parseInt(horsepower),
+              }))
             }
           />
 
@@ -156,37 +178,8 @@ const CarScreen: React.FC<CarScreenProps> = ({ route }) => {
             iconName="ticket-alt"
             placeholder="VIN"
             value={car.vin?.toString() || ""}
-            onChangeText={(text) => handleServiceInputChange("vin", text)}
+            onChangeText={(vin) => setCar((prev) => ({ ...prev, vin }))}
           />
-
-          <Text style={styles.editField}>License Plate</Text>
-          <FormInputField
-            iconName="window-maximize"
-            placeholder="License Plate"
-            value={car.licensePlate}
-            onChangeText={(text) =>
-              handleServiceInputChange("licensePlate", text)
-            }
-          />
-
-          {/* {services.map((service, index) => (
-          <View key={index} style={styles.serviceItem}>
-            <Text style={styles.serviceText}>{service}</Text>
-            {car.services[service] === undefined ? (
-              <OpacityButton
-                title="Add"
-                onPress={() => addServiceField(service)}
-              />
-            ) : (
-              <FormInputField
-                iconName="plus"
-                placeholder={`Add ${service}`}
-                value={car.services[service]}
-                onChangeText={(text) => handleServiceInputChange(service, text)}
-              />
-            )}
-          </View>
-        ))} */}
         </ScrollView>
         <View style={styles.buttonsContainer}>
           <OpacityButton title="Save car" onPress={handleSaveCar} />

@@ -10,11 +10,11 @@ import { loginApiCall, registerApiCall } from "../../api/api-service";
 import { useNavigation } from "@react-navigation/native";
 import PageTitle from "../../components/PageTitle/PageTitle";
 import RedirectButton from "../../components/RedirectButton/RedirectButton";
-import FormInputField from "../../components/FormInputField/FormInputField";
 import Logo from "../../components/Logo/Logo";
 import { styles } from "./RegisterScreen.styles";
 import OpacityButton from "../../components/OpacityButton/OpacityButton";
 import { storeString } from "../../utils/storage-handler";
+import FormAuthField from "../../components/FormAuthField/FormAuthField";
 
 const RegisterScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -60,26 +60,26 @@ const RegisterScreen: React.FC = () => {
             title="Already have an account? Login"
             onPress={() => navigation.navigate("Login" as never)}
           />
-          <FormInputField
+          <FormAuthField
             iconName="user-secret"
             placeholder="Username"
             value={username}
             onChangeText={setUsername}
           />
-          <FormInputField
+          <FormAuthField
             iconName="envelope"
             placeholder="Email"
             value={email}
             onChangeText={setEmail}
           />
-          <FormInputField
+          <FormAuthField
             iconName="lock"
             placeholder="Password"
             value={password}
             onChangeText={setPassword}
             secureTextEntry
           />
-          <FormInputField
+          <FormAuthField
             iconName="lock"
             placeholder="Confirm Password"
             value={confirmPassword}

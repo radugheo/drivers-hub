@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { View, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
 import { loginApiCall } from "../../api/api-service";
 import { useNavigation } from "@react-navigation/native";
-import FormInputField from "../../components/FormInputField/FormInputField";
 import RedirectButton from "../../components/RedirectButton/RedirectButton";
 import PageTitle from "../../components/PageTitle/PageTitle";
 import Logo from "../../components/Logo/Logo";
-import { saveAuthToken, storeString } from "../../utils/storage-handler";
+import { storeString } from "../../utils/storage-handler";
 import { styles } from "./LoginScreen.styles";
 import OpacityButton from "../../components/OpacityButton/OpacityButton";
+import FormAuthField from "../../components/FormAuthField/FormAuthField";
 
 const LoginScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -44,13 +44,13 @@ const LoginScreen: React.FC = () => {
             title="New in the area? Sign up here"
             onPress={() => navigation.navigate("Register" as never)}
           />
-          <FormInputField
+          <FormAuthField
             iconName="envelope"
             placeholder="Email"
             value={email}
             onChangeText={setEmail}
           />
-          <FormInputField
+          <FormAuthField
             iconName="lock"
             placeholder="Password"
             value={password}

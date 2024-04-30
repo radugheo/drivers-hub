@@ -34,9 +34,11 @@ export const styles = StyleSheet.create({
     color: "blue",
     fontSize: 14,
     marginRight: 5,
+    fontFamily: "OktahRound-Regular",
   },
   travelTimeText: {
     fontSize: 14,
     paddingVertical: 4,
+    fontFamily: "OktahRound-Regular",
   },
 });

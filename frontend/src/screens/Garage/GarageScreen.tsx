@@ -12,11 +12,6 @@ const GarageScreen: React.FC = () => {
   const [cars, setCars] = useState<Car[]>([]);
   const navigation = useNavigation();
 
-  // TO DO: de vazut ce e cu asta
-  // useEffect(() => {
-  //   fetchCars();
-  // }, []);
-
   const fetchCars = async () => {
     try {
       const token = await retrieveString("userToken");
@@ -55,7 +50,11 @@ const GarageScreen: React.FC = () => {
         renderItem={renderCarItem}
         keyExtractor={(item) => item.id!.toString()}
         contentContainerStyle={styles.listContainer}
-        ListEmptyComponent={<Text>No cars available.</Text>}
+        ListEmptyComponent={
+          <Text style={{ fontFamily: "OktahRound-Regular" }}>
+            No cars available.
+          </Text>
+        }
       />
       <OpacityButton title="Add Car" onPress={handleAddCar} />
     </View>

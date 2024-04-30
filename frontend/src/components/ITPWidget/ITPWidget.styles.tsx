@@ -13,6 +13,7 @@ export const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     marginBottom: 5,
+    fontFamily: "OktahRound-Regular",
   },
   progressBarBackground: {
     height: 15,
@@ -27,6 +28,10 @@ export const styles = StyleSheet.create({
   text: {
     fontSize: 14,
     marginTop: 10,
+    fontFamily: "OktahRound-Regular",
+  },
+  daysText: {
+    fontFamily: "OktahRound-Regular",
   },
   datesContainer: {
     flexDirection: "row",

@@ -18,6 +18,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import TopBar from "../../components/TopBar/TopBar";
 import FormDropdownField from "../../components/FormDropdownField/FormDropdownField";
 import NumberInputField from "../../components/NumberInputField/NumberInputField";
+import { formatLicensePlate } from "../../utils/format-text";
+import FormAuthField from "../../components/FormAuthField/FormAuthField";
 
 export const AddCarScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -42,8 +44,12 @@ export const AddCarScreen: React.FC = () => {
         return;
       }
       console.log("Owner ID", ownerId);
+
       const carWithOwnerId = { ...newCar, ownerId: ownerId };
       console.log("New car", carWithOwnerId);
+      carWithOwnerId.licensePlate = formatLicensePlate(
+        carWithOwnerId.licensePlate,
+      );
       const result = await addCarApiCall(carWithOwnerId, token);
       if (result) {
         navigation.goBack();
@@ -95,6 +101,19 @@ export const AddCarScreen: React.FC = () => {
               }))}
               onValueChange={(year) =>
                 setNewCar((prev) => ({ ...prev, year: parseInt(year) }))
+              }
+            />
+
+            <Text style={styles.editField}>License Plate</Text>
+            <FormAuthField
+              iconName="window-maximize"
+              placeholder="License Plate"
+              value={newCar.licensePlate}
+              onChangeText={(licensePlate) =>
+                setNewCar((prev) => ({
+                  ...prev,
+                  licensePlate: licensePlate,
+                }))
               }
             />
 
@@ -166,16 +185,6 @@ export const AddCarScreen: React.FC = () => {
               placeholder="VIN"
               value={newCar.vin?.toString()!}
               onChangeText={(vin) => setNewCar((prev) => ({ ...prev, vin }))}
-            />
-
-            <Text style={styles.editField}>License Plate</Text>
-            <FormInputField
-              iconName="window-maximize"
-              placeholder="License Plate"
-              value={newCar.licensePlate}
-              onChangeText={(licensePlate) =>
-                setNewCar((prev) => ({ ...prev, licensePlate }))
-              }
             />
           </ScrollView>
           <OpacityButton title="Save" onPress={handleSaveCar} />

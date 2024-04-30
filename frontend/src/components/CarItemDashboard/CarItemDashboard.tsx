@@ -54,7 +54,7 @@ const CarItemDashboard: React.FC<CarItemDashboardProps> = ({
   carHasITP,
   carHasService,
 }) => {
-  const [viewMode, setViewMode] = useState("Active"); // Local state to toggle views
+  const [viewMode, setViewMode] = useState("Active");
 
   const widgets = carWidgets[item.id!.toString()] || [];
 
@@ -75,7 +75,7 @@ const CarItemDashboard: React.FC<CarItemDashboardProps> = ({
           ]}
           onPress={() => setViewMode("Active")}
         >
-          <Text>Active</Text>
+          <Text style={styles.statusText}>Active</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[
@@ -84,7 +84,7 @@ const CarItemDashboard: React.FC<CarItemDashboardProps> = ({
           ]}
           onPress={() => setViewMode("Expired")}
         >
-          <Text>Expired</Text>
+          <Text style={styles.statusText}>Expired</Text>
         </TouchableOpacity>
       </View>
 
@@ -126,7 +126,7 @@ const CarItemDashboard: React.FC<CarItemDashboardProps> = ({
             {historyCarWidgets[item.id!] &&
               historyCarWidgets[item.id!].map((widget, index) => (
                 <CustomWidget
-                  title={widget.type}
+                  title={widget.type === "Insurance" ? "RCA" : widget.type}
                   expiryDate={formatDate(widget.data.validUntil)}
                   deleteHistoryWidget={() => {
                     deleteHistoryWidget(item.id!.toString(), widget.data.id);

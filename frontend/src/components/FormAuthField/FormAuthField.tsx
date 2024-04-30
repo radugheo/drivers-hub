@@ -1,8 +1,7 @@
 import React from "react";
 import { View, TextInput } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { styles } from "./FormInputField.styles";
-import { titleCase } from "../../utils/format-text";
+import { styles } from "./FormAuthField.styles";
 
 interface FormInputProps {
   iconName: string;
@@ -12,17 +11,13 @@ interface FormInputProps {
   secureTextEntry?: boolean;
 }
 
-const FormInputField: React.FC<FormInputProps> = ({
+const FormAuthField: React.FC<FormInputProps> = ({
   iconName,
   placeholder,
   value,
   onChangeText,
   secureTextEntry = false,
 }) => {
-  const handleTextChange = (text: string) => {
-    const formattedText = titleCase(text);
-    onChangeText(formattedText);
-  };
   return (
     <View style={styles.inputContainer}>
       <FontAwesome5 name={iconName} size={24} color="black" />
@@ -30,8 +25,8 @@ const FormInputField: React.FC<FormInputProps> = ({
         style={styles.input}
         placeholder={placeholder}
         placeholderTextColor={"#666"}
-        value={titleCase(value)}
-        onChangeText={handleTextChange}
+        value={value}
+        onChangeText={onChangeText}
         secureTextEntry={secureTextEntry}
         autoCapitalize="none"
       />
@@ -39,4 +34,4 @@ const FormInputField: React.FC<FormInputProps> = ({
   );
 };
 
-export default FormInputField;
+export default FormAuthField;

@@ -14,5 +14,6 @@ export const styles = StyleSheet.create({
   addButtonText: {
     color: "white",
     fontSize: 18,
+    fontFamily: "OktahRound-Regular",
   },
 });

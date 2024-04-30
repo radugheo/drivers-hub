@@ -12,10 +12,10 @@ export const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     marginBottom: 5,
+    fontFamily: "OktahRound-Regular",
   },
   subtitle: {
     fontSize: 14,
-
     fontStyle: "italic",
   },
   allContainer: {

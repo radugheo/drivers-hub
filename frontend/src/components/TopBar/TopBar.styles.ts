@@ -11,6 +11,6 @@ export const styles = StyleSheet.create({
   },
   topBarTitle: {
     fontSize: 26,
-    fontWeight: "bold",
+    fontFamily: "Montserrat-Bold",
   },
 });

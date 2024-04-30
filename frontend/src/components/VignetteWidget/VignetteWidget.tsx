@@ -35,7 +35,7 @@ const VignetteWidget: React.FC<VignetteWidgetProps> = ({ item }) => {
     const end = new Date(item.vignetteExpiryDate!).getTime();
     const now = new Date().getTime();
     const totalDuration = end - now;
-    const daysLeft = Math.floor(totalDuration / (1000 * 60 * 60 * 24));
+    const daysLeft = Math.floor(totalDuration / (1000 * 60 * 60 * 24)) + 1;
     return daysLeft;
   };
 
@@ -66,11 +66,11 @@ const VignetteWidget: React.FC<VignetteWidgetProps> = ({ item }) => {
     >
       <Text style={styles.title}>Vignette</Text>
       <View style={styles.datesContainer}>
-        <Text>
+        <Text style={styles.daysText}>
           {calculateDaysLeft()}
           {" days left"}
         </Text>
-        <Text>
+        <Text style={styles.daysText}>
           {formatDate(new Date(item.vignetteExpiryDate!).toDateString()!)}
         </Text>
       </View>

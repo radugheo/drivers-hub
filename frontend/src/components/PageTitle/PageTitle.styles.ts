@@ -8,6 +8,6 @@ export const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 30,
     fontWeight: "bold",
-    fontFamily: "OktahRound-Bold",
+    fontFamily: "Montserrat-Bold",
   },
 });
