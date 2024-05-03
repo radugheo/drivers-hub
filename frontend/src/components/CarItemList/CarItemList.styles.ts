@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 export const styles = StyleSheet.create({
   carItem: {
     backgroundColor: "white",
-    borderRadius: 10,
+    borderRadius: 25,
     marginVertical: 10,
     marginHorizontal: 15,
     paddingHorizontal: 10,
@@ -13,11 +13,12 @@ export const styles = StyleSheet.create({
   },
   carTitle: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontFamily: "Montserrat-Bold",
     alignSelf: "flex-start",
   },
   carLicense: {
     fontSize: 14,
+    fontFamily: "OktahRound-Regular",
     color: "gray",
   },
   carImage: {

@@ -26,7 +26,7 @@ const FormTextAreaField: React.FC<FormTextAreaProps> = ({
         value={value}
         onChangeText={onChangeText}
         multiline={true}
-        numberOfLines={4} // Adjust the number of lines as needed
+        numberOfLines={4}
         autoCapitalize="none"
       />
     </View>

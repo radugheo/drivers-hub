@@ -17,8 +17,8 @@ const NavBar = () => {
         tabBarInactiveTintColor: "gray",
         tabBarStyle: {
           backgroundColor: "#ffffff",
-          height: 70,
-          paddingBottom: 15,
+          height: 80,
+          paddingBottom: 20,
           paddingHorizontal: 25,
         },
         tabBarLabelStyle: {

@@ -6,7 +6,7 @@ export const styles = StyleSheet.create({
     alignItems: "flex-start", // Align start for the icon to be at the top
     borderWidth: 1,
     borderColor: "gray",
-    borderRadius: 5,
+    borderRadius: 25,
     marginBottom: 20,
     padding: 10,
   },

@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
   },
   cardContainer: {
     backgroundColor: "white",
-    borderRadius: 10,
+    borderRadius: 25,
     marginVertical: 5,
     marginHorizontal: 15,
     paddingHorizontal: 10,
@@ -19,10 +19,13 @@ export const styles = StyleSheet.create({
   carTitle: {
     fontSize: 20,
     fontFamily: "Montserrat-Bold",
+    paddingLeft: 10,
   },
   carSubtitle: {
     fontSize: 14,
     fontFamily: "OktahRound-Regular",
+    color: "gray",
+    paddingLeft: 10,
   },
   statusText: {
     fontFamily: "OktahRound-Regular",
@@ -35,7 +38,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     backgroundColor: "#f0f0f0", // Non-active background
-    borderRadius: 10,
+    borderRadius: 25,
     marginVertical: 5,
     marginHorizontal: 15,
     paddingHorizontal: 10,
