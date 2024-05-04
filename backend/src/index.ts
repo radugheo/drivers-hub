@@ -14,6 +14,8 @@ import { ActiveInspection } from './entities/ActiveInspection';
 import { ServiceController } from './controllers/service-controller';
 import { ActiveService } from './entities/ActiveService';
 
+const port = process.env.PORT || 3000;
+
 require('dotenv').config();
 AppDataSource.initialize()
   .then(async () => {
@@ -44,7 +46,12 @@ AppDataSource.initialize()
 
     app.use(cors());
 
-    app.listen(3000);
+    app.listen(port, () => {
+      console.log(`Server running on port ${port}`);
+    });
+    app.get('/', (req, res) => {
+      res.send('Hello World!');
+    });
     console.log('Express server has started on port 3000. Open http://localhost:3000/');
 
     cron.schedule('0 0 * * *', async () => {
