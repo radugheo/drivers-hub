@@ -25,7 +25,7 @@ export type RootStackParamList = {
   Register: undefined;
   Home: undefined;
   Profile: undefined;
-  Garage: undefined;
+  GarageScreen: undefined;
   AddCarScreen: undefined;
   CarScreen: { item: Car };
   DashboardScreen: undefined;
@@ -58,8 +58,8 @@ const AppNavigator = () => {
           component={HomeScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="Profile" component={ProfileScreen} />
-        <Stack.Screen name="Garage" component={GarageScreen} />
+        <Stack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="GarageScreen" component={GarageScreen} options={{ headerShown: false }} />
         <Stack.Screen
           name="AddCarScreen"
           component={AddCarScreen}

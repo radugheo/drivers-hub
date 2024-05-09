@@ -6,7 +6,7 @@ import { styles } from "./NumberInputField.styles";
 interface NumberInputProps {
   iconName: string;
   placeholder: string;
-  value: string | null;
+  value: number | null;
   onChangeText: (text: string) => void;
   secureTextEntry?: boolean;
 }
@@ -25,7 +25,7 @@ const NumberInputField: React.FC<NumberInputProps> = ({
         style={styles.input}
         placeholder={placeholder}
         placeholderTextColor={"#666"}
-        value={value ? value : undefined}
+        value={value?.toString() ? value.toString() : undefined}
         onChangeText={onChangeText}
         keyboardType="numeric"
         secureTextEntry={secureTextEntry}

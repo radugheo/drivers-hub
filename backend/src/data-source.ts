@@ -11,11 +11,12 @@ import { ServiceHistory } from './entities/ServiceHistory';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
-  host: 'localhost',
+  host: process.env.DB_HOST || 'localhost',
   port: 5432,
-  username: 'postgres',
-  password: 'admin',
-  database: 'drivers-hub-db',
+  username: process.env.DB_USER || 'postgres',
+  password: process.env.DB_PASSWORD || 'admin',
+  database: process.env.DB_NAME || 'drivers-hub-db',
+  ssl: process.env.DB_SSL? { rejectUnauthorized: false } : false,
   synchronize: true,
   logging: false,
   entities: [

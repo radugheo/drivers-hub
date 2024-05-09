@@ -27,6 +27,7 @@ export const AddCarScreen: React.FC = () => {
     make: "",
     model: "",
     year: new Date().getFullYear(),
+    mileage: 0,
     fuel: "",
     transmission: "",
     vin: "",
@@ -112,7 +113,7 @@ export const AddCarScreen: React.FC = () => {
               onChangeText={(licensePlate) =>
                 setNewCar((prev) => ({
                   ...prev,
-                  licensePlate: licensePlate,
+                  licensePlate: licensePlate?.toUpperCase().replace(" ", "-"),
                 }))
               }
             />
@@ -121,7 +122,7 @@ export const AddCarScreen: React.FC = () => {
             <NumberInputField
               iconName="tachometer-alt"
               placeholder="Mileage"
-              value={newCar.mileage?.toString() || ""}
+              value={newCar.mileage || null}
               onChangeText={(mileage) =>
                 setNewCar((prev) => ({ ...prev, mileage: parseInt(mileage) }))
               }
@@ -157,7 +158,7 @@ export const AddCarScreen: React.FC = () => {
             <NumberInputField
               iconName="cog"
               placeholder="Displacement"
-              value={newCar.displacement?.toString()!}
+              value={newCar.displacement || null}
               onChangeText={(displacement) =>
                 setNewCar((prev) => ({
                   ...prev,
@@ -170,7 +171,7 @@ export const AddCarScreen: React.FC = () => {
             <NumberInputField
               iconName="horse"
               placeholder="Horsepower"
-              value={newCar.horsepower?.toString()!}
+              value={newCar.horsepower || null}
               onChangeText={(horsepower) =>
                 setNewCar((prev) => ({
                   ...prev,

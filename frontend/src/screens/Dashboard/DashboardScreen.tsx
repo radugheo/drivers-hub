@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from "react";
 import { View, Text, Alert, TouchableOpacity } from "react-native";
-import Carousel from "react-native-snap-carousel";
 import { styles } from "./DashboardScreen.styles";
 import { getCarsApiCall, updateCarApiCall } from "../../api/api-service";
 import { Car } from "../../models/Car.model";
@@ -22,6 +21,8 @@ import { ActiveInsurance } from "../../models/Active-Insurance.model";
 import { ActiveInspection } from "../../models/Active-Inspection.model";
 import { ActiveService } from "../../models/Active-Service.model";
 import CarItemDashboard from "../../components/CarItemDashboard/CarItemDashboard";
+import Carousel from "react-native-reanimated-carousel";
+import { nextYear } from "../../utils/format-text";
 
 const DashboardScreen: React.FC = () => {
   const [cars, setCars] = useState<Car[]>([]);
@@ -38,17 +39,26 @@ const DashboardScreen: React.FC = () => {
 
   const [isInsuranceModalVisible, setIsInsuranceModalVisible] = useState(false);
   const [insurance, setInsurance] = useState<ActiveInsurance>(
-    new ActiveInsurance(),
+    {
+      validFrom: new Date(),
+      validUntil: nextYear(),
+    }
   );
 
   const [isInspectionModalVisible, setIsInspectionModalVisible] =
     useState(false);
   const [inspection, setInspection] = useState<ActiveInspection>(
-    new ActiveInspection(),
+    {
+      validFrom: new Date(),
+      validUntil: nextYear(),
+    }
   );
 
   const [isServiceModalVisible, setServiceModalVisible] = useState(false);
-  const [service, setService] = useState<ActiveService>(new ActiveService());
+  const [service, setService] = useState<ActiveService>({
+    validFrom: new Date(),
+    validUntil: nextYear(),
+  });
 
   const fetchCarsAndWidgets = useCallback(async () => {
     try {
@@ -378,9 +388,9 @@ const DashboardScreen: React.FC = () => {
       <Carousel
         data={cars}
         renderItem={renderItem}
-        sliderWidth={styles.sliderWidth.width}
-        itemWidth={styles.itemWidth.width}
-        layout={"default"}
+        loop={false}
+        width={styles.sliderSize.width}
+        autoPlay={false}
       />
 
       <OptionsModal

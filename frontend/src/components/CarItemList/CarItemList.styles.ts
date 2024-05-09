@@ -15,11 +15,13 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Montserrat-Bold",
     alignSelf: "flex-start",
+    paddingLeft: 10,
   },
   carLicense: {
     fontSize: 14,
     fontFamily: "OktahRound-Regular",
     color: "gray",
+    paddingLeft: 10,
   },
   carImage: {
     width: 50,

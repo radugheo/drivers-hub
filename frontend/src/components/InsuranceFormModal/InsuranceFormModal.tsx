@@ -12,6 +12,7 @@ import PageTitle from "../PageTitle/PageTitle";
 import { styles } from "./InsuranceFormModal.styles";
 import PictureInputField from "../PictureInputField/PictureInputField";
 import { ActiveInsurance } from "../../models/Active-Insurance.model";
+import { nextYear } from "../../utils/format-text";
 
 interface InsuranceFormModalProps {
   animationType: "none" | "slide" | "fade";
@@ -99,7 +100,7 @@ const InsuranceFormModal: React.FC<InsuranceFormModalProps> = ({
                   onChange={(date) =>
                     setInsurance({
                       ...insurance,
-                      validUntil: date || new Date(),
+                      validUntil: date || nextYear(),
                     })
                   }
                 />

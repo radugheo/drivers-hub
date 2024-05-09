@@ -25,6 +25,7 @@ export const styles = StyleSheet.create({
   editField: {
     fontSize: 14,
     fontWeight: "bold",
+    paddingLeft: 10,
   },
   buttonsContainer: {
     flexDirection: "row",

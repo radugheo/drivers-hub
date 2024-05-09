@@ -1,10 +1,13 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
-import { Ionicons, MaterialIcons, AntDesign } from "@expo/vector-icons";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
+import { View, Text, Alert, SafeAreaView, TouchableOpacity } from "react-native";
+import { AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 import { styles } from "./ProfileScreen.styles";
 import { removeString, retrieveString } from "../../utils/storage-handler";
-import { getCarsApiCall, getUserDataApiCall } from "../../api/api-service";
+import { getUserDataApiCall } from "../../api/api-service";
+import TopBar from "../../components/TopBar/TopBar";
+import FormAuthField from "../../components/FormAuthField/FormAuthField";
+import OpacityButton from "../../components/OpacityButton/OpacityButton";
 
 const ProfileScreen: React.FC = () => {
   const [userData, setUserData] = useState({
@@ -46,34 +49,44 @@ const ProfileScreen: React.FC = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.mainContainer}>
+      <TopBar title='Profile' />
       <View style={styles.headerContainer}>
-        <View style={styles.headerLeft}>
-          <Text style={styles.name}>{userData.username}</Text>
-          <View style={styles.emailContainerRow}>
-            <MaterialIcons name="email" size={16} color="grey" />
-            <Text style={styles.infoText}>{userData.email}</Text>
+        <View>
+          <View style={styles.profileData}>
+            <MaterialIcons name="account-circle" size={40} color="grey" />
+            <View>
+              <Text style={styles.name}>{userData.username}</Text>
+              <Text style={styles.email}>{userData.email}</Text>
+            </View>
           </View>
         </View>
+
         <View style={styles.headerRight}>
-          <Text style={styles.fieldAmount}>{userData.carsNumber}</Text>
-          <Text style={styles.fieldLabel}>Cars</Text>
+          <Text style={styles.carsNumber}>{userData.carsNumber}</Text>
+          <MaterialIcons name="drive-eta" size={30} color="grey" />
         </View>
       </View>
 
-      <TouchableOpacity style={styles.actionItem}>
-        <AntDesign name="edit" size={20} color="blue" />
-        <Text style={styles.actionText}>Edit Profile</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.actionItem}>
-        <Ionicons name="settings-outline" size={20} color="blue" />
-        <Text style={styles.actionText}>Settings</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.actionItem} onPress={handleLogout}>
-        <Ionicons name="log-out-outline" size={20} color="blue" />
-        <Text style={styles.actionText}>Logout</Text>
-      </TouchableOpacity>
-    </ScrollView>
+      <SafeAreaView style={styles.safeContainer}>
+          <TouchableOpacity style={styles.actionItem}>
+            <AntDesign name="edit" size={20} color="black" />
+            <Text style={styles.actionText}>Edit Profile</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.actionItem}>
+            <Ionicons name="key-outline" size={20} color="black" />
+            <Text style={styles.actionText}>Change Password</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.actionItem}>
+            <Ionicons name="settings-outline" size={20} color="black" />
+            <Text style={styles.actionText}>Settings</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.lastActionItem} onPress={handleLogout}>
+            <Ionicons name="log-out-outline" size={20} color="red" />
+            <Text style={styles.actionText}>Logout</Text>
+          </TouchableOpacity>
+      </SafeAreaView>
+    </View>
   );
 };
 

@@ -10,6 +10,7 @@ import OpacityButton from "../OpacityButton/OpacityButton";
 import PageTitle from "../PageTitle/PageTitle";
 import { styles } from "./ITPFormModal.styles";
 import { ActiveInspection } from "../../models/Active-Inspection.model";
+import { nextYear } from "../../utils/format-text";
 
 interface ITPFormModal {
   animationType: "none" | "slide" | "fade";
@@ -47,7 +48,7 @@ const ITPFormModal: React.FC<ITPFormModal> = ({
                 <DateInputField
                   iconName="calendar-alt"
                   placeholder="ITP Start Date"
-                  value={inspection.validFrom || new Date()}
+                  value={new Date()}
                   onChange={(date) =>
                     setInspection({
                       ...inspection,
@@ -60,11 +61,11 @@ const ITPFormModal: React.FC<ITPFormModal> = ({
                 <DateInputField
                   iconName="calendar-alt"
                   placeholder="ITP Expiry Date"
-                  value={inspection.validUntil || new Date()}
+                  value={nextYear()}
                   onChange={(date) =>
                     setInspection({
                       ...inspection,
-                      validUntil: date || new Date(),
+                      validUntil: date || nextYear(),
                     })
                   }
                 />

@@ -14,6 +14,7 @@ import NumberInputField from "../NumberInputField/NumberInputField";
 import FormTextAreaField from "../FormTextAreaField/FormTextAreaField";
 import { ActiveService } from "../../models/Active-Service.model";
 import FormDropdownField from "../FormDropdownField/FormDropdownField";
+import { nextYear } from "../../utils/format-text";
 
 interface ServiceFormModal {
   animationType: "none" | "slide" | "fade";
@@ -83,7 +84,7 @@ const ServiceFormModal: React.FC<ServiceFormModal> = ({
                   onChange={(date) =>
                     setService({
                       ...service,
-                      validUntil: date || new Date(),
+                      validUntil: date || nextYear(),
                     })
                   }
                 />
@@ -93,9 +94,7 @@ const ServiceFormModal: React.FC<ServiceFormModal> = ({
                   iconName="tachometer-alt"
                   placeholder="Mileage"
                   value={
-                    service.serviceMileage === 0
-                      ? ""
-                      : service.serviceMileage?.toString() || ""
+                    service.serviceMileage || null
                   }
                   onChangeText={(serviceMileage) =>
                     setService({
@@ -106,21 +105,6 @@ const ServiceFormModal: React.FC<ServiceFormModal> = ({
                 />
 
                 <Text style={styles.editField}>Next service in:</Text>
-                {/* <NumberInputField
-                  iconName="tachometer-alt"
-                  placeholder="Mileage interval"
-                  value={
-                    service.mileageInterval === 0
-                      ? ""
-                      : service.mileageInterval?.toString() || ""
-                  }
-                  onChangeText={(mileageInterval) =>
-                    setService({
-                      ...service,
-                      mileageInterval,
-                    })
-                  }
-                /> */}
                 <FormDropdownField
                   iconName="tachometer-alt"
                   selectedValue={service.mileageInterval?.toString() || ""}

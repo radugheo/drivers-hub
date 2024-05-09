@@ -106,7 +106,7 @@ const CarScreen: React.FC<CarScreenProps> = ({ route }) => {
             onChangeText={(licensePlate) =>
               setCar((prev) => ({
                 ...prev,
-                licensePlate: licensePlate.toUpperCase().replace(" ", "-"),
+                licensePlate: licensePlate?.toUpperCase().replace(" ", "-"),
               }))
             }
           />
@@ -115,7 +115,7 @@ const CarScreen: React.FC<CarScreenProps> = ({ route }) => {
           <NumberInputField
             iconName="tachometer-alt"
             placeholder="Mileage"
-            value={car.mileage?.toString() || ""}
+            value={car.mileage || null}
             onChangeText={(mileage) =>
               setCar((prev) => ({ ...prev, mileage: parseInt(mileage) }))
             }
@@ -151,7 +151,7 @@ const CarScreen: React.FC<CarScreenProps> = ({ route }) => {
           <NumberInputField
             iconName="cog"
             placeholder="Displacement"
-            value={car.displacement?.toString() || ""}
+            value={car.displacement || null}
             onChangeText={(displacement) =>
               setCar((prev) => ({
                 ...prev,
@@ -164,7 +164,7 @@ const CarScreen: React.FC<CarScreenProps> = ({ route }) => {
           <NumberInputField
             iconName="horse"
             placeholder="Horsepower"
-            value={car.horsepower?.toString() || ""}
+            value={car.horsepower || null}
             onChangeText={(horsepower) =>
               setCar((prev) => ({
                 ...prev,

@@ -21,6 +21,7 @@ export const styles = StyleSheet.create({
   allContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
+    paddingLeft: 10,
   },
   progressBarBackground: {
     height: 15,

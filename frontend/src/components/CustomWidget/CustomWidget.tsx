@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { styles } from "./CustomWidget.styles";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 interface CustomWidgetProps {
   title: string;
@@ -15,7 +15,7 @@ const CustomWidget: React.FC<CustomWidgetProps> = ({
   deleteHistoryWidget,
 }) => {
   return (
-    <TouchableOpacity style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.allContainer}>
         <View>
           <Text style={styles.title}>{title}</Text>
@@ -25,10 +25,10 @@ const CustomWidget: React.FC<CustomWidgetProps> = ({
           style={styles.deleteIcon}
           onPress={deleteHistoryWidget}
         >
-          <FontAwesome5 name="trash" size={24} color="red" />
+          <Ionicons name="trash" size={24} color="red" />
         </TouchableOpacity>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
 

@@ -49,10 +49,10 @@ AppDataSource.initialize()
     app.listen(port, () => {
       console.log(`Server running on port ${port}`);
     });
-    app.get('/', (req, res) => {
-      res.send('Hello World!');
+    app.get('/healthcheck', (req, res) => {
+      res.status(200).send('ok!');
     });
-    console.log('Express server has started on port 3000. Open http://localhost:3000/');
+    console.log(`Express server has started on port ${port}. Open http://localhost:3000/`);
 
     cron.schedule('0 0 * * *', async () => {
       console.log('Running daily check for expiring services at', new Date());
