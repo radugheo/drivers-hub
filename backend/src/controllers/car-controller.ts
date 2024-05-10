@@ -134,4 +134,23 @@ export class CarController {
     await this.carRepository.save(car);
     return 'Car updated';
   };
+  predictPrice = async (req: Request, res: Response) => {
+    const id = parseInt(req.params.id);
+    const car = await this.carRepository.findOneBy({ id });
+    if (!car) {
+      throw new CustomError(404, 'Car not found');
+    }
+    let { make, model, year, mileage, displacement, transmission, fuel } = car;
+    let brand = make.toLowerCase();
+    model = model.toLowerCase();
+    let fuel_type = fuel.toLowerCase();
+    let automatic_transmission = 0;
+    transmission === 'Automatic' ? (automatic_transmission = 1) : (automatic_transmission = 0);
+    let engine_size = displacement / 1000;
+
+    if (brand === 'mercedes') {
+      brand = 'mercedes-benz';
+    }
+    const xgbInput = [brand, model, year, mileage, engine_size, automatic_transmission, fuel_type, 0, 1];
+  };
 }
