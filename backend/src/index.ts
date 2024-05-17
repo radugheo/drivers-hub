@@ -13,6 +13,7 @@ import { InspectionController } from './controllers/inspection-controller';
 import { ActiveInspection } from './entities/ActiveInspection';
 import { ServiceController } from './controllers/service-controller';
 import { ActiveService } from './entities/ActiveService';
+import { scheduleNotificationsFor } from './utils/notification-service';
 
 const port = process.env.PORT || 3000;
 
@@ -52,6 +53,15 @@ AppDataSource.initialize()
     app.get('/healthcheck', (req, res) => {
       res.status(200).send('ok!');
     });
+    app.get('/test-notifications', async (req, res) => {
+      try {
+        await scheduleExpiryNotifications();
+        res.status(200).send('Notifications are being processed.');
+      } catch (error) {
+        console.error('Error triggering notifications:', error);
+        res.status(500).send('Failed to trigger notifications.');
+      }
+    });
     console.log(`Express server has started on port ${port}. Open http://localhost:3000/`);
 
     cron.schedule('0 0 * * *', async () => {
@@ -59,9 +69,16 @@ AppDataSource.initialize()
       await checkAndExpireInsurances();
       await checkAndExpireInspections();
       await checkAndExpireServices();
+      await scheduleExpiryNotifications();
     });
   })
   .catch((error) => console.log(error));
+
+const scheduleExpiryNotifications = async () => {
+  await scheduleNotificationsFor(ActiveService, 'Service');
+  await scheduleNotificationsFor(ActiveInsurance, 'Insurance');
+  await scheduleNotificationsFor(ActiveInspection, 'Inspection');
+};
 
 const checkAndExpireInsurances = async () => {
   const yesterday = endOfDay(subDays(new Date(), 1));

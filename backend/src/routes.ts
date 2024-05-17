@@ -45,6 +45,20 @@ const userRoutes = [
     action: 'remove',
     middlewares: [isAuthenticated, isAdmin],
   },
+  {
+    method: 'put',
+    route: '/users/:id/updatePushToken',
+    controller: UserController,
+    action: 'updatePushToken',
+    middlewares: [isAuthenticated],
+  },
+  {
+    method: 'get',
+    route: '/users/:id/pushToken',
+    controller: UserController,
+    action: 'getPushToken',
+    middlewares: [isAuthenticated],
+  },
 ];
 
 const carRoutes = [
@@ -89,6 +103,12 @@ const carRoutes = [
     controller: CarController,
     action: 'update',
     middlewares: [isAuthenticated],
+  },
+  {
+    method: 'post',
+    route: '/cars/:id/predict',
+    controller: CarController,
+    action: 'predictPrice',
   },
 ];
 

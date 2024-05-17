@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "white",
-    borderRadius:25,
+    borderRadius: 25,
     marginVertical: 5,
     marginHorizontal: 15,
     paddingHorizontal: 10,
@@ -19,7 +19,7 @@ export const styles = StyleSheet.create({
   },
   safeContainer: {
     backgroundColor: "white",
-    borderRadius:25,
+    borderRadius: 25,
     marginVertical: 5,
     marginHorizontal: 15,
     paddingHorizontal: 10,

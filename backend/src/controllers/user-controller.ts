@@ -21,6 +21,32 @@ export class UserController {
     return user;
   };
 
+  updatePushToken = async (req: Request, res: Response) => {
+    const id = parseInt(req.params.id);
+    const { pushToken } = req.body;
+
+    const user = await this.userRepository.findOneBy({ id });
+    if (!user) {
+      throw new CustomError(404, 'User not found');
+    }
+
+    user.pushToken = pushToken;
+    await this.userRepository.save(user);
+    return user;
+  };
+
+  getPushToken = async (req: Request, res: Response) => {
+    const id = parseInt(req.params.id);
+    const user = await this.userRepository.findOneBy({ id });
+    if (!user) {
+      throw new CustomError(404, 'User not found');
+    }
+    if (!user.pushToken) {
+      throw new CustomError(404, 'Push token not found');
+    }
+    return user.pushToken;
+  };
+
   remove = async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
     const userToRemove = await this.userRepository.findOneBy({ id });

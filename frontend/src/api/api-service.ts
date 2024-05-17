@@ -3,7 +3,9 @@ import { Car } from "../models/Car.model";
 import { retrieveString } from "../utils/storage-handler";
 import { ActiveInsurance } from "../models/Active-Insurance.model";
 
-const BASE_URL = process.env.BACKEND_URL;
+// const BASE_URL = process.env.BACKEND_URL;
+// const BASE_URL = "http://drivershub.us-east-1.elasticbeanstalk.com";
+const BASE_URL = "http://192.168.100.33:3000";
 
 export const registerApiCall = async (
   username: string,
@@ -252,5 +254,48 @@ export const deleteServiceApiCall = async (
     throw error.response
       ? error.response.data
       : new Error("An error occurred while deleting service");
+  }
+};
+export const updatePushTokenApiCall = async (
+  userId: number,
+  pushToken: string,
+  token: string,
+) => {
+  try {
+    const response = await axios.put(
+      `${BASE_URL}/users/${userId}/updatePushToken`,
+      {
+        pushToken,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (error: any) {
+    console.log(JSON.stringify(error));
+    throw error.response
+      ? error.response.data
+      : new Error(
+          `An error occurred while updating push token: ${JSON.stringify(error)}`,
+        );
+  }
+};
+
+export const getPushTokenApiCall = async (userId: number, token: string) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/users/${userId}/pushToken`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    console.log(JSON.stringify(error));
+    throw error.response
+      ? error.response.data
+      : new Error("An error occurred while fetching push token");
   }
 };

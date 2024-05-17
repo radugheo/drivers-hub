@@ -93,9 +93,7 @@ const ServiceFormModal: React.FC<ServiceFormModal> = ({
                 <NumberInputField
                   iconName="tachometer-alt"
                   placeholder="Mileage"
-                  value={
-                    service.serviceMileage || null
-                  }
+                  value={service.serviceMileage || null}
                   onChangeText={(serviceMileage) =>
                     setService({
                       ...service,

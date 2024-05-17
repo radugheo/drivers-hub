@@ -38,21 +38,17 @@ const DashboardScreen: React.FC = () => {
   const [refreshingActive, setRefreshingActive] = useState(false);
 
   const [isInsuranceModalVisible, setIsInsuranceModalVisible] = useState(false);
-  const [insurance, setInsurance] = useState<ActiveInsurance>(
-    {
-      validFrom: new Date(),
-      validUntil: nextYear(),
-    }
-  );
+  const [insurance, setInsurance] = useState<ActiveInsurance>({
+    validFrom: new Date(),
+    validUntil: nextYear(),
+  });
 
   const [isInspectionModalVisible, setIsInspectionModalVisible] =
     useState(false);
-  const [inspection, setInspection] = useState<ActiveInspection>(
-    {
-      validFrom: new Date(),
-      validUntil: nextYear(),
-    }
-  );
+  const [inspection, setInspection] = useState<ActiveInspection>({
+    validFrom: new Date(),
+    validUntil: nextYear(),
+  });
 
   const [isServiceModalVisible, setServiceModalVisible] = useState(false);
   const [service, setService] = useState<ActiveService>({
@@ -67,76 +63,44 @@ const DashboardScreen: React.FC = () => {
         let fetchedCars: Car[] = await getCarsApiCall(token);
         setCars(fetchedCars);
 
-        const historyWidgetsFetchPromises = fetchedCars.map(async (car) => {
+        const carWidgetsMap = fetchedCars.reduce((acc, car) => {
           const carIdStr = car.id!.toString();
-          let historyWidgets = await retrieveCarHistoryWidgets(carIdStr);
-          if (historyWidgets.length === 0) {
-            const historyWidgets = [
-              ...(car.insuranceHistory || []).map((item) => ({
-                type: "Insurance",
-                status: "Expired",
-                data: item,
-              })),
-              ...(car.inspectionHistory || []).map((item) => ({
-                type: "ITP",
-                status: "Expired",
-                data: item,
-              })),
-              ...(car.serviceHistory || []).map((item) => ({
-                type: "Service",
-                status: "Expired",
-                data: item,
-              })),
-            ];
-            await saveCarHistoryWidgets(carIdStr, historyWidgets);
+          const widgets = [];
+          if (carHasInsurance(car)) {
+            widgets.push("Insurance");
           }
-          return { carId: carIdStr, historyWidgets };
-        });
-        const allHistoryWidgets = await Promise.all(
-          historyWidgetsFetchPromises,
-        );
-        const historyWidgetsMap = allHistoryWidgets.reduce(
-          (acc, { carId, historyWidgets }) => {
-            return { ...acc, [carId]: historyWidgets };
-          },
-          {},
-        );
-        console.log("History widgets map", historyWidgetsMap);
-        setHistoryWidgets(historyWidgetsMap);
-
-        /// ----------------------------
-
-        const widgetsFetchPromises = fetchedCars.map((car) =>
-          retrieveCarWidgets(car.id!.toString()),
-        );
-        const allWidgets = await Promise.all(widgetsFetchPromises);
-        const widgetsMap = fetchedCars.reduce((acc, car, index) => {
-          const validWidgets = allWidgets[index].filter((widgetName) => {
-            if (widgetName === "Insurance" && !carHasInsurance(car)) {
-              removeCarWidget(car.id!.toString(), widgetName);
-              return false;
-            } else if (
-              widgetName === "ITP (Technical Inspection)" &&
-              !carHasITP(car)
-            ) {
-              removeCarWidget(car.id!.toString(), widgetName);
-              return false;
-            } else if (
-              widgetName === "Service & Maintenance" &&
-              !carHasService(car)
-            ) {
-              removeCarWidget(car.id!.toString(), widgetName);
-              return false;
-            }
-            return true;
-          });
-          return {
-            ...acc,
-            [car.id!.toString()]: validWidgets,
-          };
+          if (carHasITP(car)) {
+            widgets.push("ITP (Technical Inspection)");
+          }
+          if (carHasService(car)) {
+            widgets.push("Service & Maintenance");
+          }
+          return { ...acc, [carIdStr]: widgets };
         }, {});
-        console.log("Widgets map", widgetsMap);
-        setCarWidgets(widgetsMap);
+        setCarWidgets(carWidgetsMap);
+
+        const historyWidgetsMap = fetchedCars.reduce((acc, car) => {
+          const carIdStr = car.id!.toString();
+          const historyWidgets = [
+            ...(car.insuranceHistory || []).map((item) => ({
+              type: "Insurance",
+              status: "Expired",
+              data: item,
+            })),
+            ...(car.inspectionHistory || []).map((item) => ({
+              type: "ITP",
+              status: "Expired",
+              data: item,
+            })),
+            ...(car.serviceHistory || []).map((item) => ({
+              type: "Service",
+              status: "Expired",
+              data: item,
+            })),
+          ];
+          return { ...acc, [carIdStr]: historyWidgets };
+        }, {});
+        setHistoryWidgets(historyWidgetsMap);
       } else {
         Alert.alert("Error", "Unable to retrieve user token");
       }

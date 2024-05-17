@@ -18,6 +18,9 @@ export class User {
   @Column()
   role: string;
 
+  @Column({ nullable: true })
+  pushToken: string;
+
   @OneToMany(() => Car, (car) => car.owner)
   cars: Car[];
 }

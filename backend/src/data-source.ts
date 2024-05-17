@@ -16,7 +16,7 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASSWORD || 'admin',
   database: process.env.DB_NAME || 'drivers-hub-db',
-  ssl: process.env.DB_SSL? { rejectUnauthorized: false } : false,
+  ssl: process.env.DB_SSL ? { rejectUnauthorized: false } : false,
   synchronize: true,
   logging: false,
   entities: [

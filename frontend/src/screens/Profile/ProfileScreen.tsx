@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Alert, SafeAreaView, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Alert,
+  SafeAreaView,
+  TouchableOpacity,
+} from "react-native";
 import { AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { styles } from "./ProfileScreen.styles";
 import { removeString, retrieveString } from "../../utils/storage-handler";
-import { getUserDataApiCall } from "../../api/api-service";
+import {
+  getUserDataApiCall,
+  updatePushTokenApiCall,
+} from "../../api/api-service";
 import TopBar from "../../components/TopBar/TopBar";
 import FormAuthField from "../../components/FormAuthField/FormAuthField";
 import OpacityButton from "../../components/OpacityButton/OpacityButton";
@@ -36,8 +45,20 @@ const ProfileScreen: React.FC = () => {
     getUserData();
   }, []);
 
+  const clearNotificationToken = async () => {
+    try {
+      const userId = await retrieveString("userId");
+      const userToken = await retrieveString("userToken");
+      await updatePushTokenApiCall(parseInt(userId), "", userToken);
+      console.log("Notification token cleared successfully");
+    } catch (error) {
+      console.error("Error clearing notification token: ", error);
+    }
+  };
+
   const handleLogout = async () => {
     try {
+      await clearNotificationToken();
       await removeString("userToken");
       console.log("User logged out");
       Alert.alert("Success", "You have been logged out successfully.");
@@ -50,7 +71,7 @@ const ProfileScreen: React.FC = () => {
 
   return (
     <View style={styles.mainContainer}>
-      <TopBar title='Profile' />
+      <TopBar title="Profile" />
       <View style={styles.headerContainer}>
         <View>
           <View style={styles.profileData}>
@@ -69,22 +90,22 @@ const ProfileScreen: React.FC = () => {
       </View>
 
       <SafeAreaView style={styles.safeContainer}>
-          <TouchableOpacity style={styles.actionItem}>
-            <AntDesign name="edit" size={20} color="black" />
-            <Text style={styles.actionText}>Edit Profile</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.actionItem}>
-            <Ionicons name="key-outline" size={20} color="black" />
-            <Text style={styles.actionText}>Change Password</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.actionItem}>
-            <Ionicons name="settings-outline" size={20} color="black" />
-            <Text style={styles.actionText}>Settings</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.lastActionItem} onPress={handleLogout}>
-            <Ionicons name="log-out-outline" size={20} color="red" />
-            <Text style={styles.actionText}>Logout</Text>
-          </TouchableOpacity>
+        <TouchableOpacity style={styles.actionItem}>
+          <AntDesign name="edit" size={20} color="black" />
+          <Text style={styles.actionText}>Edit Profile</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.actionItem}>
+          <Ionicons name="key-outline" size={20} color="black" />
+          <Text style={styles.actionText}>Change Password</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.actionItem}>
+          <Ionicons name="settings-outline" size={20} color="black" />
+          <Text style={styles.actionText}>Settings</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.lastActionItem} onPress={handleLogout}>
+          <Ionicons name="log-out-outline" size={20} color="red" />
+          <Text style={styles.actionText}>Logout</Text>
+        </TouchableOpacity>
       </SafeAreaView>
     </View>
   );

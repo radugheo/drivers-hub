@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { Car } from '../entities/Car';
 import { User } from '../entities/User';
 import { CustomError } from '../models/custom-error';
+import { predictPrice } from '../utils/preprocess-model-input';
 
 const updateCarFields = async (car, data, userRepository) => {
   const fields = [
@@ -147,10 +148,29 @@ export class CarController {
     let automatic_transmission = 0;
     transmission === 'Automatic' ? (automatic_transmission = 1) : (automatic_transmission = 0);
     let engine_size = displacement / 1000;
-
     if (brand === 'mercedes') {
       brand = 'mercedes-benz';
     }
-    const xgbInput = [brand, model, year, mileage, engine_size, automatic_transmission, fuel_type, 0, 1];
+    const features = {
+      brand: 'volkswagen',
+      model: 'tiguan',
+      year: 2012,
+      mileage: 200000,
+      engine_size: 2.0,
+      automatic_transmission: 0,
+      fuel_type: 'diesel',
+    };
+    try {
+      console.log(`Features: ${JSON.stringify(features)}`);
+      let predictedPrice: number = await predictPrice(features);
+      predictedPrice = Math.round(predictedPrice);
+      // predictedPrice = predictedPrice - 0.2 * predictedPrice;
+      console.log(`Predicted price: ${predictedPrice}`);
+
+      return { price: predictedPrice };
+    } catch (error) {
+      console.error(`Error in predicting price: ${error}`);
+      throw new CustomError(500, 'Error in predicting price');
+    }
   };
 }

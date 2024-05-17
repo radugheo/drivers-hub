@@ -58,8 +58,16 @@ const AppNavigator = () => {
           component={HomeScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="GarageScreen" component={GarageScreen} options={{ headerShown: false }} />
+        <Stack.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="GarageScreen"
+          component={GarageScreen}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name="AddCarScreen"
           component={AddCarScreen}
