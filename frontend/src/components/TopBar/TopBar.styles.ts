@@ -8,6 +8,7 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 20,
     marginTop: 50,
+    marginBottom: 0,
   },
   topBarTitle: {
     fontSize: 26,

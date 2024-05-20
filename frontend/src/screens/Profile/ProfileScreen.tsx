@@ -15,8 +15,6 @@ import {
   updatePushTokenApiCall,
 } from "../../api/api-service";
 import TopBar from "../../components/TopBar/TopBar";
-import FormAuthField from "../../components/FormAuthField/FormAuthField";
-import OpacityButton from "../../components/OpacityButton/OpacityButton";
 
 const ProfileScreen: React.FC = () => {
   const [userData, setUserData] = useState({

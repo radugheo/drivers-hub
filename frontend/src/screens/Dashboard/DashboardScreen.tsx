@@ -358,7 +358,7 @@ const DashboardScreen: React.FC = () => {
       />
 
       <OptionsModal
-        animationType="none"
+        animationType="fade"
         transparent={true}
         visible={isOptionsModalVisible}
         options={options}
@@ -367,7 +367,7 @@ const DashboardScreen: React.FC = () => {
       />
 
       <InsuranceFormModal
-        animationType="none"
+        animationType="fade"
         transparent={true}
         visible={isInsuranceModalVisible}
         onRequestClose={() => setIsInsuranceModalVisible(false)}
@@ -377,7 +377,7 @@ const DashboardScreen: React.FC = () => {
       />
 
       <ITPFormModal
-        animationType="none"
+        animationType="fade"
         transparent={true}
         visible={isInspectionModalVisible}
         onRequestClose={() => setIsInspectionModalVisible(false)}
@@ -387,7 +387,7 @@ const DashboardScreen: React.FC = () => {
       />
 
       <ServiceFormModal
-        animationType="none"
+        animationType="fade"
         transparent={true}
         visible={isServiceModalVisible}
         onRequestClose={() => setServiceModalVisible(false)}

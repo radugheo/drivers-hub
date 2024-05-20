@@ -105,7 +105,7 @@ const carRoutes = [
     middlewares: [isAuthenticated],
   },
   {
-    method: 'post',
+    method: 'get',
     route: '/cars/:id/predict',
     controller: CarController,
     action: 'predictPrice',

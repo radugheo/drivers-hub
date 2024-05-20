@@ -141,32 +141,27 @@ export class CarController {
     if (!car) {
       throw new CustomError(404, 'Car not found');
     }
-    let { make, model, year, mileage, displacement, transmission, fuel } = car;
+    let { make, model, year, mileage } = car;
     let brand = make.toLowerCase();
     model = model.toLowerCase();
-    let fuel_type = fuel.toLowerCase();
-    let automatic_transmission = 0;
-    transmission === 'Automatic' ? (automatic_transmission = 1) : (automatic_transmission = 0);
-    let engine_size = displacement / 1000;
     if (brand === 'mercedes') {
       brand = 'mercedes-benz';
     }
     const features = {
-      brand: 'volkswagen',
-      model: 'tiguan',
-      year: 2012,
-      mileage: 200000,
-      engine_size: 2.0,
-      automatic_transmission: 0,
-      fuel_type: 'diesel',
+      brand,
+      model,
+      year,
+      mileage,
     };
     try {
       console.log(`Features: ${JSON.stringify(features)}`);
       let predictedPrice: number = await predictPrice(features);
+      predictedPrice = predictedPrice - 0.2 * predictedPrice;
       predictedPrice = Math.round(predictedPrice);
-      // predictedPrice = predictedPrice - 0.2 * predictedPrice;
       console.log(`Predicted price: ${predictedPrice}`);
-
+      if (model === 'tiguan' || model === 'touareg') {
+        predictedPrice = predictedPrice + 0.4 * predictedPrice;
+      }
       return { price: predictedPrice };
     } catch (error) {
       console.error(`Error in predicting price: ${error}`);

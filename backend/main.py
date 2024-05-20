@@ -16,7 +16,7 @@ def main():
     sample_data = pd.DataFrame(columns=columns_list)
     sample_data.loc[0] = 0
 
-    direct_keys = ['year', 'engine_size', 'mileage']
+    direct_keys = ['year', 'mileage']
 
     for key, value in features.items():
         if key in direct_keys:

@@ -256,6 +256,25 @@ export const deleteServiceApiCall = async (
       : new Error("An error occurred while deleting service");
   }
 };
+
+export const getEstimatedCarPriceApiCall = async (
+  id: number,
+  token: string,
+) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/cars/${id}/predict`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data.price;
+  } catch (error: any) {
+    console.log(JSON.stringify(error));
+    throw error.response
+      ? error.response.data
+      : new Error("An error occurred while getting price prediction");
+  }
+};
 export const updatePushTokenApiCall = async (
   userId: number,
   pushToken: string,

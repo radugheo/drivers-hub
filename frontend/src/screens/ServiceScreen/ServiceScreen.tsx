@@ -143,7 +143,7 @@ const ServiceScreen: React.FC<ServiceScreenProps> = ({ route }) => {
             <NumberInputField
               iconName="tachometer-alt"
               placeholder={service.serviceMileage?.toString() || "Mileage"}
-              value={service.serviceMileage?.toString() || null}
+              value={service.serviceMileage || null}
               onChangeText={(serviceMileage) =>
                 handleServiceInputChange("serviceMileage", serviceMileage)
               }

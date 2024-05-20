@@ -1,13 +1,7 @@
 import { useEffect, useState } from "react";
 import AppNavigator from "./src/navigation/app-navigator";
-import { ActivityIndicator, Alert, LogBox } from "react-native";
-import * as Notifications from "expo-notifications";
+import { ActivityIndicator, LogBox } from "react-native";
 import * as Font from "expo-font";
-import {
-  getPushTokenApiCall,
-  updatePushTokenApiCall,
-} from "./src/api/api-service";
-import { retrieveString } from "./src/utils/storage-handler";
 
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -31,6 +25,7 @@ export default function App() {
       'Each child in a list should have a unique "key" prop',
       "Reduced motion setting is enabled on this device",
       "Calling getExpoPushTokenAsync without specifying a projectId is deprecated",
+      "Possible unhandled promise rejection"
     ]);
     loadFonts();
   }, []);
