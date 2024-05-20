@@ -17,11 +17,7 @@ import TopBar from "../../components/TopBar/TopBar";
 import FormInputField from "../../components/FormInputField/FormInputField";
 import OpacityButton from "../../components/OpacityButton/OpacityButton";
 import { removeCarWidget, retrieveString } from "../../utils/storage-handler";
-import {
-  deleteServiceApiCall,
-  updateCarApiCall,
-  updateServiceApiCall,
-} from "../../api/api-service";
+import { updateCarApiCall } from "../../api/api-service";
 import DateInputField from "../../components/DateInputField/DateInputField";
 import { Car } from "../../models/Car.model";
 import NumberInputField from "../../components/NumberInputField/NumberInputField";
@@ -64,9 +60,8 @@ const ServiceScreen: React.FC<ServiceScreenProps> = ({ route }) => {
       console.log("Updating car with ID: ", car.id);
       const updatedCar = { ...car, activeService: service };
       const token = await retrieveString("userToken");
-      const resultServiceCall = await updateServiceApiCall(service, token);
       const resultCarCall = await updateCarApiCall(updatedCar, token);
-      if (resultServiceCall && resultCarCall) {
+      if (resultCarCall) {
         Alert.alert("Success", "Service details have been updated.");
         navigation.goBack();
       }
@@ -81,9 +76,8 @@ const ServiceScreen: React.FC<ServiceScreenProps> = ({ route }) => {
       console.log("Deleting service with ID: ", service.id);
       console.log("Updating car with ID: ", car.id);
       const token = await retrieveString("userToken");
-      const resultServiceCall = await deleteServiceApiCall(service.id!, token);
       const resultCarCall = await updateCarApiCall(updatedCar, token);
-      if (resultServiceCall && resultCarCall) {
+      if (resultCarCall) {
         Alert.alert("Success", "Service details have been deleted.");
         await removeCarWidget(car.id!.toString(), "Service & Maintenance");
         navigation.goBack();

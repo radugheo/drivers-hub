@@ -18,17 +18,14 @@ import TopBar from "../../components/TopBar/TopBar";
 import FormInputField from "../../components/FormInputField/FormInputField";
 import OpacityButton from "../../components/OpacityButton/OpacityButton";
 import { removeCarWidget, retrieveString } from "../../utils/storage-handler";
-import {
-  deleteInsuranceApiCall,
-  updateCarApiCall,
-  updateInsuranceApiCall,
-} from "../../api/api-service";
+import { updateCarApiCall } from "../../api/api-service";
 import DateInputField from "../../components/DateInputField/DateInputField";
 import { Car } from "../../models/Car.model";
 import PictureModal from "../../components/PictureModal/PictureModal";
 import PictureInputField from "../../components/PictureInputField/PictureInputField";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { ActiveInsurance } from "../../models/Active-Insurance.model";
+import { uploadPictureToS3Bucket } from "../../utils/picture-handler";
 
 LogBox.ignoreLogs([
   "Non-serializable values were found in the navigation state",
@@ -66,14 +63,22 @@ const InsuranceScreen: React.FC<InsuranceScreenProps> = ({ route }) => {
       }
       console.log("Updating insurance with ID:", insurance.id);
       console.log("Updating car with ID:", car.id);
-      const updatedCar = { ...car, activeInsurance: insurance };
+      let pictureUrl: string = "";
+      try {
+        if (insurance.picture) {
+          pictureUrl = await uploadPictureToS3Bucket(insurance.picture);
+        }
+      } catch (error) {
+        Alert.alert("Error", "Failed to upload insurance picture.");
+        return;
+      }
+      const updatedCar = {
+        ...car,
+        activeInsurance: { ...insurance, picture: pictureUrl, carId: car.id },
+      };
       const token = await retrieveString("userToken");
-      const resultInsuranceCall = await updateInsuranceApiCall(
-        insurance,
-        token,
-      );
       const resultCarCall = await updateCarApiCall(updatedCar, token);
-      if (resultInsuranceCall && resultCarCall) {
+      if (resultCarCall) {
         Alert.alert("Success", "Car insurance updated successfully.");
         navigation.goBack();
       }
@@ -86,12 +91,8 @@ const InsuranceScreen: React.FC<InsuranceScreenProps> = ({ route }) => {
     try {
       const updatedCar = { ...car, activeInsurance: null };
       const token = await retrieveString("userToken");
-      const resultInsuranceCall = await deleteInsuranceApiCall(
-        insurance.id!,
-        token,
-      );
       const resultCarCall = await updateCarApiCall(updatedCar, token);
-      if (resultInsuranceCall && resultCarCall) {
+      if (resultCarCall) {
         Alert.alert("Success", "Insurance details have been deleted.");
         await removeCarWidget(car.id!.toString(), "Insurance");
         navigation.goBack();

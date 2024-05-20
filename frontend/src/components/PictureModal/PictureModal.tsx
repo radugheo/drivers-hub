@@ -1,6 +1,14 @@
-import React, { useState } from "react";
-import { Modal, View, Image, TouchableOpacity, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  Modal,
+  View,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { getImageFromS3 } from "../../utils/picture-handler";
 
 interface PictureModalProps {
   isVisible: boolean;
@@ -13,13 +21,49 @@ const PictureModal: React.FC<PictureModalProps> = ({
   onClose,
   imageData,
 }) => {
+  const [base64Image, setBase64Image] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const bucketName = "drivers-hub";
+
+  useEffect(() => {
+    const fetchImage = async () => {
+      if (!imageData || !isVisible) {
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true);
+      try {
+        if (imageData.length > 300) {
+          setBase64Image(imageData);
+        } else {
+          const base64 = await getImageFromS3(bucketName, imageData);
+          setBase64Image(base64);
+        }
+      } catch (error) {
+        console.error("Error fetching image from S3:", error);
+        setBase64Image(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchImage();
+  }, [isVisible, imageData]);
+
   return (
     <Modal visible={isVisible} transparent={true} animationType="slide">
       <View style={styles.modalView}>
-        <Image
-          source={{ uri: `data:image/png;base64,${imageData}` }}
-          style={styles.fullImage}
-        />
+        {loading ? (
+          <ActivityIndicator size="large" color="#ffffff" />
+        ) : (
+          base64Image && (
+            <Image
+              source={{ uri: `data:image/png;base64,${base64Image}` }}
+              style={styles.fullImage}
+            />
+          )
+        )}
         <TouchableOpacity style={styles.closeButton} onPress={onClose}>
           <FontAwesome5 name="times" size={24} color="white" />
         </TouchableOpacity>

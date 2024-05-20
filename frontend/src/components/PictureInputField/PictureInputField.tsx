@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Alert, Image } from "react-native";
+import { View, Text, TouchableOpacity, Alert } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import { styles } from "./PictureInputField.styles"; // Assuming you have a similar style file
+import { styles } from "./PictureInputField.styles";
 
 interface PictureInputProps {
   iconName: string;

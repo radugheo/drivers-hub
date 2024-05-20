@@ -23,6 +23,7 @@ import { ActiveService } from "../../models/Active-Service.model";
 import CarItemDashboard from "../../components/CarItemDashboard/CarItemDashboard";
 import Carousel from "react-native-reanimated-carousel";
 import { nextYear } from "../../utils/format-text";
+import { uploadPictureToS3Bucket } from "../../utils/picture-handler";
 
 const DashboardScreen: React.FC = () => {
   const [cars, setCars] = useState<Car[]>([]);
@@ -220,11 +221,21 @@ const DashboardScreen: React.FC = () => {
       Alert.alert("Error", "Car not found.");
       return;
     }
+    let pictureUrl: string = "";
+    try {
+      if (insurance.picture) {
+        pictureUrl = await uploadPictureToS3Bucket(insurance.picture);
+      }
+    } catch (error) {
+      Alert.alert("Error", "Failed to upload insurance picture.");
+      return;
+    }
     const updatedCar = {
       ...cars[carToUpdateIndex],
       activeInsurance: {
         ...insurance,
         carId: selectedCarId,
+        picture: pictureUrl,
       },
     };
     try {
@@ -237,7 +248,6 @@ const DashboardScreen: React.FC = () => {
       const newCars = [...cars];
       newCars[carToUpdateIndex] = updatedCar;
       setCars(newCars);
-
       updateWidgetsForCar(selectedCarId.toString(), "Insurance");
       fetchCarsAndWidgets();
     } catch (error) {

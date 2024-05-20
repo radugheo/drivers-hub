@@ -16,11 +16,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import TopBar from "../../components/TopBar/TopBar";
 import OpacityButton from "../../components/OpacityButton/OpacityButton";
 import { removeCarWidget, retrieveString } from "../../utils/storage-handler";
-import {
-  deleteInspectionApiCall,
-  updateCarApiCall,
-  updateInspectionApiCall,
-} from "../../api/api-service";
+import { updateCarApiCall } from "../../api/api-service";
 import DateInputField from "../../components/DateInputField/DateInputField";
 import { Car } from "../../models/Car.model";
 import { ActiveInspection } from "../../models/Active-Inspection.model";
@@ -60,12 +56,8 @@ const ITPScreen: React.FC<ITPScreenProps> = ({ route }) => {
       console.log("Udating car with ID: ", car.id);
       const updatedCar = { ...car, activeInspection: inspection };
       const token = await retrieveString("userToken");
-      const resultInspectionCall = await updateInspectionApiCall(
-        inspection,
-        token,
-      );
       const resultCarCall = await updateCarApiCall(updatedCar, token);
-      if (resultInspectionCall && resultCarCall) {
+      if (resultCarCall) {
         Alert.alert("Success", "Car inspection updated successfully.");
         navigation.goBack();
       }
@@ -78,12 +70,8 @@ const ITPScreen: React.FC<ITPScreenProps> = ({ route }) => {
     try {
       const updatedCar = { ...car, activeInspection: null };
       const token = await retrieveString("userToken");
-      const resultInspectionCall = await deleteInspectionApiCall(
-        inspection.id!,
-        token,
-      );
       const resultCarCall = await updateCarApiCall(updatedCar, token);
-      if (resultInspectionCall && resultCarCall) {
+      if (resultCarCall) {
         Alert.alert("Success", "ITP details have been deleted.");
         await removeCarWidget(car.id!.toString(), "ITP (Technical Inspection)");
         navigation.goBack();
