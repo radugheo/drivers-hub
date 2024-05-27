@@ -30,6 +30,21 @@ export class AuthController {
     return 'User registered';
   };
 
+  updatePassword = async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      throw new CustomError(400, 'All fields are required');
+    }
+    const user = await this.userRepository.findOneBy({ email });
+    if (!user) {
+      throw new CustomError(404, 'User not found');
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user.password = hashedPassword;
+    await this.userRepository.save(user);
+    return 'Password updated';
+  };
+
   login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
     if (!email || !password) {

@@ -5,7 +5,11 @@ build/
 tmp/
 temp/
 venv/
-xgb_model.json
+src/ml-models/best.pt
+src/ml-models/xgb_model.json
+src/ml-models/columns_list.json
+processed_images/
+uploads/
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml

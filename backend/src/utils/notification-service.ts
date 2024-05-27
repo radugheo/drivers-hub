@@ -1,7 +1,9 @@
 import { addDays } from 'date-fns';
 import { Expo } from 'expo-server-sdk';
 import { AppDataSource } from '../data-source';
-import { LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
+import { ActiveInspection } from '../entities/ActiveInspection';
+import { ActiveInsurance } from '../entities/ActiveInsurance';
+import { ActiveService } from '../entities/ActiveService';
 
 const expo = new Expo();
 
@@ -67,4 +69,10 @@ export const sendNotifications = async (tokens: string[], title: string, body: s
       console.error('Error sending notification:', error);
     }
   }
+};
+
+export const scheduleExpiryNotifications = async () => {
+  await scheduleNotificationsFor(ActiveService, 'Service');
+  await scheduleNotificationsFor(ActiveInsurance, 'Insurance');
+  await scheduleNotificationsFor(ActiveInspection, 'Inspection');
 };

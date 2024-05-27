@@ -73,7 +73,7 @@ export const AddCarScreen: React.FC = () => {
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={{ flex: 1 }}
         >
-          <ScrollView style={styles.scrollContainer}>
+          <ScrollView>
             <Text style={styles.editField}>Make</Text>
             <FormInputField
               iconName="car"

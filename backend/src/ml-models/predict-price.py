@@ -5,9 +5,9 @@ import xgboost as xgb
 
 def main():
     model = xgb.Booster()
-    model.load_model('xgb_model.json')
+    model.load_model('./src/ml-models/xgb_model.json')
 
-    with open('columns_list.json', 'r') as file:
+    with open('./src/ml-models/columns_list.json', 'r') as file:
         columns_list = json.load(file)
 
     input_json = sys.stdin.read()

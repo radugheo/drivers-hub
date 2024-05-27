@@ -4,6 +4,15 @@ import { User } from '../entities/User';
 import { CustomError } from '../models/custom-error';
 import { Car } from '../entities/Car';
 
+const updateUserFields = (user, data) => {
+  const fields = ['username', 'email'];
+  fields.forEach((field) => {
+    if (data[field] !== undefined) {
+      user[field] = data[field];
+    }
+  });
+}
+
 export class UserController {
   private userRepository = AppDataSource.getRepository(User);
   private carRepository = AppDataSource.getRepository(Car);
@@ -20,6 +29,19 @@ export class UserController {
     }
     return user;
   };
+
+  update = async (req: Request, res: Response) => {
+    console.log(`req.body: ${JSON.stringify(req.body)}`)
+    console.log(`req.params: ${JSON.stringify(req.params)}`)
+    const id = parseInt(req.params.id);
+    const user = await this.userRepository.findOneBy({ id });
+    if (!user) {
+      throw new CustomError(404, 'User not found');
+    }
+    updateUserFields(user, req.body);
+    await this.userRepository.save(user);
+    return 'User updated';
+  }
 
   updatePushToken = async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);

@@ -3,7 +3,12 @@ import { Request, Response } from 'express';
 import { Car } from '../entities/Car';
 import { User } from '../entities/User';
 import { CustomError } from '../models/custom-error';
-import { predictPrice } from '../utils/preprocess-model-input';
+import { cleanupFile, predictImage, predictPrice } from '../utils/preprocess-model-input';
+import path = require('path');
+
+interface MulterRequest extends Request {
+  file?: Express.Multer.File;
+}
 
 const updateCarFields = async (car, data, userRepository) => {
   const fields = [
@@ -116,6 +121,7 @@ export class CarController {
     await this.carRepository.save(car);
     return 'Car inserted';
   };
+
   remove = async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
     const carToRemove = await this.carRepository.findOneBy({ id });
@@ -125,6 +131,7 @@ export class CarController {
     await this.carRepository.remove(carToRemove);
     return 'Car removed';
   };
+
   update = async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
     const car = await this.carRepository.findOneBy({ id });
@@ -135,6 +142,7 @@ export class CarController {
     await this.carRepository.save(car);
     return 'Car updated';
   };
+
   predictPrice = async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
     const car = await this.carRepository.findOneBy({ id });
@@ -166,6 +174,32 @@ export class CarController {
     } catch (error) {
       console.error(`Error in predicting price: ${error}`);
       throw new CustomError(500, 'Error in predicting price');
+    }
+  };
+
+  predictDashboardSymbols = async (req: MulterRequest, res: Response) => {
+    const file = req.file as Express.Multer.File;
+    if (!file) {
+      return res.status(400).send('No image uploaded.');
+    }
+
+    const inputPath = path.resolve(file.path);
+    const outputPath = path.resolve('processed_images', 'processed-' + file.originalname);
+
+    try {
+      const result = await predictImage(inputPath, outputPath);
+      console.log('Processing complete, file saved at:', result.image_path);
+      console.log('Detected labels:', result.labels);
+
+      cleanupFile(inputPath);
+
+      res.status(200).json({
+        imageUrl: `/processed_images/processed-${file.originalname}`,
+        labels: result.labels,
+      });
+    } catch (error) {
+      console.error('Failed to process image:', error);
+      res.status(500).send('Server error');
     }
   };
 }

@@ -3,8 +3,6 @@ import { StyleSheet } from "react-native";
 export const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    paddingHorizontal: 20,
-    paddingBottom: 10,
   },
   headerContainer: {
     flexDirection: "row",
@@ -13,7 +11,7 @@ export const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 25,
     marginVertical: 5,
-    marginHorizontal: 15,
+    marginHorizontal: 20,
     paddingHorizontal: 10,
     paddingVertical: 10,
   },
@@ -21,7 +19,7 @@ export const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 25,
     marginVertical: 5,
-    marginHorizontal: 15,
+    marginHorizontal: 20,
     paddingHorizontal: 10,
     paddingVertical: 10,
   },

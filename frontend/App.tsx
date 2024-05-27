@@ -37,6 +37,7 @@ export default function App() {
       "Reduced motion setting is enabled on this device",
       "Calling getExpoPushTokenAsync without specifying a projectId is deprecated",
       "Possible unhandled promise rejection",
+      "Require cycles are allowed, but can result in uninitialized values"
     ]);
   }, []);
 

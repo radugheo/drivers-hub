@@ -21,6 +21,13 @@ const authRoutes = [
     action: 'login',
     middlewares: [],
   },
+  {
+    method: 'put',
+    route: '/updatePassword',
+    controller: AuthController,
+    action: 'updatePassword',
+    middlewares: [isAuthenticated],
+  },
 ];
 
 const userRoutes = [
@@ -36,6 +43,13 @@ const userRoutes = [
     route: '/users/:id',
     controller: UserController,
     action: 'one',
+    middlewares: [isAuthenticated],
+  },
+  {
+    method: 'put',
+    route: '/users/:id',
+    controller: UserController,
+    action: 'update',
     middlewares: [isAuthenticated],
   },
   {

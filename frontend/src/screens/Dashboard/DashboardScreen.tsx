@@ -5,11 +5,7 @@ import { getCarsApiCall, updateCarApiCall } from "../../api/api-service";
 import { Car } from "../../models/Car.model";
 import {
   removeCarHistoryWidget,
-  removeCarWidget,
-  retrieveCarHistoryWidgets,
-  retrieveCarWidgets,
   retrieveString,
-  saveCarHistoryWidgets,
   saveCarWidgets,
 } from "../../utils/storage-handler";
 import OptionsModal from "../../components/OptionsModal/OptionsModal";
@@ -126,7 +122,6 @@ const DashboardScreen: React.FC = () => {
     "Insurance",
     "ITP (Technical Inspection)",
     "Service & Maintenance",
-    "Vignette",
   ];
 
   const widgetExists = (widgetName: string) => {

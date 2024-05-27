@@ -6,23 +6,15 @@ export const styles = StyleSheet.create({
     justifyContent: "flex-end",
     backgroundColor: "rgba(0,0,0,0.5)",
   },
-  modalContainer: {
-    backgroundColor: "white",
-    padding: 10,
-    maxHeight: Dimensions.get("window").height,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-  },
   modalFormContainer: {
     backgroundColor: "white",
     paddingHorizontal: 20,
     paddingBottom: 20,
     paddingTop: 10,
-    maxHeight: Dimensions.get("window").height,
+    maxHeight: Dimensions.get("window").height / 2,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
-
   editField: {
     fontSize: 14,
     fontWeight: "bold",

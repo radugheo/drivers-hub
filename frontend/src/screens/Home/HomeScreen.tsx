@@ -1,10 +1,8 @@
 import React, { useEffect } from "react";
 import TopBarWithProfile from "../../components/TopBarWithProfile/TopBarWithProfile";
 import NavBar from "../../components/NavBar/NavBar";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Alert, View } from "react-native";
 import {
-  getPushTokenApiCall,
   updatePushTokenApiCall,
 } from "../../api/api-service";
 import { retrieveString } from "../../utils/storage-handler";
@@ -61,7 +59,7 @@ const HomeScreen: React.FC = () => {
         console.error("Error updating notification token: ", error);
       }
     };
-
+    
     registerForPushNotificationsAsync();
   }, []);
   return (

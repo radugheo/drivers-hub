@@ -6,7 +6,7 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { retrieveString, storeString } from "../../utils/storage-handler";
 import { styles } from "./GarageScreen.styles";
 import CarItemList from "../../components/CarItemList/CarItemList";
-import OpacityButton from "../../components/OpacityButton/OpacityButton";
+import TopBar from "../../components/TopBar/TopBar";
 
 const GarageScreen: React.FC = () => {
   const [cars, setCars] = useState<Car[]>([]);
@@ -32,31 +32,29 @@ const GarageScreen: React.FC = () => {
   useFocusEffect(
     useCallback(() => {
       fetchCars();
-    }, [fetchCars]),
+    }, [fetchCars])
   );
-
-  const handleAddCar = async () => {
-    navigation.navigate("AddCarScreen" as never);
-  };
 
   const renderCarItem: ListRenderItem<Car> = ({ item }) => (
     <CarItemList item={item} />
   );
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={cars}
-        renderItem={renderCarItem}
-        keyExtractor={(item) => item.id!.toString()}
-        contentContainerStyle={styles.listContainer}
-        ListEmptyComponent={
-          <Text style={{ fontFamily: "OktahRound-Regular" }}>
-            No cars available.
-          </Text>
-        }
-      />
-      <OpacityButton title="Add Car" onPress={handleAddCar} />
+    <View style={{flex: 1}}>
+      <TopBar title="Garage" />
+      <View style={styles.container}>
+        <FlatList
+          data={cars}
+          renderItem={renderCarItem}
+          keyExtractor={(item) => item.id!.toString()}
+          contentContainerStyle={styles.listContainer}
+          ListEmptyComponent={
+            <Text style={{ fontFamily: "OktahRound-Regular" }}>
+              No cars available.
+            </Text>
+          }
+        />
+      </View>
     </View>
   );
 };

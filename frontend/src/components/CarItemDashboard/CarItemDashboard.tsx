@@ -5,6 +5,7 @@ import {
   ScrollView,
   RefreshControl,
   Text,
+  Modal,
 } from "react-native";
 import InsuranceWidget from "../InsuranceWidget/InsuranceWidget";
 import ITPWidget from "../ITPWidget/ITPWidget";
@@ -16,6 +17,10 @@ import { ActiveInsurance } from "../../models/Active-Insurance.model";
 import { ActiveInspection } from "../../models/Active-Inspection.model";
 import { ActiveService } from "../../models/Active-Service.model";
 import CustomWidget from "../CustomWidget/CustomWidget";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { retrieveString } from "../../utils/storage-handler";
+import { getEstimatedCarPriceApiCall } from "../../api/api-service";
+import { formatCurrency } from "../../utils/format-text";
 
 interface CarItemDashboardProps {
   item: Car;
@@ -55,18 +60,36 @@ const CarItemDashboard: React.FC<CarItemDashboardProps> = ({
   carHasService,
 }) => {
   const [viewMode, setViewMode] = useState("Active");
-
+  const [modalVisible, setModalVisible] = useState(false);
+  const [estimatedPrice, setEstimatedPrice] = useState<string | null>(null);
   const widgets = carWidgets[item.id!.toString()] || [];
+
+  const showPricePopup = async () => {
+    setModalVisible(true);
+    const token = await retrieveString("userToken");
+    const price = await getEstimatedCarPriceApiCall(item.id!, token);
+    setEstimatedPrice(formatCurrency(price));
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
 
   return (
     <View style={styles.carContainer}>
       <View style={styles.cardContainer}>
-        <Text style={styles.carTitle}>
-          {item.make} {item.model} {item.year}
-        </Text>
-        <Text style={styles.carSubtitle}>{item.licensePlate}</Text>
+        <View>
+          <Text style={styles.carTitle}>
+            {item.make} {item.model} {item.year}
+          </Text>
+          <Text style={styles.carSubtitle}>
+            {item.licensePlate} | {item.mileage} km
+          </Text>
+        </View>
+        <TouchableOpacity onPress={showPricePopup} style={styles.headerRight}>
+          <FontAwesome5 name={"dollar-sign"} size={24} color="green" />
+        </TouchableOpacity>
       </View>
-
       <View style={styles.switchContainer}>
         <TouchableOpacity
           style={[
@@ -144,6 +167,31 @@ const CarItemDashboard: React.FC<CarItemDashboardProps> = ({
           setOptionsModalVisible(true);
         }}
       />
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={closeModal}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <FontAwesome5
+              name="robot"
+              size={24}
+              color="#5D5DFF"
+              style={{ marginBottom: 10 }}
+            />
+            <Text style={styles.modalTitle}>AI Car Valuation</Text>
+            <Text style={styles.modalText}>
+              {estimatedPrice
+                ? `Our AI estimates your car to be worth around ${estimatedPrice}`
+                : "Calculating..."}
+            </Text>
+            <OpacityButton title="Close" onPress={closeModal}></OpacityButton>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
