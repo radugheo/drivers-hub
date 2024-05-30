@@ -7,12 +7,14 @@ import { styles } from "./PictureInputField.styles";
 interface PictureInputProps {
   iconName: string;
   title: string;
+  showDeleteButton?: boolean;
   onImageSelect: (imageBase64: string | null) => void;
 }
 
 const PictureInputField: React.FC<PictureInputProps> = ({
   iconName,
   title,
+  showDeleteButton,
   onImageSelect,
 }) => {
   const [selectedImage, setSelectedImage] = useState<{
@@ -29,7 +31,7 @@ const PictureInputField: React.FC<PictureInputProps> = ({
       Alert.alert(
         "Insufficient Permissions!",
         "You need to grant camera and photo library permissions to use this feature.",
-        [{ text: "Okay" }],
+        [{ text: "Okay" }]
       );
       return false;
     }
@@ -39,7 +41,6 @@ const PictureInputField: React.FC<PictureInputProps> = ({
   const handleTakePhoto = async () => {
     const result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
-      aspect: [9, 16],
       quality: 1,
       base64: true,
     });
@@ -51,7 +52,6 @@ const PictureInputField: React.FC<PictureInputProps> = ({
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [9, 16],
       quality: 1,
       base64: true,
     });
@@ -97,9 +97,11 @@ const PictureInputField: React.FC<PictureInputProps> = ({
           <Text style={styles.imageName} numberOfLines={1}>
             {selectedImage.name}
           </Text>
-          <TouchableOpacity onPress={handleRemoveImage}>
-            <FontAwesome5 name="times-circle" size={20} color="red" />
-          </TouchableOpacity>
+          {showDeleteButton ? (
+            <TouchableOpacity onPress={handleRemoveImage}>
+              <FontAwesome5 name="times-circle" size={20} color="red" />
+            </TouchableOpacity>
+          ) : null}
         </View>
       ) : (
         <Text style={styles.title}>{title}</Text>

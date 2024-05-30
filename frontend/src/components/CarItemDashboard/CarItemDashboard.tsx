@@ -109,6 +109,15 @@ const CarItemDashboard: React.FC<CarItemDashboardProps> = ({
         >
           <Text style={styles.statusText}>Expired</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => {
+            setSelectedCarId(item.id!);
+            setOptionsModalVisible(true);
+          }}
+        >
+          <FontAwesome5 name="plus" size={20} color="white" />
+        </TouchableOpacity>
       </View>
 
       {viewMode === "Active" ? (
@@ -159,14 +168,6 @@ const CarItemDashboard: React.FC<CarItemDashboardProps> = ({
           </View>
         </ScrollView>
       )}
-
-      <OpacityButton
-        title="Add new information"
-        onPress={() => {
-          setSelectedCarId(item.id!);
-          setOptionsModalVisible(true);
-        }}
-      />
 
       <Modal
         animationType="fade"

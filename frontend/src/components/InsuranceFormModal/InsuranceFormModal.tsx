@@ -109,6 +109,7 @@ const InsuranceFormModal: React.FC<InsuranceFormModalProps> = ({
                 <PictureInputField
                   iconName="camera"
                   title="Select or Take a Picture"
+                  showDeleteButton={true}
                   onImageSelect={handleImageSelect}
                 />
               </ScrollView>

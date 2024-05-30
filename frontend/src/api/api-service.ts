@@ -2,6 +2,7 @@ import axios from "axios";
 import { Car } from "../models/Car.model";
 import { retrieveString } from "../utils/storage-handler";
 import { ActiveInsurance } from "../models/Active-Insurance.model";
+import { Buffer } from "buffer";
 
 // const BASE_URL = process.env.BACKEND_URL;
 // const BASE_URL = "http://drivershub.us-east-1.elasticbeanstalk.com";
@@ -355,5 +356,40 @@ export const getPushTokenApiCall = async (userId: number, token: string) => {
     throw error.response
       ? error.response.data
       : new Error("An error occurred while fetching push token");
+  }
+};
+
+export const getSymbolsDataApiCall = async (formData: FormData) => {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/predict-dashboard-symbols`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    console.log(JSON.stringify(error));
+    throw error.response
+      ? error.response.data
+      : new Error("An error occurred while fetching symbols");
+  }
+};
+
+export const getSymbolsImageApiCall = async (imageUrl: string) => {
+  try {
+    const response = await axios.get(`${BASE_URL}${imageUrl}`, {
+      responseType: "arraybuffer",
+    });
+    const base64 = Buffer.from(response.data, "binary").toString("base64");
+    return `data:image/jpeg;base64,${base64}`;
+  } catch (error: any) {
+    console.log(JSON.stringify(error));
+    throw error.response
+      ? error.response.data
+      : new Error("An error occurred while fetching symbols image");
   }
 };

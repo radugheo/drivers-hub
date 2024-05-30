@@ -19,6 +19,9 @@ import { ActiveInsurance } from "../models/Active-Insurance.model";
 import { ActiveInspection } from "../models/Active-Inspection.model";
 import { ActiveService } from "../models/Active-Service.model";
 import NearbyCarServicesScreen from "../screens/NearbyCarServices/NearbyCarServices";
+import SymbolsScreen from "../screens/SymbolsScreen/SymbolsScreen";
+import LocationsScreen from "../screens/LocationsScreen/LocationsScreen";
+import ChatScreen from "../screens/ChatScreen/ChatScreen";
 
 export type RootStackParamList = {
   Login: undefined;
@@ -30,6 +33,9 @@ export type RootStackParamList = {
   CarScreen: { item: Car };
   DashboardScreen: undefined;
   FindMyCarScreen: undefined;
+  SymbolsScreen: undefined;
+  LocationsScreen: undefined;
+  ChatScreen: undefined;
   InsuranceScreen: { carItem: Car; insuranceItem: ActiveInsurance };
   ITPScreen: { carItem: Car; inspectionItem: ActiveInspection };
   ServiceScreen: { carItem: Car; serviceItem: ActiveService };
@@ -64,6 +70,11 @@ const AppNavigator = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen
+          name="ChatScreen"
+          component={ChatScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
           name="GarageScreen"
           component={GarageScreen}
           options={{ headerShown: false }}
@@ -86,6 +97,16 @@ const AppNavigator = () => {
         <Stack.Screen
           name="FindMyCarScreen"
           component={FindMyCarScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="SymbolsScreen"
+          component={SymbolsScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="LocationsScreen"
+          component={LocationsScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen

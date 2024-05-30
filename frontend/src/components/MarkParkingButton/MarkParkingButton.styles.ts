@@ -2,7 +2,8 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   recenterButton: {
-    backgroundColor: "#092b3d",
+    // backgroundColor: "#092b3d",
+    backgroundColor: "black",
     borderRadius: 50,
     padding: 10,
     marginTop: 10,

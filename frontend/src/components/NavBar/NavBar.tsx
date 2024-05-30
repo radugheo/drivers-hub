@@ -1,20 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { FontAwesome5 } from "@expo/vector-icons";
-import FindMyCarScreen from "../../screens/FindMyCar/FindMyCarScreen";
 import DashboardScreen from "../../screens/Dashboard/DashboardScreen";
 import NearbyCarServicesScreen from "../../screens/NearbyCarServices/NearbyCarServices";
 import AddCarScreen from "../../screens/AddCar/AddCarScreen";
-import { TouchableOpacity, View } from "react-native";
-import LocationOptionsModal from "../LocationOptionsModal/LocationOptionsModal";
+import { Dimensions, TouchableOpacity, View } from "react-native";
 import { StyleSheet } from "react-native";
+import Svg, { Path } from "react-native-svg";
+import SymbolsScreen from "../../screens/SymbolsScreen/SymbolsScreen";
+import LocationsScreen from "../../screens/LocationsScreen/LocationsScreen";
+import ChatScreen from "../../screens/ChatScreen/ChatScreen";
+
+const { width } = Dimensions.get("window");
+const tabWidth = (width - 40) / 4;
 
 const Tab = createBottomTabNavigator();
 
 const NavBar = () => {
-  const [isLocationModalVisible, setLocationModalVisible] = useState(false);
-  const handleCloseModal = () => {
-    setLocationModalVisible(false);
+  useEffect(() => {
+    console.log(`Tab width: ${tabWidth}, width: ${width}`);
+  }, []);
+  const TabBarBackground = () => {
+    return (
+      <Svg height={70} style={styles.svgStyle}>
+        <Path
+          // d={`M0,0 L${tabWidth * 1.5},0 Q${tabWidth * 2},80 ${tabWidth * 2.5},0 L${width},0 L${width},70 L0,70 Z`}
+          // d={`M0,0 L0,0 L${((width-40) - 73)/2},0 A1,1,0,0,0,${((width-40) - 73)/2 + 73},0 L${width-40},0, L${width-40},70 L0,70 Z`}
+          d={`M0,0 L0,0 L${((width-40) - 73)/2},0 C${((width-40) - 73)/2},60,${((width-40) - 73)/2 + 73},60,${((width-40) - 73)/2 + 73},0 L${width-40},0, L${width-40},70 L0,70 Z`}
+          fill="white"
+        />
+      </Svg>
+    );
   };
   return (
     <View style={{ flex: 1 }}>
@@ -24,7 +40,8 @@ const NavBar = () => {
           tabBarActiveTintColor: "black",
           tabBarInactiveTintColor: "gray",
           tabBarStyle: {
-            backgroundColor: "white",
+            backgroundColor: "transparent",
+            borderTopWidth: 0,
             height: 70,
             paddingBottom: 10,
             paddingHorizontal: 10,
@@ -38,6 +55,7 @@ const NavBar = () => {
             fontFamily: "OktahRound-Regular",
             marginTop: -10,
           },
+          tabBarBackground: () => <TabBarBackground />,
           tabBarButton: (props) => {
             if (route.name === "Add Car") {
               return (
@@ -95,7 +113,7 @@ const NavBar = () => {
         })}
       >
         <Tab.Screen name="Dashboard" component={DashboardScreen} />
-        <Tab.Screen name="Symbols" component={DashboardScreen} />
+        <Tab.Screen name="Symbols" component={SymbolsScreen} />
         <Tab.Screen
           name="Add Car"
           component={AddCarScreen}
@@ -106,32 +124,28 @@ const NavBar = () => {
             },
           })}
         />
-        <Tab.Screen name="Chat" component={NearbyCarServicesScreen} />
-        <Tab.Screen
-          name="Location"
-          component={FindMyCarScreen}
-          listeners={{
-            tabPress: (e) => {
-              e.preventDefault();
-              setLocationModalVisible(true);
-            },
-          }}
-        />
+        <Tab.Screen name="Chat" component={ChatScreen} />
+        <Tab.Screen name="Location" component={LocationsScreen} />
       </Tab.Navigator>
-      <LocationOptionsModal
-        isVisible={isLocationModalVisible}
-        onClose={handleCloseModal}
-      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  svgStyle: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    borderRadius: 25,
+    overflow: "hidden",
+  },
   fab: {
     position: "absolute",
     width: 60,
     height: 60,
-    backgroundColor: "#092b3d",
+    // backgroundColor: "#092b3d",
+    backgroundColor: "black",
     borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",

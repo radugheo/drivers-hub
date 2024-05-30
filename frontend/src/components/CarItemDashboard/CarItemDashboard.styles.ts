@@ -86,6 +86,14 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 10,
   },
+  addButton: {
+    marginVertical: 5,
+    marginHorizontal: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    borderRadius: 20,
+    backgroundColor: "black",
+  },
   activeSwitch: {
     backgroundColor: "#dedede", 
   },

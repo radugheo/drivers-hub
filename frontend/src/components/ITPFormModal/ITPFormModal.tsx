@@ -48,7 +48,7 @@ const ITPFormModal: React.FC<ITPFormModal> = ({
                 <DateInputField
                   iconName="calendar-alt"
                   placeholder="ITP Start Date"
-                  value={new Date()}
+                  value={inspection.validFrom || new Date()}
                   onChange={(date) =>
                     setInspection({
                       ...inspection,
@@ -61,7 +61,7 @@ const ITPFormModal: React.FC<ITPFormModal> = ({
                 <DateInputField
                   iconName="calendar-alt"
                   placeholder="ITP Expiry Date"
-                  value={nextYear()}
+                  value={inspection.validUntil || nextYear()}
                   onChange={(date) =>
                     setInspection({
                       ...inspection,

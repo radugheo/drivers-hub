@@ -185,6 +185,7 @@ const InsuranceScreen: React.FC<InsuranceScreenProps> = ({ route }) => {
               <PictureInputField
                 iconName="camera"
                 title="Select or Take a Picture"
+                showDeleteButton={true}
                 onImageSelect={handleImageSelect}
               />
             )}
