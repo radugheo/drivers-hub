@@ -58,7 +58,7 @@ export class AuthController {
     if (!isPasswordValid) {
       throw new CustomError(401, 'Invalid credentials');
     }
-    const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
     return { auth: true, token: token, id: user.id };

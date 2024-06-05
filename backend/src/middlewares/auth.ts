@@ -13,9 +13,8 @@ export const isAuthenticated = (req: Request, res: Response, next: NextFunction)
       throw new CustomError(500, 'Failed to authenticate token');
     }
     const payload = decoded as jwt.JwtPayload;
-    if (payload.id && payload.role) {
+    if (payload.id) {
       (req as any).userId = payload.id;
-      (req as any).userRole = payload.role;
       next();
     } else {
       throw new CustomError(500, 'Invalid token payload');

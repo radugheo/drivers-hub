@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 import axios from "axios";
 
@@ -20,6 +21,7 @@ interface Message {
 const ChatScreen = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const sendMessage = async () => {
     const userMessage: Message = {
@@ -38,6 +40,7 @@ const ChatScreen = () => {
       content: msg.text,
     }));
     console.log(`Sending message to GPT-4: ${JSON.stringify(newInput)}`);
+    setLoading(true);
     try {
       const response = await axios.post(
         "https://api.openai.com/v1/chat/completions",
@@ -66,6 +69,8 @@ const ChatScreen = () => {
       setMessages((prevMessages) => [...prevMessages, botMessage]);
     } catch (error) {
       console.error("Error sending message to GPT-4:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -73,7 +78,11 @@ const ChatScreen = () => {
     <View
       style={item.sender === "user" ? styles.userMessage : styles.botMessage}
     >
-      <Text>{item.text}</Text>
+      {item.text === "loading" ? (
+        <ActivityIndicator size="small" color="#0000ff" />
+      ) : (
+        <Text>{item.text}</Text>
+      )}
     </View>
   );
 
@@ -84,7 +93,14 @@ const ChatScreen = () => {
       keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 100}
     >
       <FlatList
-        data={messages}
+        data={
+          loading
+            ? [
+                ...messages,
+                { id: "loading", text: "loading", sender: "assistant" },
+              ]
+            : messages
+        }
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         style={{ flex: 1, marginBottom: 10 }}
@@ -148,6 +164,11 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 18,
     fontFamily: "OktahRound-Regular",
+  },
+  loadingContainer: {
+    alignSelf: "flex-start",
+    padding: 12,
+    marginVertical: 4,
   },
 });
 

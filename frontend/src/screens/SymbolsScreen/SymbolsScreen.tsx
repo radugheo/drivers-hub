@@ -123,10 +123,12 @@ const SymbolsScreen: React.FC<SymbolsScreenProps> = () => {
               ))}
             </View>
           ) : image ? (
-            <Text style={styles.instructions}>
-              No issues detected. Please take a clear picture of your car
-              dashboard.
-            </Text>
+            <View style={styles.labelsContainer}>
+              <Text style={styles.instructions}>
+                No issues detected. Please take a clear picture of your car
+                dashboard.
+              </Text>
+            </View>
           ) : null}
         </ScrollView>
       </SafeAreaView>

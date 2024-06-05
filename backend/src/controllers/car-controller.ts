@@ -191,7 +191,7 @@ export class CarController {
       console.log('Processing complete, file saved at:', result.image_path);
       console.log('Detected labels:', result.labels);
 
-      // cleanupFile(inputPath);
+      cleanupFile(inputPath);
 
       res.status(200).json({
         imageUrl: `/processed_images/processed-${file.originalname}`,

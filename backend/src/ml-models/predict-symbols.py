@@ -6,7 +6,7 @@ import sys
 
 def main():
     model = torch.hub.load('ultralytics/yolov5', 'custom', path='./src/ml-models/best.pt', force_reload=True)
-    model.conf = 0.2  
+    model.conf = 0.4  
     image_path = sys.argv[1]
     output_path = sys.argv[2]
 
@@ -23,7 +23,7 @@ def infer_image(model, image_path, output_path):
 
     draw = ImageDraw.Draw(img)
     for index, row in results_data.iterrows():
-        draw.rectangle([(row['xmin'], row['ymin']), (row['xmax'], row['ymax'])], outline="red", width=2)
+        draw.rectangle([(row['xmin'], row['ymin']), (row['xmax'], row['ymax'])], outline="red", width=10)
         draw.text((row['xmin'], row['ymin']), f"{row['name']} {row['confidence']:.2f}", fill="red")
 
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
