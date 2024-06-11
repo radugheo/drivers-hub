@@ -57,7 +57,7 @@ const ChatScreen = () => {
             Authorization: `Bearer ${API_KEY}`,
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       const botMessage: Message = {

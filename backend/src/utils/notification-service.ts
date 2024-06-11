@@ -34,7 +34,7 @@ export const scheduleNotificationsFor = async (entity, description) => {
       await sendNotifications(
         [item.car.owner.pushToken],
         `${description} Expiration Reminder`,
-        `Your ${description} for your car is expiring in ${daysBefore} day(s).`,
+        `Your ${description} for ${item.car.make} ${item.car.model} is expiring in ${daysBefore} day(s).`,
       );
     }
   }

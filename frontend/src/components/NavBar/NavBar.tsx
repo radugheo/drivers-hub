@@ -26,7 +26,7 @@ const NavBar = () => {
         <Path
           // d={`M0,0 L${tabWidth * 1.5},0 Q${tabWidth * 2},80 ${tabWidth * 2.5},0 L${width},0 L${width},70 L0,70 Z`}
           // d={`M0,0 L0,0 L${((width-40) - 73)/2},0 A1,1,0,0,0,${((width-40) - 73)/2 + 73},0 L${width-40},0, L${width-40},70 L0,70 Z`}
-          d={`M0,0 L0,0 L${((width-40) - 73)/2},0 C${((width-40) - 73)/2},60,${((width-40) - 73)/2 + 73},60,${((width-40) - 73)/2 + 73},0 L${width-40},0, L${width-40},70 L0,70 Z`}
+          d={`M0,0 L0,0 L${(width - 40 - 73) / 2},0 C${(width - 40 - 73) / 2},60,${(width - 40 - 73) / 2 + 73},60,${(width - 40 - 73) / 2 + 73},0 L${width - 40},0, L${width - 40},70 L0,70 Z`}
           fill="white"
         />
       </Svg>

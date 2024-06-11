@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { View, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
+import {
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Alert,
+} from "react-native";
 import { loginApiCall } from "../../api/api-service";
 import { useNavigation } from "@react-navigation/native";
 import RedirectButton from "../../components/RedirectButton/RedirectButton";
@@ -26,7 +32,12 @@ const LoginScreen: React.FC = () => {
         routes: [{ name: "Home" as never }],
       });
     } catch (error) {
-      console.error("Login failed", error);
+      console.warn("Login failed", error);
+      Alert.alert(
+        "Error signing in",
+        "Invalid email and password combination.",
+        [{ text: "Dismiss" }],
+      );
     }
   };
 

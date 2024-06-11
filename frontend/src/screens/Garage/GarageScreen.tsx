@@ -32,7 +32,7 @@ const GarageScreen: React.FC = () => {
   useFocusEffect(
     useCallback(() => {
       fetchCars();
-    }, [fetchCars])
+    }, [fetchCars]),
   );
 
   const renderCarItem: ListRenderItem<Car> = ({ item }) => (
@@ -40,7 +40,7 @@ const GarageScreen: React.FC = () => {
   );
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <TopBar title="Garage" />
       <View style={styles.container}>
         <FlatList

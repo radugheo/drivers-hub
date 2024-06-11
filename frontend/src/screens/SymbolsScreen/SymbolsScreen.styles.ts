@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 export const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    paddingBottom: 20
+    paddingBottom: 20,
   },
   safeContainer: {
     flex: 1,
@@ -12,7 +12,7 @@ export const styles = StyleSheet.create({
   scrollContainer: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingBottom: 30
+    paddingBottom: 30,
   },
   instructions: {
     fontSize: 16,

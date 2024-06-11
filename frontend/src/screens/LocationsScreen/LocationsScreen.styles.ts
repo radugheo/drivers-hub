@@ -53,18 +53,18 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-end",
     width: "100%",
-    paddingTop: 50
+    paddingTop: 50,
   },
   activeSwitch: {
-    backgroundColor: "black", 
+    backgroundColor: "black",
   },
   statusTextActive: {
     fontFamily: "OktahRound-Regular",
-    color: "white"
+    color: "white",
   },
   statusTextInactive: {
     fontFamily: "OktahRound-Regular",
-    color: "black"
+    color: "black",
   },
   calloutStyle: {
     minWidth: 200,

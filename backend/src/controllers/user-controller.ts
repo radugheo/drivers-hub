@@ -11,7 +11,7 @@ const updateUserFields = (user, data) => {
       user[field] = data[field];
     }
   });
-}
+};
 
 export class UserController {
   private userRepository = AppDataSource.getRepository(User);
@@ -31,8 +31,8 @@ export class UserController {
   };
 
   update = async (req: Request, res: Response) => {
-    console.log(`req.body: ${JSON.stringify(req.body)}`)
-    console.log(`req.params: ${JSON.stringify(req.params)}`)
+    console.log(`req.body: ${JSON.stringify(req.body)}`);
+    console.log(`req.params: ${JSON.stringify(req.params)}`);
     const id = parseInt(req.params.id);
     const user = await this.userRepository.findOneBy({ id });
     if (!user) {
@@ -41,7 +41,7 @@ export class UserController {
     updateUserFields(user, req.body);
     await this.userRepository.save(user);
     return 'User updated';
-  }
+  };
 
   updatePushToken = async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);

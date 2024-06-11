@@ -37,7 +37,7 @@ const SymbolsScreen: React.FC<SymbolsScreenProps> = () => {
   const navigation = useNavigation<SymbolsScreenNavigationProp>();
   const [image, setImage] = useState<string | null>(null);
   const [processedImageUrl, setProcessedImageUrl] = useState<string | null>(
-    null
+    null,
   );
   const [labels, setLabels] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);

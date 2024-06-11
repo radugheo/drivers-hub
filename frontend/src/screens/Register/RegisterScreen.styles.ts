@@ -6,4 +6,9 @@ export const styles = StyleSheet.create({
     justifyContent: "flex-start",
     padding: 20,
   },
+  errorText: {
+    fontSize: 12,
+    color: "red",
+    marginBottom: 10,
+  },
 });

@@ -44,7 +44,7 @@ const LocationsScreen: React.FC = () => {
   const mapRef = useRef<MapView | null>(null);
 
   const [locationServices, setLocationServices] = useState<Region | undefined>(
-    undefined
+    undefined,
   );
   const [services, setServices] = useState<ServicesArray>([]);
   const [selectedMarker, setSelectedMarker] = useState<string | null>(null);
@@ -75,7 +75,7 @@ const LocationsScreen: React.FC = () => {
           accuracy: Location.Accuracy.BestForNavigation,
           distanceInterval: 1,
         },
-        () => {}
+        () => {},
       );
     };
 
@@ -89,7 +89,7 @@ const LocationsScreen: React.FC = () => {
     const fetchNearbyCarServices = async (region: Region) => {
       const { latitude, longitude } = region;
       const apiKey: string = process.env.GOOGLE_API_KEY!;
-      const radius = 4000;
+      const radius = 3000;
       const apiUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=${radius}&type=car_repair&key=${apiKey}`;
       try {
         const response = await fetch(apiUrl);
@@ -107,7 +107,7 @@ const LocationsScreen: React.FC = () => {
       if (status !== "granted") {
         Alert.alert(
           "Permission denied",
-          "Permission to access location was denied"
+          "Permission to access location was denied",
         );
         return;
       }
@@ -149,7 +149,7 @@ const LocationsScreen: React.FC = () => {
       setParkingSpot(newParkingSpot);
       await AsyncStorage.setItem(
         PARKING_SPOT_KEY,
-        JSON.stringify(newParkingSpot)
+        JSON.stringify(newParkingSpot),
       );
     }
   };
@@ -177,7 +177,7 @@ const LocationsScreen: React.FC = () => {
           latitudeDelta: 0.006,
           longitudeDelta: 0.006,
         },
-        500
+        500,
       );
     }
   };
@@ -190,7 +190,7 @@ const LocationsScreen: React.FC = () => {
   const handleMarkerPress = async (
     latitude: number,
     longitude: number,
-    name: string
+    name: string,
   ) => {
     setSelectedMarker(name);
 
@@ -208,7 +208,7 @@ const LocationsScreen: React.FC = () => {
       } else {
         console.error(
           "Error fetching travel time: ",
-          json.rows[0].elements[0].status
+          json.rows[0].elements[0].status,
         );
         setTravelTimes((prevTimes) => ({
           ...prevTimes,
@@ -239,7 +239,7 @@ const LocationsScreen: React.FC = () => {
     });
 
     Linking.openURL(url!).catch((err) =>
-      console.error("An error occurred", err)
+      console.error("An error occurred", err),
     );
   };
 
@@ -349,7 +349,7 @@ const LocationsScreen: React.FC = () => {
                   handleMarkerPress(
                     service.geometry.location.lat,
                     service.geometry.location.lng,
-                    service.name
+                    service.name,
                   )
                 }
               >
@@ -358,7 +358,7 @@ const LocationsScreen: React.FC = () => {
                   onPress={() =>
                     handleOpenDirections(
                       service.geometry.location.lat,
-                      service.geometry.location.lng
+                      service.geometry.location.lng,
                     )
                   }
                 >

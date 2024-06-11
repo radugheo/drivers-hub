@@ -12,7 +12,7 @@ export const registerApiCall = async (
   username: string,
   email: string,
   password: string,
-  role: string = "user"
+  role: string = "user",
 ) => {
   try {
     console.log("BASE_URL", BASE_URL);
@@ -66,7 +66,7 @@ export const getUserDataApiCall = async (token: string) => {
 export const updateUserDataApiCall = async (
   userData: any,
   id: number,
-  token: string
+  token: string,
 ) => {
   try {
     const response = await axios.put(`${BASE_URL}/users/${id}`, userData, {
@@ -85,18 +85,18 @@ export const updateUserDataApiCall = async (
 export const updateUserPasswordApiCall = async (
   email: string,
   newPassword: string,
-  token: string
+  token: string,
 ) => {
   try {
     const response = await axios.put(
       `${BASE_URL}/updatePassword`,
       { email, password: newPassword },
-      { headers: { Authorization: `Bearer ${token}` } }
+      { headers: { Authorization: `Bearer ${token}` } },
     );
     return response.data;
   } catch (error: any) {
     console.error(
-      `An error occurred while updating password: ${JSON.stringify(error)}`
+      `An error occurred while updating password: ${JSON.stringify(error)}`,
     );
     throw new Error("Failed to update password");
   }
@@ -173,7 +173,7 @@ export const deleteCarApiCall = async (carId: number, token: string) => {
 
 export const updateInsuranceApiCall = async (
   insurance: ActiveInsurance,
-  token: string
+  token: string,
 ) => {
   try {
     const response = await axios.put(
@@ -183,7 +183,7 @@ export const updateInsuranceApiCall = async (
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     return response.data;
   } catch (error: any) {
@@ -195,7 +195,7 @@ export const updateInsuranceApiCall = async (
 
 export const deleteInsuranceApiCall = async (
   insuranceId: number,
-  token: string
+  token: string,
 ) => {
   try {
     const response = await axios.delete(
@@ -204,7 +204,7 @@ export const deleteInsuranceApiCall = async (
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     return response.data;
   } catch (error: any) {
@@ -216,7 +216,7 @@ export const deleteInsuranceApiCall = async (
 
 export const updateInspectionApiCall = async (
   inspection: any,
-  token: string
+  token: string,
 ) => {
   try {
     const response = await axios.put(
@@ -226,7 +226,7 @@ export const updateInspectionApiCall = async (
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     return response.data;
   } catch (error: any) {
@@ -238,7 +238,7 @@ export const updateInspectionApiCall = async (
 
 export const deleteInspectionApiCall = async (
   inspectionId: number,
-  token: string
+  token: string,
 ) => {
   try {
     const response = await axios.delete(
@@ -247,7 +247,7 @@ export const deleteInspectionApiCall = async (
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     return response.data;
   } catch (error: any) {
@@ -266,7 +266,7 @@ export const updateServiceApiCall = async (service: any, token: string) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     return response.data;
   } catch (error: any) {
@@ -278,7 +278,7 @@ export const updateServiceApiCall = async (service: any, token: string) => {
 
 export const deleteServiceApiCall = async (
   serviceId: number,
-  token: string
+  token: string,
 ) => {
   try {
     const response = await axios.delete(
@@ -287,7 +287,7 @@ export const deleteServiceApiCall = async (
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     return response.data;
   } catch (error: any) {
@@ -299,7 +299,7 @@ export const deleteServiceApiCall = async (
 
 export const getEstimatedCarPriceApiCall = async (
   id: number,
-  token: string
+  token: string,
 ) => {
   try {
     const response = await axios.get(`${BASE_URL}/cars/${id}/predict`, {
@@ -318,7 +318,7 @@ export const getEstimatedCarPriceApiCall = async (
 export const updatePushTokenApiCall = async (
   userId: number,
   pushToken: string,
-  token: string
+  token: string,
 ) => {
   try {
     const response = await axios.put(
@@ -330,7 +330,7 @@ export const updatePushTokenApiCall = async (
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     return response.data;
   } catch (error: any) {
@@ -338,7 +338,7 @@ export const updatePushTokenApiCall = async (
     throw error.response
       ? error.response.data
       : new Error(
-          `An error occurred while updating push token: ${JSON.stringify(error)}`
+          `An error occurred while updating push token: ${JSON.stringify(error)}`,
         );
   }
 };
@@ -368,7 +368,7 @@ export const getSymbolsDataApiCall = async (formData: FormData) => {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      }
+      },
     );
     return response.data;
   } catch (error: any) {

@@ -79,7 +79,7 @@ export const styles = StyleSheet.create({
   switchButton: {
     flex: 1,
     alignItems: "center",
-    backgroundColor: "#f0f0f0", 
+    backgroundColor: "#f0f0f0",
     borderRadius: 25,
     marginVertical: 5,
     marginHorizontal: 10,
@@ -95,7 +95,7 @@ export const styles = StyleSheet.create({
     backgroundColor: "black",
   },
   activeSwitch: {
-    backgroundColor: "#dedede", 
+    backgroundColor: "#dedede",
   },
   expiredContainer: {
     padding: 20,

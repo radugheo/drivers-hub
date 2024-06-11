@@ -67,7 +67,6 @@ AppDataSource.initialize()
     app.delete('/delete_image/:filename', (req, res) => {
       const filename = req.params.filename;
       const filePath = path.resolve('processed_images', filename);
-
       try {
         cleanupFile(filePath);
         res.send('File deleted successfully');

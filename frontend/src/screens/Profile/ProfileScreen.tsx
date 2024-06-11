@@ -96,7 +96,7 @@ const ProfileScreen: React.FC = () => {
       await updateUserDataApiCall(
         formattedFormData,
         parseInt(userId),
-        userToken
+        userToken,
       );
       Alert.alert("Success", "Profile updated successfully.");
       setEditModalVisible(false);
@@ -166,10 +166,6 @@ const ProfileScreen: React.FC = () => {
           <Ionicons name="key-outline" size={20} color="black" />
           <Text style={styles.actionText}>Change Password</Text>
         </TouchableOpacity>
-        {/* <TouchableOpacity style={styles.actionItem}>
-          <Ionicons name="settings-outline" size={20} color="black" />
-          <Text style={styles.actionText}>Settings</Text>
-        </TouchableOpacity> */}
         <TouchableOpacity style={styles.lastActionItem} onPress={handleLogout}>
           <Ionicons name="log-out-outline" size={20} color="red" />
           <Text style={styles.actionText}>Logout</Text>

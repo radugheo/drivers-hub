@@ -12,7 +12,9 @@ const TopBarWithProfile: React.FC<TopBarWithProfileProps> = ({ title }) => {
   const navigation = useNavigation();
   return (
     <View style={styles.topBar}>
-      <TouchableOpacity onPress={() => navigation.navigate("GarageScreen" as never)}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("GarageScreen" as never)}
+      >
         <Ionicons name="car-outline" size={30} color="black" />
       </TouchableOpacity>
       <Text style={styles.topBarTitle}>{title}</Text>

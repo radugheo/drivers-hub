@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import { styles } from "./InsuranceWidget.styles"; // Assuming you'll extend or reuse styles from CustomWidget
+import { styles } from "./InsuranceWidget.styles";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Car } from "../../models/Car.model";

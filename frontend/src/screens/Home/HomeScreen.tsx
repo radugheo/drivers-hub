@@ -2,9 +2,7 @@ import React, { useEffect } from "react";
 import TopBarWithProfile from "../../components/TopBarWithProfile/TopBarWithProfile";
 import NavBar from "../../components/NavBar/NavBar";
 import { Alert, View } from "react-native";
-import {
-  updatePushTokenApiCall,
-} from "../../api/api-service";
+import { updatePushTokenApiCall } from "../../api/api-service";
 import { retrieveString } from "../../utils/storage-handler";
 import * as Notifications from "expo-notifications";
 
@@ -59,7 +57,7 @@ const HomeScreen: React.FC = () => {
         console.error("Error updating notification token: ", error);
       }
     };
-    
+
     registerForPushNotificationsAsync();
   }, []);
   return (

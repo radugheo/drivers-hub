@@ -39,7 +39,7 @@ const FormDropdownField: React.FC<FormDropdownProps> = ({
           <View style={styles.modalView}>
             <Picker
               selectedValue={selectedValue}
-              onValueChange={(itemValue, itemIndex) => {
+              onValueChange={(itemValue) => {
                 onValueChange(itemValue);
                 setModalVisible(false);
               }}
