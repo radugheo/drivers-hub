@@ -6,7 +6,12 @@ import { Routes } from './routes';
 import cors = require('cors');
 import * as cron from 'node-cron';
 import { scheduleExpiryNotifications } from './utils/notification-service';
-import { checkAndExpireInsurances, checkAndExpireInspections, checkAndExpireServices } from './utils/expire-service';
+import {
+  checkAndExpireInsurances,
+  checkAndExpireInspections,
+  checkAndExpireServices,
+  checkAndExpireVignettes,
+} from './utils/expire-service';
 import multer = require('multer');
 import { CarController } from './controllers/car-controller';
 import path = require('path');
@@ -94,6 +99,7 @@ AppDataSource.initialize()
       await checkAndExpireInsurances();
       await checkAndExpireInspections();
       await checkAndExpireServices();
+      await checkAndExpireVignettes();
       await scheduleExpiryNotifications();
     });
   })

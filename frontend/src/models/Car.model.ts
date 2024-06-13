@@ -1,6 +1,7 @@
 import { ActiveInsurance } from "./Active-Insurance.model";
 import { ActiveInspection } from "./Active-Inspection.model";
 import { ActiveService } from "./Active-Service.model";
+import { ActiveVignette } from "./Active-Vignette.model";
 
 export class Car {
   id?: number;
@@ -14,22 +15,16 @@ export class Car {
   transmission?: string;
   displacement?: number;
   horsepower?: number;
-  vignetteStartDate?: Date;
-  vignetteExpiryDate?: Date;
-  lastService?: Date;
-  nextService?: Date;
-  lastServiceMileage?: number;
-  nextServiceMileageInterval?: number;
-  serviceCompany?: string;
-  serviceDetails?: string;
   vin?: string;
   ownerId: string;
   activeInsurance?: ActiveInsurance;
   activeInspection?: ActiveInspection;
   activeService?: ActiveService;
+  activeVignette?: ActiveVignette;
   insuranceHistory?: ActiveInsurance[];
   inspectionHistory?: ActiveInspection[];
   serviceHistory?: ActiveService[];
+  vignetteHistory?: ActiveVignette[];
   constructor(
     make: string,
     model: string,
@@ -40,8 +35,6 @@ export class Car {
     transmission: string,
     displacement: number,
     horsepower: number,
-    vignetteStartDate: Date,
-    vignetteExpiryDate: Date,
     vin: string,
     ownerId: string,
   ) {
@@ -54,8 +47,6 @@ export class Car {
     this.transmission = transmission;
     this.displacement = displacement;
     this.horsepower = horsepower;
-    this.vignetteStartDate = vignetteStartDate;
-    this.vignetteExpiryDate = vignetteExpiryDate;
     this.vin = vin;
     this.ownerId = ownerId;
   }

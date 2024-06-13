@@ -6,6 +6,8 @@ import { ActiveInspection } from './ActiveInspection';
 import { InspectionHistory } from './InspectionHistory';
 import { ActiveService } from './ActiveService';
 import { ServiceHistory } from './ServiceHistory';
+import { ActiveVignette } from './ActiveVignette';
+import { VignetteHistory } from './VignetteHistory';
 
 @Entity()
 export class Car {
@@ -74,6 +76,18 @@ export class Car {
     onDelete: 'CASCADE',
   })
   inspectionHistory: InspectionHistory[];
+
+  @OneToOne(() => ActiveVignette, (vignette) => vignette.car, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  activeVignette: ActiveVignette;
+
+  @OneToMany(() => VignetteHistory, (vignette) => vignette.car, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  vignetteHistory: VignetteHistory[];
 
   @OneToOne(() => ActiveService, (service) => service.car, {
     cascade: true,

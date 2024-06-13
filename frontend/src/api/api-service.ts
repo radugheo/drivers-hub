@@ -117,6 +117,7 @@ export const getCarsApiCall = async (token: string) => {
       if (a.model > b.model) return 1;
       return 0;
     });
+    console.log("Cars", response.data);
     return response.data;
   } catch (error: any) {
     console.log(JSON.stringify(error));
@@ -168,132 +169,6 @@ export const deleteCarApiCall = async (carId: number, token: string) => {
     throw error.response
       ? error.response.data
       : new Error("An error occurred while deleting the car");
-  }
-};
-
-export const updateInsuranceApiCall = async (
-  insurance: ActiveInsurance,
-  token: string,
-) => {
-  try {
-    const response = await axios.put(
-      `${BASE_URL}/insurance/active/${insurance.id}`,
-      insurance,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-    return response.data;
-  } catch (error: any) {
-    throw error.response
-      ? error.response.data
-      : new Error("An error occurred while updating insurance");
-  }
-};
-
-export const deleteInsuranceApiCall = async (
-  insuranceId: number,
-  token: string,
-) => {
-  try {
-    const response = await axios.delete(
-      `${BASE_URL}/insurance/active/${insuranceId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-    return response.data;
-  } catch (error: any) {
-    throw error.response
-      ? error.response.data
-      : new Error("An error occurred while deleting insurance");
-  }
-};
-
-export const updateInspectionApiCall = async (
-  inspection: any,
-  token: string,
-) => {
-  try {
-    const response = await axios.put(
-      `${BASE_URL}/inspection/active/${inspection.id}`,
-      inspection,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-    return response.data;
-  } catch (error: any) {
-    throw error.response
-      ? error.response.data
-      : new Error("An error occurred while updating inspection");
-  }
-};
-
-export const deleteInspectionApiCall = async (
-  inspectionId: number,
-  token: string,
-) => {
-  try {
-    const response = await axios.delete(
-      `${BASE_URL}/inspection/active/${inspectionId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-    return response.data;
-  } catch (error: any) {
-    throw error.response
-      ? error.response.data
-      : new Error("An error occurred while deleting inspection");
-  }
-};
-
-export const updateServiceApiCall = async (service: any, token: string) => {
-  try {
-    const response = await axios.put(
-      `${BASE_URL}/service/active/${service.id}`,
-      service,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-    return response.data;
-  } catch (error: any) {
-    throw error.response
-      ? error.response.data
-      : new Error("An error occurred while updating service");
-  }
-};
-
-export const deleteServiceApiCall = async (
-  serviceId: number,
-  token: string,
-) => {
-  try {
-    const response = await axios.delete(
-      `${BASE_URL}/service/active/${serviceId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-    return response.data;
-  } catch (error: any) {
-    throw error.response
-      ? error.response.data
-      : new Error("An error occurred while deleting service");
   }
 };
 

@@ -8,6 +8,8 @@ import { ActiveInspection } from './entities/ActiveInspection';
 import { InspectionHistory } from './entities/InspectionHistory';
 import { ActiveService } from './entities/ActiveService';
 import { ServiceHistory } from './entities/ServiceHistory';
+import { ActiveVignette } from './entities/ActiveVignette';
+import { VignetteHistory } from './entities/VignetteHistory';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -28,6 +30,8 @@ export const AppDataSource = new DataSource({
     InspectionHistory,
     ActiveService,
     ServiceHistory,
+    ActiveVignette,
+    VignetteHistory,
   ],
   migrations: [],
   subscribers: [],

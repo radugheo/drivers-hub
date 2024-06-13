@@ -8,7 +8,6 @@ import {
   Modal,
 } from "react-native";
 import InsuranceWidget from "../InsuranceWidget/InsuranceWidget";
-import ITPWidget from "../ITPWidget/ITPWidget";
 import OpacityButton from "../OpacityButton/OpacityButton";
 import ServiceWidget from "../ServiceWidget/ServiceWidget";
 import { Car } from "../../models/Car.model";
@@ -21,6 +20,9 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { retrieveString } from "../../utils/storage-handler";
 import { getEstimatedCarPriceApiCall } from "../../api/api-service";
 import { formatCurrency } from "../../utils/format-text";
+import { ActiveVignette } from "../../models/Active-Vignette.model";
+import VignetteWidget from "../VignetteWidget/VignetteWidget";
+import ITPWidget from "../ITPWidget/ITPWidget";
 
 interface CarItemDashboardProps {
   item: Car;
@@ -34,6 +36,7 @@ interface CarItemDashboardProps {
   carHasInsurance: (item: Car) => ActiveInsurance | undefined;
   carHasITP: (item: Car) => ActiveInspection | undefined;
   carHasService: (item: Car) => ActiveService | undefined;
+  carHasVignette: (item: Car) => ActiveVignette | undefined;
 }
 
 const formatDate = (dateString: string): string => {
@@ -58,6 +61,7 @@ const CarItemDashboard: React.FC<CarItemDashboardProps> = ({
   carHasInsurance,
   carHasITP,
   carHasService,
+  carHasVignette,
 }) => {
   const [viewMode, setViewMode] = useState("Active");
   const [modalVisible, setModalVisible] = useState(false);
@@ -141,6 +145,10 @@ const CarItemDashboard: React.FC<CarItemDashboardProps> = ({
             } else if (widgetName === "Service & Maintenance") {
               if (carHasService(item)) {
                 return <ServiceWidget key={index} item={item} />;
+              }
+            } else if (widgetName === "Vignette") {
+              if (carHasVignette(item)) {
+                return <VignetteWidget key={index} item={item} />;
               }
             }
           })}

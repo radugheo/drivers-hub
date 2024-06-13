@@ -1,29 +1,28 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Modal, Image } from "react-native";
-import { styles } from "./VignetteWidget.styles";
+import { View, Text, TouchableOpacity } from "react-native";
+import { styles } from "../VignetteWidget/VignetteWidget.styles";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Car } from "../../models/Car.model";
+import { RootStackParamList } from "../../navigation/app-navigator";
+import { ActiveVignette } from "../../models/Active-Vignette.model";
 
 type VignetteWidgetNavigationProp = StackNavigationProp<
   RootStackParamList,
   "VignetteScreen"
 >;
 
-export type RootStackParamList = {
-  VignetteScreen: { item: Car };
-};
-
 interface VignetteWidgetProps {
   item: Car;
 }
 
 const VignetteWidget: React.FC<VignetteWidgetProps> = ({ item }) => {
+  const carVignette: ActiveVignette = item.activeVignette!;
   const navigation = useNavigation<VignetteWidgetNavigationProp>();
 
   const calculateProgress = () => {
-    const start = new Date(item.vignetteStartDate!).getTime();
-    const end = new Date(item.vignetteExpiryDate!).getTime();
+    const start = new Date(carVignette.validFrom!).getTime();
+    const end = new Date(carVignette.validUntil!).getTime();
     const now = new Date().getTime();
     const totalDuration = end - start;
     const timeElapsedSinceStart = now - start;
@@ -32,7 +31,7 @@ const VignetteWidget: React.FC<VignetteWidgetProps> = ({ item }) => {
   };
 
   const calculateDaysLeft = () => {
-    const end = new Date(item.vignetteExpiryDate!).getTime();
+    const end = new Date(carVignette.validUntil!).getTime();
     const now = new Date().getTime();
     const totalDuration = end - now;
     const daysLeft = Math.floor(totalDuration / (1000 * 60 * 60 * 24)) + 1;
@@ -53,7 +52,10 @@ const VignetteWidget: React.FC<VignetteWidgetProps> = ({ item }) => {
   };
 
   const navigateToVignetteScreen = () => {
-    navigation.navigate("VignetteScreen", { item });
+    navigation.navigate("VignetteScreen", {
+      carItem: item,
+      vignetteItem: item.activeVignette!,
+    });
   };
 
   const progress = calculateProgress();
@@ -71,7 +73,7 @@ const VignetteWidget: React.FC<VignetteWidgetProps> = ({ item }) => {
           {" days left"}
         </Text>
         <Text style={styles.daysText}>
-          {formatDate(new Date(item.vignetteExpiryDate!).toDateString()!)}
+          {formatDate(new Date(carVignette.validUntil!).toDateString()!)}
         </Text>
       </View>
       <View style={styles.progressBarBackground}>

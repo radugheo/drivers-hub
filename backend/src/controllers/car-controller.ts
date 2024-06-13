@@ -26,6 +26,7 @@ const updateCarFields = async (car, data, userRepository) => {
     'activeInsurance',
     'activeInspection',
     'activeService',
+    'activeVignette',
   ];
 
   fields.forEach(async (field) => {
@@ -67,6 +68,8 @@ export class CarController {
         'inspectionHistory',
         'activeService',
         'serviceHistory',
+        'activeVignette',
+        'vignetteHistory',
       ],
     });
     return cars;
@@ -200,6 +203,8 @@ export class CarController {
     } catch (error) {
       console.error('Failed to process image:', error);
       res.status(500).send('Server error');
+    } finally {
+      cleanupFile(outputPath);
     }
   };
 }

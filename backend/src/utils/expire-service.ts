@@ -7,6 +7,8 @@ import { InspectionController } from '../controllers/inspection-controller';
 import { ServiceController } from '../controllers/service-controller';
 import { ActiveInspection } from '../entities/ActiveInspection';
 import { ActiveService } from '../entities/ActiveService';
+import { VignetteController } from '../controllers/vignette-controller';
+import { ActiveVignette } from '../entities/ActiveVignette';
 
 export const checkAndExpireInsurances = async () => {
   const yesterday = endOfDay(subDays(new Date(), 1));
@@ -48,6 +50,28 @@ export const checkAndExpireInspections = async () => {
       console.log(`Expired inspection with id ${inspection.id}: ${result}`);
     } catch (error) {
       console.error('Error expiring inspection:', error);
+    }
+  }
+};
+
+export const checkAndExpireVignettes = async () => {
+  const yesterday = endOfDay(subDays(new Date(), 1));
+
+  const vignetteController = new VignetteController();
+  const activeVignettes = await AppDataSource.getRepository(ActiveVignette).find({
+    where: {
+      validUntil: LessThanOrEqual(yesterday),
+    },
+  });
+
+  console.log('Found vignettes to expire:', activeVignettes);
+
+  for (const vignette of activeVignettes) {
+    try {
+      const result = await vignetteController.expireById(vignette.id);
+      console.log(`Expired vignette with id ${vignette.id}: ${result}`);
+    } catch (error) {
+      console.error('Error expiring vignette:', error);
     }
   }
 };

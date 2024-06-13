@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
   modalContainer: {
     backgroundColor: "white",
     padding: 10,
-    maxHeight: Dimensions.get("window").height / 2,
+    maxHeight: Dimensions.get("window").height,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 20,
     paddingTop: 10,
-    maxHeight: Dimensions.get("window").height / 2,
+    maxHeight: Dimensions.get("window").height,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },

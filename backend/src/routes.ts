@@ -4,6 +4,7 @@ import { InspectionController } from './controllers/inspection-controller';
 import { InsuranceController } from './controllers/insurance-controller';
 import { ServiceController } from './controllers/service-controller';
 import { UserController } from './controllers/user-controller';
+import { VignetteController } from './controllers/vignette-controller';
 import { isAdmin, isAuthenticated } from './middlewares/auth';
 
 const authRoutes = [
@@ -188,6 +189,37 @@ const inspectionRoutes = [
   },
 ];
 
+const vignetteRoutes = [
+  {
+    method: 'put',
+    route: '/vignette/active/:id',
+    controller: VignetteController,
+    action: 'updateActive',
+    middlewares: [isAuthenticated],
+  },
+  {
+    method: 'delete',
+    route: '/vignette/active/:id',
+    controller: VignetteController,
+    action: 'removeActive',
+    middlewares: [isAuthenticated],
+  },
+  {
+    method: 'get',
+    route: '/vignette/history/:id',
+    controller: VignetteController,
+    action: 'historyByCar',
+    middlewares: [isAuthenticated],
+  },
+  {
+    method: 'delete',
+    route: '/vignette/history/:id',
+    controller: VignetteController,
+    action: 'removeExpired',
+    middlewares: [isAuthenticated],
+  },
+];
+
 const serviceRoutes = [
   {
     method: 'put',
@@ -225,5 +257,6 @@ export const Routes = [
   ...carRoutes,
   ...insuranceRoutes,
   ...inspectionRoutes,
+  ...vignetteRoutes,
   ...serviceRoutes,
 ];

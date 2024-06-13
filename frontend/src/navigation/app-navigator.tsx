@@ -14,7 +14,6 @@ import InsuranceScreen from "../screens/InsuranceScreen/InsuranceScreen";
 import DashboardScreen from "../screens/Dashboard/DashboardScreen";
 import ITPScreen from "../screens/ITPScreen/ITPScreen";
 import ServiceScreen from "../screens/ServiceScreen/ServiceScreen";
-import VignetteScreen from "../screens/VignetteScreen/VignetteScreen";
 import { ActiveInsurance } from "../models/Active-Insurance.model";
 import { ActiveInspection } from "../models/Active-Inspection.model";
 import { ActiveService } from "../models/Active-Service.model";
@@ -22,6 +21,8 @@ import NearbyCarServicesScreen from "../screens/NearbyCarServices/NearbyCarServi
 import SymbolsScreen from "../screens/SymbolsScreen/SymbolsScreen";
 import LocationsScreen from "../screens/LocationsScreen/LocationsScreen";
 import ChatScreen from "../screens/ChatScreen/ChatScreen";
+import { ActiveVignette } from "../models/Active-Vignette.model";
+import VignetteScreen from "../screens/VignetteScreen/VignetteScreen";
 
 export type RootStackParamList = {
   Login: undefined;
@@ -39,7 +40,7 @@ export type RootStackParamList = {
   InsuranceScreen: { carItem: Car; insuranceItem: ActiveInsurance };
   ITPScreen: { carItem: Car; inspectionItem: ActiveInspection };
   ServiceScreen: { carItem: Car; serviceItem: ActiveService };
-  VignetteScreen: { item: Car };
+  VignetteScreen: { carItem: Car; vignetteItem: ActiveVignette };
   NearbyCarServicesScreen: undefined;
 };
 

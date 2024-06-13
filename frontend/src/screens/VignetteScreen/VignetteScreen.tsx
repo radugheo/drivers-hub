@@ -15,10 +15,11 @@ import { RootStackParamList } from "../../navigation/app-navigator";
 import { StackNavigationProp } from "@react-navigation/stack";
 import TopBar from "../../components/TopBar/TopBar";
 import OpacityButton from "../../components/OpacityButton/OpacityButton";
-import { removeCarWidgets, retrieveString } from "../../utils/storage-handler";
+import { removeCarWidget, retrieveString } from "../../utils/storage-handler";
 import { updateCarApiCall } from "../../api/api-service";
 import DateInputField from "../../components/DateInputField/DateInputField";
 import { Car } from "../../models/Car.model";
+import { ActiveVignette } from "../../models/Active-Vignette.model";
 
 LogBox.ignoreLogs([
   "Non-serializable values were found in the navigation state",
@@ -37,50 +38,53 @@ interface VignetteScreenProps {
 
 const VignetteScreen: React.FC<VignetteScreenProps> = ({ route }) => {
   const navigation = useNavigation();
-  const { item } = route.params;
-  const [car, setCar] = useState<Car>(item);
+  const { carItem, vignetteItem } = route.params;
+  const [car, setCar] = useState<Car>(carItem);
+  const [vignette, setVignette] = useState<ActiveVignette>(vignetteItem);
 
   const handleSaveVignette = async () => {
     try {
-      for (const key in car) {
-        if (car[key as keyof Car] === "") {
-          (car[key as keyof Car] as Car[keyof Car] | null) = null;
+      for (const key in vignette) {
+        if (vignette[key as keyof ActiveVignette] === null) {
+          (vignette[key as keyof ActiveVignette] as
+            | ActiveVignette[keyof ActiveVignette]
+            | null) = null;
         }
       }
+      console.log("Updating vignette with ID: ", vignette.id);
+      console.log("Udating car with ID: ", car.id);
+      const updatedCar = { ...car, activeVignette: vignette };
       const token = await retrieveString("userToken");
-      const result = await updateCarApiCall(car, token);
-      if (result) {
-        Alert.alert("Success", "Car updated successfully.");
+      const resultCarCall = await updateCarApiCall(updatedCar, token);
+      if (resultCarCall) {
+        Alert.alert("Success", "Car vignette updated successfully.");
         navigation.goBack();
       }
     } catch (error) {
-      console.error("Error updating the car:", error);
+      console.error("Error updating the car vignette:", error);
     }
   };
 
   const handleDeleteVignette = async () => {
     try {
+      const updatedCar = { ...car, activeVignette: null };
       const token = await retrieveString("userToken");
-      const result = await updateCarApiCall(
-        {
-          id: car.id,
-          vignetteStartDate: null,
-          vignetteExpiryDate: null,
-        },
-        token,
-      );
-      if (result) {
+      const resultCarCall = await updateCarApiCall(updatedCar, token);
+      if (resultCarCall) {
         Alert.alert("Success", "Vignette details have been deleted.");
-        await removeCarWidgets(car.id!.toString());
+        await removeCarWidget(car.id!.toString(), "Vignette");
         navigation.goBack();
       }
     } catch (error) {
-      console.error("Error deleting the Vignette details:", error);
+      console.error("Error deleting the vignette details:", error);
     }
   };
 
-  const handleServiceInputChange = (name: keyof Car, value: string | null) => {
-    setCar((prevCar) => ({ ...prevCar, [name]: value }));
+  const handleServiceInputChange = (
+    name: keyof ActiveVignette,
+    value: string | null,
+  ) => {
+    setVignette((prevVignette) => ({ ...prevVignette, [name]: value }));
   };
 
   return (
@@ -96,14 +100,9 @@ const VignetteScreen: React.FC<VignetteScreenProps> = ({ route }) => {
             <DateInputField
               iconName="calendar"
               placeholder="Start Date"
-              value={
-                new Date(car.vignetteStartDate || new Date().toISOString())
-              }
+              value={new Date(vignette.validFrom || new Date().toISOString())}
               onChange={(date) =>
-                handleServiceInputChange(
-                  "vignetteStartDate",
-                  date.toISOString(),
-                )
+                handleServiceInputChange("validFrom", date.toISOString())
               }
             />
 
@@ -111,14 +110,9 @@ const VignetteScreen: React.FC<VignetteScreenProps> = ({ route }) => {
             <DateInputField
               iconName="calendar"
               placeholder="End Date"
-              value={
-                new Date(car.vignetteExpiryDate || new Date().toISOString())
-              }
+              value={new Date(vignette.validUntil || new Date().toISOString())}
               onChange={(date) =>
-                handleServiceInputChange(
-                  "vignetteExpiryDate",
-                  date.toISOString(),
-                )
+                handleServiceInputChange("validUntil", date.toISOString())
               }
             />
           </ScrollView>

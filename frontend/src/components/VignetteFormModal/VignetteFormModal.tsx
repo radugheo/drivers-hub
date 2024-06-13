@@ -9,17 +9,16 @@ import DateInputField from "../DateInputField/DateInputField";
 import OpacityButton from "../OpacityButton/OpacityButton";
 import PageTitle from "../PageTitle/PageTitle";
 import { styles } from "./VignetteFormModal.styles";
+import { ActiveVignette } from "../../models/Active-Vignette.model";
+import { nextYear } from "../../utils/format-text";
 
 interface VignetteFormModal {
   animationType: "none" | "slide" | "fade";
   transparent: boolean;
   visible: boolean;
   onRequestClose: () => void;
-  vignetteFormData: {
-    vignetteStartDate: Date;
-    vignetteExpiryDate: Date;
-  };
-  setVignetteFormData: (data: any) => void;
+  vignette: ActiveVignette;
+  setVignette: (data: any) => void;
   onSave: () => void;
 }
 
@@ -28,8 +27,8 @@ const VignetteFormModal: React.FC<VignetteFormModal> = ({
   transparent,
   visible,
   onRequestClose,
-  vignetteFormData,
-  setVignetteFormData,
+  vignette,
+  setVignette,
   onSave,
 }) => {
   return (
@@ -49,11 +48,11 @@ const VignetteFormModal: React.FC<VignetteFormModal> = ({
                 <DateInputField
                   iconName="calendar-alt"
                   placeholder="Vignette Start Date"
-                  value={vignetteFormData.vignetteStartDate}
+                  value={vignette.validFrom || new Date()}
                   onChange={(date) =>
-                    setVignetteFormData({
-                      ...vignetteFormData,
-                      vignetteStartDate: date || new Date(),
+                    setVignette({
+                      ...vignette,
+                      validFrom: date || new Date(),
                     })
                   }
                 />
@@ -62,11 +61,11 @@ const VignetteFormModal: React.FC<VignetteFormModal> = ({
                 <DateInputField
                   iconName="calendar-alt"
                   placeholder="Vignette Expiry Date"
-                  value={vignetteFormData.vignetteExpiryDate}
+                  value={vignette.validUntil || nextYear()}
                   onChange={(date) =>
-                    setVignetteFormData({
-                      ...vignetteFormData,
-                      vignetteExpiryDate: date || new Date(),
+                    setVignette({
+                      ...vignette,
+                      validUntil: date || nextYear(),
                     })
                   }
                 />

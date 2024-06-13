@@ -4,6 +4,7 @@ import { AppDataSource } from '../data-source';
 import { ActiveInspection } from '../entities/ActiveInspection';
 import { ActiveInsurance } from '../entities/ActiveInsurance';
 import { ActiveService } from '../entities/ActiveService';
+import { ActiveVignette } from '../entities/ActiveVignette';
 
 const expo = new Expo();
 
@@ -75,4 +76,5 @@ export const scheduleExpiryNotifications = async () => {
   await scheduleNotificationsFor(ActiveService, 'Service');
   await scheduleNotificationsFor(ActiveInsurance, 'Insurance');
   await scheduleNotificationsFor(ActiveInspection, 'Inspection');
+  await scheduleNotificationsFor(ActiveVignette, 'Vignette');
 };

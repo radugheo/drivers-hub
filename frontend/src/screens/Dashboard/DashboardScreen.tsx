@@ -20,6 +20,8 @@ import CarItemDashboard from "../../components/CarItemDashboard/CarItemDashboard
 import Carousel from "react-native-reanimated-carousel";
 import { nextYear } from "../../utils/format-text";
 import { uploadPictureToS3Bucket } from "../../utils/picture-handler";
+import { ActiveVignette } from "../../models/Active-Vignette.model";
+import VignetteFormModal from "../../components/VignetteFormModal/VignetteFormModal";
 
 const DashboardScreen: React.FC = () => {
   const [cars, setCars] = useState<Car[]>([]);
@@ -43,6 +45,12 @@ const DashboardScreen: React.FC = () => {
   const [isInspectionModalVisible, setIsInspectionModalVisible] =
     useState(false);
   const [inspection, setInspection] = useState<ActiveInspection>({
+    validFrom: new Date(),
+    validUntil: nextYear(),
+  });
+
+  const [isVignetteModalVisible, setIsVignetteModalVisible] = useState(false);
+  const [vignette, setVignette] = useState<ActiveVignette>({
     validFrom: new Date(),
     validUntil: nextYear(),
   });
@@ -72,6 +80,9 @@ const DashboardScreen: React.FC = () => {
           if (carHasService(car)) {
             widgets.push("Service & Maintenance");
           }
+          if (carHasVignette(car)) {
+            widgets.push("Vignette");
+          }
           return { ...acc, [carIdStr]: widgets };
         }, {});
         setCarWidgets(carWidgetsMap);
@@ -91,6 +102,11 @@ const DashboardScreen: React.FC = () => {
             })),
             ...(car.serviceHistory || []).map((item) => ({
               type: "Service",
+              status: "Expired",
+              data: item,
+            })),
+            ...(car.vignetteHistory || []).map((item) => ({
+              type: "Vignette",
               status: "Expired",
               data: item,
             })),
@@ -122,6 +138,7 @@ const DashboardScreen: React.FC = () => {
     "Insurance",
     "ITP (Technical Inspection)",
     "Service & Maintenance",
+    "Vignette",
   ];
 
   const widgetExists = (widgetName: string) => {
@@ -160,6 +177,9 @@ const DashboardScreen: React.FC = () => {
           } else if (selectedCarId && item === "Service & Maintenance") {
             setServiceModalVisible(true);
             setOptionsModalVisible(false);
+          } else if (selectedCarId && item === "Vignette") {
+            setIsVignetteModalVisible(true);
+            setOptionsModalVisible(false);
           }
         }
       }}
@@ -182,6 +202,11 @@ const DashboardScreen: React.FC = () => {
   const carHasService = (car: Car) => {
     console.log("Car service:", car.activeService);
     return car.activeService;
+  };
+
+  const carHasVignette = (car: Car) => {
+    console.log("Car vignette:", car.activeVignette);
+    return car.activeVignette;
   };
 
   const updateWidgetsForCar = async (carId: string, widgetName: string) => {
@@ -336,6 +361,47 @@ const DashboardScreen: React.FC = () => {
     }
   };
 
+  const handleVignetteFormSubmit = async () => {
+    const token = await retrieveString("userToken");
+    if (!token) {
+      Alert.alert("Error", "User token not found.");
+      return;
+    }
+    if (!selectedCarId) {
+      Alert.alert("Error", "No car selected.");
+      return;
+    }
+    const carToUpdateIndex = cars.findIndex((car) => car.id === selectedCarId);
+    if (carToUpdateIndex === -1) {
+      Alert.alert("Error", "Car not found.");
+      return;
+    }
+    const updatedCar = {
+      ...cars[carToUpdateIndex],
+      activeVignette: {
+        ...vignette,
+        carId: selectedCarId,
+      },
+    };
+    try {
+      console.log(
+        `Updating vignette for carId: ${selectedCarId}: ${JSON.stringify(updatedCar.activeVignette)}`,
+      );
+      await updateCarApiCall(updatedCar, token);
+      Alert.alert("Success", "Vignette information updated successfully.");
+      setIsVignetteModalVisible(false);
+      const newCars = [...cars];
+      newCars[carToUpdateIndex] = updatedCar;
+      setCars(newCars);
+
+      updateWidgetsForCar(selectedCarId.toString(), "Vignette");
+      fetchCarsAndWidgets();
+    } catch (error) {
+      console.error("Error updating vignette information:", error);
+      Alert.alert("Error", "Failed to update vignette information.");
+    }
+  };
+
   const renderItem = ({ item }: { item: Car }) => (
     <CarItemDashboard
       item={item}
@@ -349,6 +415,7 @@ const DashboardScreen: React.FC = () => {
       carHasInsurance={carHasInsurance}
       carHasITP={carHasITP}
       carHasService={carHasService}
+      carHasVignette={carHasVignette}
     />
   );
 
@@ -399,6 +466,16 @@ const DashboardScreen: React.FC = () => {
         service={service}
         setService={setService}
         onSave={handleServiceFormSubmit}
+      />
+
+      <VignetteFormModal
+        animationType="fade"
+        transparent={true}
+        visible={isVignetteModalVisible}
+        onRequestClose={() => setIsVignetteModalVisible(false)}
+        vignette={vignette}
+        setVignette={setVignette}
+        onSave={handleVignetteFormSubmit}
       />
     </View>
   );
