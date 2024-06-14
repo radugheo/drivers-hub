@@ -81,6 +81,9 @@ const ITPWidget: React.FC<ITPWidgetProps> = ({ item }) => {
           ]}
         />
       </View>
+      <Text style={styles.text}>
+        Cost: <Text style={styles.boldText}>{carInspection.price} ron</Text>
+      </Text>
     </TouchableOpacity>
   );
 };

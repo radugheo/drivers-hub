@@ -10,6 +10,9 @@ export class ActiveInspection {
   @JoinColumn()
   car: Car;
 
+  @Column({ nullable: true })
+  price: number;
+
   @Column()
   validFrom: Date;
 

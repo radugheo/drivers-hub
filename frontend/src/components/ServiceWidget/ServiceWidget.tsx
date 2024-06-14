@@ -93,6 +93,9 @@ const ServiceWidget: React.FC<ServiceWidgetProps> = ({ item }) => {
           ]}
         />
       </View>
+      <Text style={styles.text}>
+        Cost: <Text style={styles.boldText}>{carService.price} ron</Text>
+      </Text>
     </TouchableOpacity>
   );
 };

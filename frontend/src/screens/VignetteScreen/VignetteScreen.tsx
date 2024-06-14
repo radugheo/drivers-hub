@@ -20,6 +20,7 @@ import { updateCarApiCall } from "../../api/api-service";
 import DateInputField from "../../components/DateInputField/DateInputField";
 import { Car } from "../../models/Car.model";
 import { ActiveVignette } from "../../models/Active-Vignette.model";
+import NumberInputField from "../../components/NumberInputField/NumberInputField";
 
 LogBox.ignoreLogs([
   "Non-serializable values were found in the navigation state",
@@ -114,6 +115,14 @@ const VignetteScreen: React.FC<VignetteScreenProps> = ({ route }) => {
               onChange={(date) =>
                 handleServiceInputChange("validUntil", date.toISOString())
               }
+            />
+
+            <Text style={styles.editField}>Cost</Text>
+            <NumberInputField
+              iconName="money-bill"
+              placeholder={vignette.price?.toString() || "Cost"}
+              value={vignette.price || null}
+              onChangeText={(price) => handleServiceInputChange("price", price)}
             />
           </ScrollView>
           <View style={styles.buttonsContainer}>

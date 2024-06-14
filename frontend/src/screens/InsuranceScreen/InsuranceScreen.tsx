@@ -26,6 +26,7 @@ import PictureInputField from "../../components/PictureInputField/PictureInputFi
 import { FontAwesome5 } from "@expo/vector-icons";
 import { ActiveInsurance } from "../../models/Active-Insurance.model";
 import { uploadPictureToS3Bucket } from "../../utils/picture-handler";
+import NumberInputField from "../../components/NumberInputField/NumberInputField";
 
 LogBox.ignoreLogs([
   "Non-serializable values were found in the navigation state",
@@ -165,6 +166,14 @@ const InsuranceScreen: React.FC<InsuranceScreenProps> = ({ route }) => {
               onChange={(date) =>
                 handleServiceInputChange("validUntil", date.toISOString())
               }
+            />
+
+            <Text style={styles.editField}>Cost</Text>
+            <NumberInputField
+              iconName="money-bill"
+              placeholder={insurance.price?.toString() || "Cost"}
+              value={insurance.price || null}
+              onChangeText={(price) => handleServiceInputChange("price", price)}
             />
 
             <Text style={styles.editField}>Insurance Picture</Text>

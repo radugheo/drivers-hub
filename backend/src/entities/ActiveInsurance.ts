@@ -17,6 +17,9 @@ export class ActiveInsurance {
   validUntil: Date;
 
   @Column({ nullable: true })
+  price: number;
+
+  @Column({ nullable: true })
   policyNumber: string;
 
   @Column({ nullable: true })
