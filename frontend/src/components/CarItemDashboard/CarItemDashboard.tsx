@@ -23,6 +23,7 @@ import { formatCurrency } from "../../utils/format-text";
 import { ActiveVignette } from "../../models/Active-Vignette.model";
 import VignetteWidget from "../VignetteWidget/VignetteWidget";
 import ITPWidget from "../ITPWidget/ITPWidget";
+import CostWidget from "../CostWidget/CostWidget";
 
 interface CarItemDashboardProps {
   item: Car;
@@ -133,6 +134,13 @@ const CarItemDashboard: React.FC<CarItemDashboardProps> = ({
             />
           }
         >
+          <CostWidget
+            insuranceCost={carHasInsurance(item)?.price || 0}
+            inspectionCost={carHasITP(item)?.price || 0}
+            serviceCost={carHasService(item)?.price || 0}
+            vignetteCost={carHasVignette(item)?.price || 0}
+          />
+
           {widgets.map((widgetName, index) => {
             if (widgetName === "Insurance") {
               if (carHasInsurance(item)) {

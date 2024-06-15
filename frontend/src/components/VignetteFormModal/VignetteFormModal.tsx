@@ -11,6 +11,7 @@ import PageTitle from "../PageTitle/PageTitle";
 import { styles } from "./VignetteFormModal.styles";
 import { ActiveVignette } from "../../models/Active-Vignette.model";
 import { nextYear } from "../../utils/format-text";
+import NumberInputField from "../NumberInputField/NumberInputField";
 
 interface VignetteFormModal {
   animationType: "none" | "slide" | "fade";
@@ -66,6 +67,19 @@ const VignetteFormModal: React.FC<VignetteFormModal> = ({
                     setVignette({
                       ...vignette,
                       validUntil: date || nextYear(),
+                    })
+                  }
+                />
+
+                <Text style={styles.editField}>Cost</Text>
+                <NumberInputField
+                  iconName="money-bill"
+                  placeholder="Cost"
+                  value={vignette.price || null}
+                  onChangeText={(price) =>
+                    setVignette({
+                      ...vignette,
+                      price,
                     })
                   }
                 />

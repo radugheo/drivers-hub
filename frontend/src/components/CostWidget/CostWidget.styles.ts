@@ -16,49 +16,45 @@ export const styles = StyleSheet.create({
     paddingRight: 10,
     fontFamily: "OktahRound-Regular",
   },
+  boldText: {
+    fontSize: 18,
+    fontFamily: "Montserrat-Bold",
+  },
   progressBarBackground: {
     height: 15,
     backgroundColor: "#eee",
     borderRadius: 10,
     marginLeft: 10,
     marginRight: 10,
+    flexDirection: "row",
+    overflow: "hidden",
   },
-  progressBarForeground: {
+  progressBarSegment: {
     height: "100%",
-    backgroundColor: "green",
-    borderRadius: 10,
-    paddingLeft: 10,
-    paddingRight: 10,
   },
-  text: {
-    fontSize: 14,
+  costContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 10,
     paddingLeft: 10,
     paddingRight: 10,
-    fontFamily: "OktahRound-Regular",
   },
-  boldText: {
-    fontSize: 14,
-    fontFamily: "Montserrat-Bold",
-  },
-  daysText: {
-    fontFamily: "OktahRound-Regular",
-  },
-  datesContainer: {
-    paddingLeft: 10,
-    paddingRight: 10,
+  costItem: {
     flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  modalOverlay: {
-    flex: 1,
-    justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
-  insuranceImage: {
-    width: 300,
-    height: 400,
-    resizeMode: "contain",
+  colorCircle: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginRight: 5,
+  },
+  text: {
+    fontSize: 12,
+    fontFamily: "OktahRound-Regular",
+  },
+  textValue: {
+    fontSize: 12,
+    fontFamily: "OktahRound-Regular",
   },
 });

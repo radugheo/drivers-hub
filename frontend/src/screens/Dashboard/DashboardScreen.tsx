@@ -393,7 +393,6 @@ const DashboardScreen: React.FC = () => {
       const newCars = [...cars];
       newCars[carToUpdateIndex] = updatedCar;
       setCars(newCars);
-
       updateWidgetsForCar(selectedCarId.toString(), "Vignette");
       fetchCarsAndWidgets();
     } catch (error) {

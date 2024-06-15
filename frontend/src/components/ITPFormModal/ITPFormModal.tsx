@@ -11,6 +11,7 @@ import PageTitle from "../PageTitle/PageTitle";
 import { styles } from "./ITPFormModal.styles";
 import { ActiveInspection } from "../../models/Active-Inspection.model";
 import { nextYear } from "../../utils/format-text";
+import NumberInputField from "../NumberInputField/NumberInputField";
 
 interface ITPFormModal {
   animationType: "none" | "slide" | "fade";
@@ -66,6 +67,19 @@ const ITPFormModal: React.FC<ITPFormModal> = ({
                     setInspection({
                       ...inspection,
                       validUntil: date || nextYear(),
+                    })
+                  }
+                />
+
+                <Text style={styles.editField}>Cost</Text>
+                <NumberInputField
+                  iconName="money-bill"
+                  placeholder="Cost"
+                  value={inspection.price || null}
+                  onChangeText={(price) =>
+                    setInspection({
+                      ...inspection,
+                      price,
                     })
                   }
                 />

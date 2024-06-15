@@ -85,7 +85,7 @@ const InsuranceWidget: React.FC<InsuranceWidgetProps> = ({ item }) => {
         />
       </View>
       <Text style={styles.text}>
-        Policy Number: {carInsurance.policyNumber}
+        Cost: <Text style={styles.boldText}>{carInsurance.price} ron</Text>
       </Text>
     </TouchableOpacity>
   );

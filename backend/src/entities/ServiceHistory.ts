@@ -17,6 +17,9 @@ export class ServiceHistory {
   validUntil: Date;
 
   @Column({ nullable: true })
+  price: number;
+
+  @Column({ nullable: true })
   serviceMileage: number;
 
   @Column({ nullable: true })

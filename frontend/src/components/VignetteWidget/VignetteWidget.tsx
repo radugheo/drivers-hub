@@ -84,6 +84,9 @@ const VignetteWidget: React.FC<VignetteWidgetProps> = ({ item }) => {
           ]}
         />
       </View>
+      <Text style={styles.text}>
+        Cost: <Text style={styles.boldText}>{carVignette.price} ron</Text>
+      </Text>
     </TouchableOpacity>
   );
 };

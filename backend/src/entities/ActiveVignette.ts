@@ -10,6 +10,9 @@ export class ActiveVignette {
   @JoinColumn()
   car: Car;
 
+  @Column({ nullable: true })
+  price: number;
+
   @Column()
   validFrom: Date;
 

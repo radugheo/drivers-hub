@@ -37,6 +37,10 @@ export const styles = StyleSheet.create({
     paddingRight: 10,
     fontFamily: "OktahRound-Regular",
   },
+  boldText: {
+    fontSize: 14,
+    fontFamily: "Montserrat-Bold",
+  },
   daysText: {
     fontFamily: "OktahRound-Regular",
   },

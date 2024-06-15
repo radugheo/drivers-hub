@@ -13,6 +13,7 @@ import { styles } from "./InsuranceFormModal.styles";
 import PictureInputField from "../PictureInputField/PictureInputField";
 import { ActiveInsurance } from "../../models/Active-Insurance.model";
 import { nextYear } from "../../utils/format-text";
+import NumberInputField from "../NumberInputField/NumberInputField";
 
 interface InsuranceFormModalProps {
   animationType: "none" | "slide" | "fade";
@@ -101,6 +102,19 @@ const InsuranceFormModal: React.FC<InsuranceFormModalProps> = ({
                     setInsurance({
                       ...insurance,
                       validUntil: date || nextYear(),
+                    })
+                  }
+                />
+
+                <Text style={styles.editField}>Cost</Text>
+                <NumberInputField
+                  iconName="money-bill"
+                  placeholder="Cost"
+                  value={insurance.price || null}
+                  onChangeText={(price) =>
+                    setInsurance({
+                      ...insurance,
+                      price,
                     })
                   }
                 />

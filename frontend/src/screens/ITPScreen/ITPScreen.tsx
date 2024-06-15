@@ -20,6 +20,7 @@ import { updateCarApiCall } from "../../api/api-service";
 import DateInputField from "../../components/DateInputField/DateInputField";
 import { Car } from "../../models/Car.model";
 import { ActiveInspection } from "../../models/Active-Inspection.model";
+import NumberInputField from "../../components/NumberInputField/NumberInputField";
 
 LogBox.ignoreLogs([
   "Non-serializable values were found in the navigation state",
@@ -117,6 +118,14 @@ const ITPScreen: React.FC<ITPScreenProps> = ({ route }) => {
               onChange={(date) =>
                 handleServiceInputChange("validUntil", date.toISOString())
               }
+            />
+
+            <Text style={styles.editField}>Cost</Text>
+            <NumberInputField
+              iconName="money-bill"
+              placeholder={inspection.price?.toString() || "Cost"}
+              value={inspection.price || null}
+              onChangeText={(price) => handleServiceInputChange("price", price)}
             />
           </ScrollView>
           <View style={styles.buttonsContainer}>

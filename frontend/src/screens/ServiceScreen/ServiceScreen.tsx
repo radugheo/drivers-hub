@@ -123,6 +123,14 @@ const ServiceScreen: React.FC<ServiceScreenProps> = ({ route }) => {
               }
             />
 
+            <Text style={styles.editField}>Cost</Text>
+            <NumberInputField
+              iconName="money-bill"
+              placeholder={service.price?.toString() || "Cost"}
+              value={service.price || null}
+              onChangeText={(price) => handleServiceInputChange("price", price)}
+            />
+
             <Text style={styles.editField}>Next estimated maintainance</Text>
             <DateInputField
               iconName="calendar"

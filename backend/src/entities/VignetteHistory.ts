@@ -16,6 +16,9 @@ export class VignetteHistory {
   @Column()
   validUntil: Date;
 
+  @Column({ nullable: true })
+  price: number;
+
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 }

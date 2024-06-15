@@ -74,6 +74,19 @@ const ServiceFormModal: React.FC<ServiceFormModal> = ({
                   }
                 />
 
+                <Text style={styles.editField}>Cost</Text>
+                <NumberInputField
+                  iconName="money-bill"
+                  placeholder="Cost"
+                  value={service.price || null}
+                  onChangeText={(price) =>
+                    setService({
+                      ...service,
+                      price,
+                    })
+                  }
+                />
+
                 <Text style={styles.editField}>
                   Next estimated maintainance
                 </Text>
