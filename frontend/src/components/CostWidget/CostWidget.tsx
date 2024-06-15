@@ -33,7 +33,7 @@ const CostWidget: React.FC<CostWidgetProps> = ({
   };
 
   return (
-    <TouchableOpacity style={styles.container}>
+    <View style={styles.container}>
       <Text style={styles.title}>
         Current costs -{" "}
         <Text style={styles.boldText}>
@@ -96,7 +96,7 @@ const CostWidget: React.FC<CostWidgetProps> = ({
           <Text style={styles.text}>Vignette</Text>
         </View>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
 
