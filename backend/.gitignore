@@ -10,6 +10,7 @@ src/ml-models/xgb_model.json
 src/ml-models/columns_list.json
 processed_images/
 uploads/
+venv
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml

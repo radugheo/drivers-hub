@@ -203,8 +203,6 @@ export class CarController {
     } catch (error) {
       console.error('Failed to process image:', error);
       res.status(500).send('Server error');
-    } finally {
-      cleanupFile(outputPath);
     }
   };
 }

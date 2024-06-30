@@ -36,16 +36,20 @@ export const predictImage = (inputPath, outputPath): Promise<any> => {
     const pythonProcess = spawn(pythonExecutable, ['./src/ml-models/predict-symbols.py', inputPath, outputPath]);
 
     let outputData = '';
+    let errorData = '';
 
     pythonProcess.stdout.on('data', (data) => {
       outputData += data.toString();
     });
 
     pythonProcess.stderr.on('data', (data) => {
-      console.error(`stderr: ${data}`);
+      errorData += data.toString();
     });
 
     pythonProcess.on('close', (code) => {
+      console.log(`Python process closed with code ${code}`);
+      console.log(`stdout: ${outputData}`);
+      console.log(`stderr: ${errorData}`);
       if (code === 0) {
         try {
           const result = JSON.parse(outputData);
@@ -54,7 +58,13 @@ export const predictImage = (inputPath, outputPath): Promise<any> => {
           reject(`Failed to parse Python output: ${e.message}`);
         }
       } else {
-        reject(`Child process exited with code ${code}`);
+        console.error(`stderr: ${errorData}`);
+        try {
+          const errorResult = JSON.parse(errorData);
+          reject(`Python script error: ${errorResult.error}`);
+        } catch (e) {
+          reject(`Child process exited with code ${code}. stderr: ${errorData}`);
+        }
       }
     });
   });
